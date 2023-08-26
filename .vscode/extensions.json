@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "dart-code.flutter",
+        "streetsidesoftware.code-spell-checker",
+        "editorconfig.editorconfig",
+        "ms-vscode.makefile-tools",
+        "yzhang.markdown-all-in-one",
+        "shd101wyy.markdown-preview-enhanced",
+        "davidanson.vscode-markdownlint"
+    ]
+}

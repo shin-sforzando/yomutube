@@ -371,7 +371,6 @@ terraform.rc
 ### Pulumi ###
 # Ignore temp build directory for Pulumi
 # Info: https://www.pulumi.com/docs/
-
 .pulumi/
 
 ### Data ###
@@ -389,3 +388,9 @@ terraform.rc
 *.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/osx,windows,linux,data,flutter,python,visualstudiocode,pulumi,terraform
+
+### git-secret ###
+.gitsecret/keys/random_seed
+!*.secret
+
+### Project Specific ###

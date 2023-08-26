@@ -1,5 +1,5 @@
 name: yomutube
-description: A new Flutter project.
+description: A service that watches YouTube on behalf of you.
 
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'

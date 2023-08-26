@@ -1,6 +1,6 @@
-# yomutube
+# YomuTube
 
-A new Flutter project.
+A service that watches YouTube on behalf of you.
 
 ## Getting Started
 
