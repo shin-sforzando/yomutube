@@ -3,8 +3,8 @@ name: Feature Request (機能追加)
 about: Suggest an idea for this project
 title: 'feat: '
 labels: 'enhancement'
+projects: ['YomuTube']
 assignees: 'shin-sforzando'
-
 ---
 
 ## Describe the desired **state** as a goal
