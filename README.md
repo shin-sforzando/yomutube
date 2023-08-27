@@ -67,6 +67,7 @@ See. [Flutter アプリに Firebase を追加する](https://firebase.google.com
 ```shell
 firebase login
 dart pub global activate flutterfire_cli
+flutterfire configure
 ```
 
 ### Document

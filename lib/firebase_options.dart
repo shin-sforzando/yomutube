@@ -24,11 +24,20 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -54,33 +63,5 @@ class DefaultFirebaseOptions {
     authDomain: 'yomutube-f5b5d.firebaseapp.com',
     storageBucket: 'yomutube-f5b5d.appspot.com',
     measurementId: 'G-TS09HM9W19',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD8asyolDF5vQxKQTWUwqqlHWbUuPnHEzo',
-    appId: '1:1009724725603:android:fd2fb9957825f34aef1b56',
-    messagingSenderId: '1009724725603',
-    projectId: 'yomutube-f5b5d',
-    storageBucket: 'yomutube-f5b5d.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDRzl9xfqvrYim5D-aSdbJXUGf7uvnj1EY',
-    appId: '1:1009724725603:ios:7895dfaced30e742ef1b56',
-    messagingSenderId: '1009724725603',
-    projectId: 'yomutube-f5b5d',
-    storageBucket: 'yomutube-f5b5d.appspot.com',
-    iosClientId: '1009724725603-5eo1c2rq41mh3pg02rud2jfng1j74s1h.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yomutube',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDRzl9xfqvrYim5D-aSdbJXUGf7uvnj1EY',
-    appId: '1:1009724725603:ios:898b28ae05294b88ef1b56',
-    messagingSenderId: '1009724725603',
-    projectId: 'yomutube-f5b5d',
-    storageBucket: 'yomutube-f5b5d.appspot.com',
-    iosClientId: '1009724725603-t0tel20hvm048vjnf88ferhnhlecbd0g.apps.googleusercontent.com',
-    iosBundleId: 'com.example.yomutube.RunnerTests',
   );
 }
