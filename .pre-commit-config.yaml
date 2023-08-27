@@ -1,0 +1,39 @@
+repos:
+  - repo: local
+    hooks:
+      - id: hide-secret
+        name: Hide Files using Git Secret
+        entry: make hide
+        language: system
+        always_run: true
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/asottile/reorder-python-imports
+    rev: v3.10.0
+    hooks:
+      - id: reorder-python-imports
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+  - repo: https://github.com/fluttercommunity/import_sorter
+    rev: 'f350497a11b1285c695595049e95a420068e7a9f'
+    hooks:
+      - id: flutter-import-sorter
+  - repo: https://github.com/dluksza/flutter-analyze-pre-commit
+    rev: "4afcaa82fc368d40d486256bf4edba329bf667bb"
+    hooks:
+      - id: flutter-analyze
+        args: [lib/*]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.5
+    hooks:
+      - id: shellcheck

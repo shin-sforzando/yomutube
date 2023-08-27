@@ -1,0 +1,6 @@
+name: YomuTube
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A service that watches YouTube on behalf of you
