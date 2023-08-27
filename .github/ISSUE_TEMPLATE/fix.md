@@ -3,7 +3,7 @@ name: Bug Report (不具合報告)
 about: Create a report to help us improve
 title: 'fix: '
 labels: 'bug'
-projects: ['YomuTube']
+projects: ['shin-sforzando/YomuTube']
 assignees: 'shin-sforzando'
 ---
 

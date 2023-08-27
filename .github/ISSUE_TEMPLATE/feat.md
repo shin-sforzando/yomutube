@@ -3,7 +3,7 @@ name: Feature Request (機能追加)
 about: Suggest an idea for this project
 title: 'feat: '
 labels: 'enhancement'
-projects: ['YomuTube']
+projects: ['shin-sforzando/YomuTube']
 assignees: 'shin-sforzando'
 ---
 
