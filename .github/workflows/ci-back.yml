@@ -18,7 +18,8 @@ jobs:
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-private-key-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
-      - name: Read env file and set variables
-        uses: cosq-network/dotenv-loader@v1.0.2
+      - name: Load pulumi/.env
+        uses: falti/dotenv-action@v1.0.4
         with:
-          env-file: pulumi/.env
+          path: pulumi/.env
+          mask-variables: true
