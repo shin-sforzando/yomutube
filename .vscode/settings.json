@@ -1,15 +1,17 @@
 {
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.formatOnSave": true
-    },
-    "cSpell.words": [
-        "conventionalcommits",
-        "direnv",
-        "flutterfire",
-        "Pulumi",
-        "serviceaccount",
-        "shellcheck",
-        "YomuTube"
-    ]
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
+  "cSpell.words": [
+    "conventionalcommits",
+    "direnv",
+    "flutterfire",
+    "Pulumi",
+    "serviceaccount",
+    "shellcheck",
+    "venv",
+    "virtualenv",
+    "YomuTube"
+  ]
 }

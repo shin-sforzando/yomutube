@@ -13,12 +13,12 @@ A service that watches YouTube on behalf of you.
 あなたに代わって、YouTubeを視聴するサービス。
 
 - [Prerequisites](#prerequisites)
-  - [Common](#common)
-  - [Back-End](#back-end)
-  - [Front-End](#front-end)
 - [How to](#how-to)
   - [Setup](#setup)
     - [Firebase](#firebase)
+  - [Develop](#develop)
+    - [Back-End](#back-end)
+    - [Front-End](#front-end)
   - [Document](#document)
     - [CHANGELOG](#changelog)
 - [Misc](#misc)
@@ -27,21 +27,13 @@ A service that watches YouTube on behalf of you.
 
 ## Prerequisites
 
-### Common
-
-- [direnv](https://direnv.net)
-- [pre-commit](https://pre-commit.com)
-
-### Back-End
-
 - [Pulumi](https://www.pulumi.com) (Version `3.79.0` or higher)
   - Google Cloud SDK (Version `444.0.0` or higher)
   - Firebase CLI (Version `12.5.2` or higher)
-
-### Front-End
-
 - Flutter SDK (Version `3.13.1` or higher)
   - [FlutterFire](https://firebase.flutter.dev)
+- [direnv](https://direnv.net)
+- [pre-commit](https://pre-commit.com)
 
 ## How to
 
@@ -52,6 +44,7 @@ init                 初期
 open                 閲覧
 hide                 秘匿
 reveal               暴露
+format               整形
 clean                掃除
 help                 助言
 ```
@@ -69,6 +62,16 @@ firebase login
 dart pub global activate flutterfire_cli
 flutterfire configure
 ```
+
+### Develop
+
+#### Back-End
+
+(T. B. D.)
+
+#### Front-End
+
+(T. B. D.)
 
 ### Document
 

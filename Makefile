@@ -8,7 +8,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default open hide reveal clean help
+.PHONY: default open hide reveal format clean help
 
 default: ## 常用
 
@@ -35,9 +35,13 @@ hide: ## 秘匿
 reveal: ## 暴露
 	git secret reveal -vf
 
+format: ## 整形
+	pre-commit run --all-files
+
 clean: ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
 	find . -type d -name "__pycache__" -exec rm -rf {} +
+	flutter clean
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process is complete." ; fi
 
 help: ## 助言
