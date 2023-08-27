@@ -1,0 +1,6 @@
+{
+  "appTitle": "YomuTube",
+  "@appTitle": {
+    "description": "A service that watches YouTube on behalf of you"
+  }
+}

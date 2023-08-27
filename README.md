@@ -18,6 +18,7 @@ A service that watches YouTube on behalf of you.
   - [Front-End](#front-end)
 - [How to](#how-to)
   - [Setup](#setup)
+    - [Firebase](#firebase)
   - [Document](#document)
     - [CHANGELOG](#changelog)
 - [Misc](#misc)
@@ -40,6 +41,7 @@ A service that watches YouTube on behalf of you.
 ### Front-End
 
 - Flutter SDK (Version `3.13.1` or higher)
+  - [FlutterFire](https://firebase.flutter.dev)
 
 ## How to
 
@@ -57,6 +59,15 @@ help                 助言
 ### Setup
 
 `make init` to setup all dependencies.
+
+#### Firebase
+
+See. [Flutter アプリに Firebase を追加する](https://firebase.google.com/docs/flutter/setup?hl=ja&platform=web#prerequisites)
+
+```shell
+firebase login
+dart pub global activate flutterfire_cli
+```
 
 ### Document
 
