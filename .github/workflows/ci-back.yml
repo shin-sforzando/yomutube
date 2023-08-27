@@ -3,8 +3,8 @@ name: CI for Back-End
 on:
   workflow_dispatch:
   push:
-    paths-ignore:
-      - "**.md"
+    paths:
+      - "pulumi/**"
 
 jobs:
   ci:
@@ -18,3 +18,7 @@ jobs:
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-private-key-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
+      - name: Read env file and set variables
+        uses: cosq-network/dotenv-loader@v1.0.2
+        with:
+          env-file: pulumi/.env
