@@ -17,6 +17,7 @@ ifeq ($(OS_NAME),Darwin)
 	brew install git-cliff
 	brew install git-secret
 	brew install direnv
+	brew install firebase-cli
 	brew install pre-commit
 	brew install pulumi/tap/pulumi
 	brew install --cask google-cloud-sdk
