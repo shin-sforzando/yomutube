@@ -11,7 +11,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default open hide reveal format clean help FORCE
+.PHONY: default open hide reveal format test clean help FORCE
 
 default: ## 常用
 

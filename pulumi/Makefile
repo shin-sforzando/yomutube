@@ -8,7 +8,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default open hide reveal format clean help cwd
+.PHONY: default open hide reveal format test clean help cwd
 
 default: ## 常用
 
@@ -33,6 +33,9 @@ reveal: ## 暴露
 
 format: ## 整形
 	pre-commit run --all-files
+
+test: ## 試験
+	$(MAKEFILE_DIR)/venv/bin/python -m unittest
 
 clean: ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
