@@ -33,20 +33,32 @@ A service that watches YouTube on behalf of you.
 - Flutter SDK (Version `3.13.1` or higher)
   - [FlutterFire](https://firebase.flutter.dev)
 - [direnv](https://direnv.net)
+- [lcov](https://github.com/linux-test-project/lcov)
 - [pre-commit](https://pre-commit.com)
 
 ## How to
 
 ```shell
 $ make help
+./pulumi/default     常用
+./pulumi/init        初期
+./pulumi/open        閲覧
+./pulumi/hide        秘匿
+./pulumi/reveal      暴露
+./pulumi/format      整形
+./pulumi/clean       掃除
+./pulumi/cwd         現地
+./pulumi/help        助言
 default              常用
 init                 初期
 open                 閲覧
 hide                 秘匿
 reveal               暴露
 format               整形
+test                 試験
 clean                掃除
 help                 助言
+FORCE                強制
 ```
 
 ### Setup

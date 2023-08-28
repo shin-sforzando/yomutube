@@ -5,6 +5,7 @@ MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 OS_NAME := $(shell uname -s)
 
 SUBDIRS := ./pulumi
+.SILENT: $(SUBDIRS)
 
 OPEN_TARGET := http://0.0.0.0:8000/
 
@@ -16,9 +17,10 @@ default: ## 常用
 
 init: $(SUBDIRS) ## 初期
 ifeq ($(OS_NAME),Darwin)
+	brew install direnv
 	brew install git-cliff
 	brew install git-secret
-	brew install direnv
+	brew install lcov
 	brew install pre-commit
 endif
 	direnv allow
@@ -37,13 +39,17 @@ reveal: ## 暴露
 format: ## 整形
 	pre-commit run --all-files
 
+test: $(SUBDIRS) ## 試験
+	flutter test --coverage
+	genhtml coverage/lcov.info -o coverage/html
+
 clean: $(SUBDIRS) ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
 	flutter clean
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process is complete." ; fi
 
 $(SUBDIRS): FORCE
-	@make -C $@ $(MAKECMDGOALS)
+	make -C $@ $(MAKECMDGOALS)
 
 cwd: $(SUBDIRS)
 
