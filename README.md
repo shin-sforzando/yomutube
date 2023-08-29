@@ -19,6 +19,7 @@ A service that watches YouTube on behalf of you.
   - [Develop](#develop)
     - [Back-End](#back-end)
     - [Front-End](#front-end)
+  - [Test](#test)
   - [Document](#document)
     - [CHANGELOG](#changelog)
 - [Misc](#misc)
@@ -41,16 +42,17 @@ A service that watches YouTube on behalf of you.
 ```shell
 $ make help
 ./pulumi/default     常用
-./pulumi/init        初期
+./pulumi/setup       準備
 ./pulumi/open        閲覧
 ./pulumi/hide        秘匿
 ./pulumi/reveal      暴露
 ./pulumi/format      整形
+./pulumi/test        試験
 ./pulumi/clean       掃除
 ./pulumi/cwd         現地
 ./pulumi/help        助言
 default              常用
-init                 初期
+setup                準備
 open                 閲覧
 hide                 秘匿
 reveal               暴露
@@ -63,7 +65,7 @@ FORCE                強制
 
 ### Setup
 
-`make init` to setup all dependencies.
+`make setup` to setup all dependencies.
 
 #### Firebase
 
@@ -82,6 +84,10 @@ flutterfire configure
 (T. B. D.)
 
 #### Front-End
+
+(T. B. D.)
+
+### Test
 
 (T. B. D.)
 
