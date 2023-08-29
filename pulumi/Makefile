@@ -4,15 +4,16 @@ TIMESTAMP := $(shell date +%Y%m%d%H%M%S)
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 OS_NAME := $(shell uname -s)
 
+CMD_PULUMI := pulumi --cwd $(MAKEFILE_DIR)
 OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default open hide reveal format test clean help cwd
+.PHONY: default setup open hide reveal format test clean help cwd
 
 default: ## 常用
 
-init: ## 初期
+setup: ## 準備
 ifeq ($(OS_NAME),Darwin)
 	brew install firebase-cli
 	brew install pulumi/tap/pulumi
@@ -20,7 +21,7 @@ ifeq ($(OS_NAME),Darwin)
 endif
 	direnv allow
 	pre-commit install
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The initialization process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
 
 open: ## 閲覧
 	@if [ $(OS_NAME) = "Darwin" ]; then open ${OPEN_TARGET} ; fi
@@ -44,6 +45,7 @@ clean: ## 掃除
 
 cwd: ## 現地
 	@echo $(MAKEFILE_DIR)
+	@echo $(CMD_PULUMI)
 
 help: ## 助言
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "./pulumi/\033[36m%-11s\033[0m %s\n", $$1, $$2}'

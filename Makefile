@@ -11,11 +11,11 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default open hide reveal format test clean help FORCE
+.PHONY: default setup open hide reveal format test clean help FORCE
 
 default: ## 常用
 
-init: $(SUBDIRS) ## 初期
+setup: $(SUBDIRS) ## 準備
 ifeq ($(OS_NAME),Darwin)
 	brew install direnv
 	brew install git-cliff
@@ -25,7 +25,7 @@ ifeq ($(OS_NAME),Darwin)
 endif
 	direnv allow
 	pre-commit install
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The initialization process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
 
 open: ## 閲覧
 	@if [ $(OS_NAME) = "Darwin" ]; then open ${OPEN_TARGET} ; fi
