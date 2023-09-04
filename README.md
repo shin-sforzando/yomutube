@@ -28,7 +28,7 @@ A service that watches YouTube on behalf of you.
 
 ## Prerequisites
 
-- [Pulumi](https://www.pulumi.com) (Version `3.79.0` or higher)
+- [Pulumi](https://www.pulumi.com) (Version `3.80.0` or higher)
   - Google Cloud SDK (Version `444.0.0` or higher)
   - Firebase CLI (Version `12.5.2` or higher)
 - Flutter SDK (Version `3.13.1` or higher)

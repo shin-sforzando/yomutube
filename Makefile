@@ -24,7 +24,7 @@ ifeq ($(OS_NAME),Darwin)
 	brew install pre-commit
 endif
 	direnv allow
-	pre-commit install
+	pre-commit install && pre-commit autoupdate
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
 
 open: ## 閲覧
