@@ -49,7 +49,7 @@ debug: ## 確認
 
 test: $(SUBDIRS) ## 試験
 	flutter test --coverage
-	genhtml coverage/lcov.info -o coverage/html
+	genhtml coverage/lcov.info --output-directory coverage/html
 
 clean: $(SUBDIRS) ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +

@@ -21,7 +21,7 @@ ifeq ($(OS_NAME),Darwin)
 endif
 	direnv allow
 	pre-commit install
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process on Pulumi is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process of Pulumi is complete." ; fi
 
 open: ## 閲覧
 	@if [ $(OS_NAME) = "Darwin" ]; then open ${OPEN_TARGET} ; fi
@@ -41,7 +41,7 @@ test: ## 試験
 clean: ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
 	find . -type d -name "__pycache__" -exec rm -rf {} +
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process on Pulumi is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Pulumi is complete." ; fi
 
 cwd: ## 現地
 	@echo $(MAKEFILE_DIR)

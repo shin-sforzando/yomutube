@@ -20,7 +20,7 @@ pulumi_service_account = gcp.serviceaccount.Account(
 
 default_web_app = gcp.firebase.WebApp(
     "default",
-    display_name="yomutube (web)",
+    display_name="YomuTube (Web)",
     project="yomutube-f5b5d",
     opts=pulumi.ResourceOptions(protect=True),
 )
