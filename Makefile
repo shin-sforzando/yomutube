@@ -11,7 +11,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal format test clean help FORCE
+.PHONY: default setup open hide reveal check test clean help FORCE
 
 default: ## 常用
 
@@ -36,7 +36,7 @@ hide: ## 秘匿
 reveal: ## 暴露
 	git secret reveal -vf
 
-format: ## 整形
+check: ## 検証
 	pre-commit run --all-files
 
 test: $(SUBDIRS) ## 試験

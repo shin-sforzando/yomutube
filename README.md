@@ -56,7 +56,7 @@ setup                準備
 open                 閲覧
 hide                 秘匿
 reveal               暴露
-format               整形
+check                検証
 test                 試験
 clean                掃除
 help                 助言
