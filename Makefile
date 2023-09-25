@@ -11,7 +11,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check debug test clean help FORCE
+.PHONY: default setup open hide reveal check debug test build clean help FORCE
 
 default: ## 常用
 	make debug
@@ -50,6 +50,9 @@ debug: ## 確認
 test: $(SUBDIRS) ## 試験
 	flutter test --coverage
 	genhtml coverage/lcov.info --output-directory coverage/html
+
+build: ## 構築
+	flutter build web --verbose --release
 
 clean: $(SUBDIRS) ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +

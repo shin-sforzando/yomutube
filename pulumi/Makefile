@@ -5,13 +5,14 @@ MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 OS_NAME := $(shell uname -s)
 
 CMD_PULUMI := pulumi --cwd $(MAKEFILE_DIR)
-OPEN_TARGET := http://0.0.0.0:8000/
+OPEN_TARGET := https://app.pulumi.com/shin-sforzando/YomuTube
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check test clean help cwd
+.PHONY: default setup open hide reveal check test preview clean help cwd
 
 default: ## 常用
+	make preview
 
 setup: ## 準備
 ifeq ($(OS_NAME),Darwin)
@@ -37,6 +38,12 @@ check: ## 検証
 
 test: ## 試験
 	$(MAKEFILE_DIR)/venv/bin/python -m unittest
+
+preview: ## 確認
+	$(CMD_PULUMI) preview --diff
+
+up: ## 反映
+	$(CMD_PULUMI) up
 
 clean: ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
