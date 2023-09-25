@@ -48,6 +48,8 @@ $ make help
 ./pulumi/reveal      暴露
 ./pulumi/check       検証
 ./pulumi/test        試験
+./pulumi/preview     確認
+./pulumi/up          反映
 ./pulumi/clean       掃除
 ./pulumi/cwd         現地
 ./pulumi/help        助言
@@ -59,6 +61,8 @@ reveal               暴露
 check                検証
 debug                確認
 test                 試験
+build                構築
+deploy               配備
 clean                掃除
 help                 助言
 FORCE                強制
@@ -76,6 +80,7 @@ See. [Flutter アプリに Firebase を追加する](https://firebase.google.com
 firebase login
 dart pub global activate flutterfire_cli
 flutterfire configure
+firebase experiments:enable webframeworks
 ```
 
 ### Develop
