@@ -28,11 +28,11 @@ A service gives transcribed YouTube for You.
 
 ## Prerequisites
 
-- [Pulumi](https://www.pulumi.com) (Version `3.80.0` or higher)
-  - Google Cloud SDK (Version `444.0.0` or higher)
-  - Firebase CLI (Version `12.5.2` or higher)
-- Flutter SDK (Version `3.13.1` or higher)
-  - [FlutterFire](https://firebase.flutter.dev)
+- [Pulumi](https://www.pulumi.com) (Version `3.85.0` or higher)
+  - Google Cloud SDK (Version `447.0.0` or higher)
+  - Firebase CLI (Version `12.5.4` or higher)
+- Flutter SDK (Version `3.13.5` or higher)
+  - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
 - [direnv](https://direnv.net)
 - [lcov](https://github.com/linux-test-project/lcov)
 - [pre-commit](https://pre-commit.com)
@@ -46,7 +46,7 @@ $ make help
 ./pulumi/open        閲覧
 ./pulumi/hide        秘匿
 ./pulumi/reveal      暴露
-./pulumi/format      整形
+./pulumi/check       検証
 ./pulumi/test        試験
 ./pulumi/clean       掃除
 ./pulumi/cwd         現地
@@ -57,6 +57,7 @@ open                 閲覧
 hide                 秘匿
 reveal               暴露
 check                検証
+debug                確認
 test                 試験
 clean                掃除
 help                 助言

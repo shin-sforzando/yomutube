@@ -11,19 +11,23 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check test clean help FORCE
+.PHONY: default setup open hide reveal check debug test clean help FORCE
 
 default: ## 常用
+	make debug
 
 setup: $(SUBDIRS) ## 準備
 ifeq ($(OS_NAME),Darwin)
 	brew install direnv
+	brew install firebase-cli
 	brew install git-cliff
 	brew install git-secret
 	brew install lcov
 	brew install pre-commit
+	brew install --cask flutter
 endif
 	direnv allow
+	dart pub global activate flutterfire_cli
 	pre-commit install && pre-commit autoupdate
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
 
@@ -38,6 +42,10 @@ reveal: ## 暴露
 
 check: ## 検証
 	pre-commit run --all-files
+
+debug: ## 確認
+	flutter pub get
+	flutter run --debug --verbose --device-id chrome
 
 test: $(SUBDIRS) ## 試験
 	flutter test --coverage

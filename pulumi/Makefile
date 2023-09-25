@@ -9,7 +9,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal format test clean help cwd
+.PHONY: default setup open hide reveal check test clean help cwd
 
 default: ## 常用
 
@@ -21,7 +21,7 @@ ifeq ($(OS_NAME),Darwin)
 endif
 	direnv allow
 	pre-commit install
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process on Pulumi is complete." ; fi
 
 open: ## 閲覧
 	@if [ $(OS_NAME) = "Darwin" ]; then open ${OPEN_TARGET} ; fi
@@ -32,7 +32,7 @@ hide: ## 秘匿
 reveal: ## 暴露
 	git secret reveal -vf
 
-format: ## 整形
+check: ## 検証
 	pre-commit run --all-files
 
 test: ## 試験
@@ -41,7 +41,7 @@ test: ## 試験
 clean: ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
 	find . -type d -name "__pycache__" -exec rm -rf {} +
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process on Pulumi is complete." ; fi
 
 cwd: ## 現地
 	@echo $(MAKEFILE_DIR)

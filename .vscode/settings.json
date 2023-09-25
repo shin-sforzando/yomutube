@@ -8,8 +8,11 @@
     "editor.formatOnSave": true
   },
   "cSpell.words": [
+    "appspot",
     "conventionalcommits",
+    "Cupertino",
     "direnv",
+    "firebaseapp",
     "flutterfire",
     "lcov",
     "Pulumi",
