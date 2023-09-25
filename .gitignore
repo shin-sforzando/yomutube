@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/osx,windows,linux,data,flutter,python,visualstudiocode,pulumi,terraform
-# Edit at https://www.toptal.com/developers/gitignore?templates=osx,windows,linux,data,flutter,python,visualstudiocode,pulumi,terraform
+# Created by https://www.toptal.com/developers/gitignore/api/osx,windows,linux,data,flutter,python,visualstudiocode,pulumi,terraform,firebase
+# Edit at https://www.toptal.com/developers/gitignore?templates=osx,windows,linux,data,flutter,python,visualstudiocode,pulumi,terraform,firebase
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -371,6 +371,12 @@ terraform.rc
 # Info: https://www.pulumi.com/docs/
 .pulumi/
 
+
+### Firebase ###
+**/.firebaserc
+.firebase/
+.runtimeconfig.json
+
 ### Data ###
 *.csv
 *.dat
@@ -385,7 +391,7 @@ terraform.rc
 *.vcf
 *.xml
 
-# End of https://www.toptal.com/developers/gitignore/api/osx,windows,linux,data,flutter,python,visualstudiocode,pulumi,terraform
+# End of https://www.toptal.com/developers/gitignore/api/osx,windows,linux,data,flutter,python,visualstudiocode,pulumi,terraform,firebase
 
 ### git-secret ###
 .gitsecret/keys/random_seed
