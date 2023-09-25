@@ -18,3 +18,10 @@ jobs:
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-private-key-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.5'
+          channel: 'stable'
+          cache: true
+      - run: flutter pub get
+      - run: make build
