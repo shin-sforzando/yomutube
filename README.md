@@ -8,9 +8,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/7773/badge)](https://www.bestpractices.dev/projects/7773)
 
-A service that watches YouTube on behalf of you.
+A service gives transcribed YouTube for You.
 
-あなたに代わって、YouTubeを視聴するサービス。
+あなたのためにYouTubeを書き起こしてくれるサービス。
 
 - [Prerequisites](#prerequisites)
 - [How to](#how-to)

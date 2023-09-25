@@ -3,4 +3,4 @@ runtime:
   name: python
   options:
     virtualenv: venv
-description: A service that watches YouTube on behalf of you
+description: A service gives transcribed YouTube for You
