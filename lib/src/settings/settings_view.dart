@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'settings_controller.dart';
+import 'package:yomutube/src/settings/settings_controller.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
