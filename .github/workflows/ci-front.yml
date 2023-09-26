@@ -31,6 +31,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_YOMUTUBE_F5B5D }}'
           projectId: yomutube-f5b5d
+          channelId: preview
           expires: 7d
         env:
           FIREBASE_CLI_EXPERIMENTS: webframeworks
