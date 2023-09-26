@@ -24,3 +24,11 @@ default_web_app = gcp.firebase.WebApp(
     project="yomutube-f5b5d",
     opts=pulumi.ResourceOptions(protect=True),
 )
+
+default_hosting_site = gcp.firebase.HostingSite(
+    "default",
+    app_id="1:1009724725603:web:d84e66affa6ff5abef1b56",
+    project="yomutube-f5b5d",
+    site_id="yomutube-f5b5d",
+    opts=pulumi.ResourceOptions(protect=True),
+)
