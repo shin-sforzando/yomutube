@@ -21,6 +21,7 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-private-key-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
       - name: Load pulumi/.env
+        id: dotenv
         uses: falti/dotenv-action@v1.0.4
         with:
           path: pulumi/.env
@@ -36,3 +37,4 @@ jobs:
           work-dir: pulumi
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          GOOGLE_CREDENTIALS: ${{ steps.dotenv.outputs.GOOGLE_CREDENTIALS }}

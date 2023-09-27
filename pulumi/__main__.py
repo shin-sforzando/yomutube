@@ -1,4 +1,4 @@
-"""A Google Cloud Python Pulumi program"""
+"""Infrastructure of YomuTube by Pulumi Python"""
 import pulumi_gcp as gcp
 
 import pulumi
