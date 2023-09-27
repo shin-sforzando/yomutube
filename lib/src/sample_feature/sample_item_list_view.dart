@@ -1,6 +1,9 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 // Project imports:
 import 'package:yomutube/src/sample_feature/sample_item.dart';
 import 'package:yomutube/src/sample_feature/sample_item_details_view.dart';
@@ -30,6 +33,9 @@ class SampleItemListView extends StatelessWidget {
               // to the app after it has been killed while running in the
               // background, the navigation stack is restored.
               Navigator.restorablePushNamed(context, SettingsView.routeName);
+
+              // XXX: FirestoreのURLを確認する
+              debugPrint(FirebaseFirestore.instance.databaseURL);
             },
           ),
         ],
