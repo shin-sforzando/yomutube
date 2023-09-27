@@ -27,7 +27,7 @@ jobs:
           mask-variables: true
       - run: pip install -r requirements.txt
         working-directory: pulumi
-      - uses: pulumi/actions@v3
+      - uses: pulumi/actions@v4
         with:
           command: preview
           stack-name: dev

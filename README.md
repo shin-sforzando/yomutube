@@ -87,7 +87,7 @@ firebase experiments:enable webframeworks
 
 #### Back-End
 
-(T. B. D.)
+Change Directory to `pulumi` and `source venv/bin.activate` to activate virtual Python 3.11 environment.
 
 #### Front-End
 

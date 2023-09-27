@@ -32,3 +32,14 @@ default_hosting_site = gcp.firebase.HostingSite(
     site_id="yomutube-f5b5d",
     opts=pulumi.ResourceOptions(protect=True),
 )
+
+default_firestore_database = gcp.firestore.Database(
+    "default",
+    app_engine_integration_mode="DISABLED",
+    concurrency_mode="PESSIMISTIC",
+    location_id="asia-northeast1",
+    name="(default)",
+    project="yomutube-f5b5d",
+    type="FIRESTORE_NATIVE",
+    opts=pulumi.ResourceOptions(protect=True),
+)

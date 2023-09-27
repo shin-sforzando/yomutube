@@ -13,6 +13,7 @@
     "Cupertino",
     "direnv",
     "firebaseapp",
+    "firestore",
     "flutterfire",
     "lcov",
     "Pulumi",
