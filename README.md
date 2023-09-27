@@ -30,7 +30,7 @@ A service gives transcribed YouTube for You.
 
 - [Pulumi](https://www.pulumi.com) (Version `3.85.0` or higher)
   - Google Cloud SDK (Version `447.0.0` or higher)
-  - Firebase CLI (Version `12.5.4` or higher)
+  - Firebase CLI (Version `12.6.0` or higher)
 - Flutter SDK (Version `3.13.5` or higher)
   - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
 - [direnv](https://direnv.net)

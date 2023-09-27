@@ -12,6 +12,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
       - name: Git Secret Reveal
         uses: entrostat/git-secret-action@v4
         with:
@@ -22,3 +25,14 @@ jobs:
         with:
           path: pulumi/.env
           mask-variables: true
+      - run: pip install -r requirements.txt
+        working-directory: pulumi
+      - uses: pulumi/actions@v3
+        with:
+          command: preview
+          stack-name: dev
+          comment-on-pr: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          work-dir: pulumi
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
