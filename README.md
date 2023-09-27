@@ -28,7 +28,7 @@ A service gives transcribed YouTube for You.
 
 ## Prerequisites
 
-- [Pulumi](https://www.pulumi.com) (Version `3.85.0` or higher)
+- [Pulumi](https://www.pulumi.com) (Version `3.86.0` or higher)
   - Google Cloud SDK (Version `447.0.0` or higher)
   - Firebase CLI (Version `12.6.0` or higher)
 - Flutter SDK (Version `3.13.5` or higher)
@@ -91,7 +91,7 @@ Change Directory to `pulumi` and `source venv/bin.activate` to activate virtual 
 
 #### Front-End
 
-(T. B. D.)
+`make debug` to preview the site on Chrome.
 
 ### Test
 
@@ -99,19 +99,7 @@ Change Directory to `pulumi` and `source venv/bin.activate` to activate virtual 
 
 ### Document
 
-- [業務要件定義書](https://github.com/shin-sforzando/yomutube/wiki/01_%E6%A5%AD%E5%8B%99%E8%A6%81%E4%BB%B6%E5%AE%9A%E7%BE%A9%E6%9B%B8)
-- [システム概要書](https://github.com/shin-sforzando/yomutube/wiki/02_%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E6%A6%82%E8%A6%81%E6%9B%B8)
-- [機能要件定義書](https://github.com/shin-sforzando/yomutube/wiki/03_%E6%A9%9F%E8%83%BD%E8%A6%81%E4%BB%B6%E5%AE%9A%E7%BE%A9%E6%9B%B8)
-- [非機能要件定義書](https://github.com/shin-sforzando/yomutube/wiki/04_%E9%9D%9E%E6%A9%9F%E8%83%BD%E8%A6%81%E4%BB%B6%E5%AE%9A%E7%BE%A9%E6%9B%B8)
-- [WBS](https://github.com/shin-sforzando/yomutube/wiki/05_WBS)
-- [システム構成図](https://github.com/shin-sforzando/yomutube/wiki/06_%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E6%A7%8B%E6%88%90%E5%9B%B3)
-- [画面設計書](https://github.com/shin-sforzando/yomutube/wiki/07_%E7%94%BB%E9%9D%A2%E8%A8%AD%E8%A8%88%E6%9B%B8)
-- [DB設計書](https://github.com/shin-sforzando/yomutube/wiki/08_DB%E8%A8%AD%E8%A8%88%E6%9B%B8)
-- [IF定義書](https://github.com/shin-sforzando/yomutube/wiki/09_IF%E5%AE%9A%E7%BE%A9%E6%9B%B8)
-- [テスト設計書](https://github.com/shin-sforzando/yomutube/wiki/10_%E3%83%86%E3%82%B9%E3%83%88%E8%A8%AD%E8%A8%88%E6%9B%B8)
-- [テスト報告書](https://github.com/shin-sforzando/yomutube/wiki/11_%E3%83%86%E3%82%B9%E3%83%88%E5%A0%B1%E5%91%8A%E6%9B%B8)
-- [ソースコード解説](https://github.com/shin-sforzando/yomutube/wiki/12_%E3%82%BD%E3%83%BC%E3%82%B9%E3%82%B3%E3%83%BC%E3%83%89%E8%A7%A3%E8%AA%AC)
-- [運用マニュアル](https://github.com/shin-sforzando/yomutube/wiki/13_%E9%81%8B%E7%94%A8%E3%83%9E%E3%83%8B%E3%83%A5%E3%82%A2%E3%83%AB)
+See [Wiki](https://github.com/shin-sforzando/yomutube/wiki).
 
 #### CHANGELOG
 
