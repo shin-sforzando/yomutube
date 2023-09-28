@@ -1,0 +1,6 @@
+{
+  "appTitle": "YomuTube",
+  "@appTitle": {
+    "description": "A service gives transcribed YouTube for You"
+  }
+}

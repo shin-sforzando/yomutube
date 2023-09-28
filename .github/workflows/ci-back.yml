@@ -3,18 +3,38 @@ name: CI for Back-End
 on:
   workflow_dispatch:
   push:
-    paths-ignore:
-      - "**.md"
+    paths:
+      - "pulumi/**"
 
 jobs:
   ci:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.commits.*.message, '[skip ci]') }}
 
     steps:
       - uses: actions/checkout@v3
-      - name: Install git-secret
-        run: |
-          sudo sh -c "echo 'deb https://gitsecret.jfrog.io/artifactory/git-secret-deb git-secret main' >> /etc/apt/sources.list"
-          wget -qO - https://gitsecret.jfrog.io/artifactory/api/gpg/key/public | sudo apt-key add -
-          sudo apt-get update && sudo apt-get install -y git-secret && git-secret --version
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Git Secret Reveal
+        uses: entrostat/git-secret-action@v4
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-private-key-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
+      - name: Load pulumi/.env
+        id: dotenv
+        uses: falti/dotenv-action@v1.0.4
+        with:
+          path: pulumi/.env
+          mask-variables: true
+      - run: pip install -r requirements.txt
+        working-directory: pulumi
+      - uses: pulumi/actions@v4
+        with:
+          command: preview
+          stack-name: dev
+          comment-on-pr: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          work-dir: pulumi
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          GOOGLE_CREDENTIALS: ${{ steps.dotenv.outputs.GOOGLE_CREDENTIALS }}

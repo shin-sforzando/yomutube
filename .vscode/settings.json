@@ -1,5 +1,28 @@
 {
-    "cSpell.words": [
-        "YomuTube"
-    ]
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
+  "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true
+  },
+  "cSpell.words": [
+    "appspot",
+    "conventionalcommits",
+    "Cupertino",
+    "direnv",
+    "firebaseapp",
+    "firestore",
+    "flutterfire",
+    "gitsecret",
+    "lcov",
+    "Pulumi",
+    "serviceaccount",
+    "shellcheck",
+    "venv",
+    "virtualenv",
+    "webframeworks",
+    "YomuTube"
+  ]
 }

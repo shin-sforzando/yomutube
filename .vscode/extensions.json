@@ -1,11 +1,12 @@
 {
-    "recommendations": [
-        "dart-code.flutter",
-        "davidanson.vscode-markdownlint",
-        "editorconfig.editorconfig",
-        "ms-vscode.makefile-tools",
-        "shd101wyy.markdown-preview-enhanced",
-        "streetsidesoftware.code-spell-checker",
-        "yzhang.markdown-all-in-one"
-    ]
+  "recommendations": [
+    "dart-code.flutter",
+    "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "ms-vscode.makefile-tools",
+    "pulumi.pulumi-lsp-client",
+    "shd101wyy.markdown-preview-enhanced",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one"
+  ]
 }

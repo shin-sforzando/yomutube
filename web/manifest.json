@@ -1,11 +1,11 @@
 {
-    "name": "yomutube",
-    "short_name": "yomutube",
+    "name": "YomuTube",
+    "short_name": "YomuTube",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A service that watches YouTube on behalf of you.",
+    "description": "A service gives transcribed YouTube for You.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
