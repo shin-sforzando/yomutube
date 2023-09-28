@@ -15,6 +15,7 @@
     "firebaseapp",
     "firestore",
     "flutterfire",
+    "gitsecret",
     "lcov",
     "Pulumi",
     "serviceaccount",
