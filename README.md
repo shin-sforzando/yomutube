@@ -17,7 +17,9 @@ A service gives transcribed YouTube for You.
   - [Setup](#setup)
     - [Firebase](#firebase)
   - [Develop](#develop)
+    - [Infrastructure](#infrastructure)
     - [Back-End](#back-end)
+      - [Emulator](#emulator)
     - [Front-End](#front-end)
   - [Test](#test)
   - [Document](#document)
@@ -59,6 +61,7 @@ open                 閲覧
 hide                 秘匿
 reveal               暴露
 check                検証
+emulator             模倣
 debug                確認
 test                 試験
 build                構築
@@ -85,9 +88,16 @@ firebase experiments:enable webframeworks
 
 ### Develop
 
-#### Back-End
+#### Infrastructure
 
 Change Directory to `pulumi` and `source venv/bin.activate` to activate virtual Python 3.11 environment.
+
+#### Back-End
+
+##### Emulator
+
+`make emulator` to start Firebase Emulator Suite.
+Emulator UI can be viewed at `http://0.0.0.0:4000`.
 
 #### Front-End
 

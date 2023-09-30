@@ -11,7 +11,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check debug test build deploy clean help FORCE
+.PHONY: default setup open hide reveal check emulator debug test build deploy clean help FORCE
 
 default: ## 常用
 	make debug
@@ -42,6 +42,9 @@ reveal: ## 暴露
 
 check: ## 検証
 	pre-commit run --all-files
+
+emulator: ## 模倣
+	firebase emulators:start
 
 debug: ## 確認
 	flutter pub get
