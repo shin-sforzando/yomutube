@@ -10,6 +10,7 @@ import 'package:yomutube/src/sample_feature/sample_item_details_view.dart';
 import 'package:yomutube/src/sample_feature/sample_item_list_view.dart';
 import 'package:yomutube/src/settings/settings_controller.dart';
 import 'package:yomutube/src/settings/settings_view.dart';
+import 'package:yomutube/src/view/login_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -77,7 +78,7 @@ class MyApp extends StatelessWidget {
                     return const SampleItemDetailsView();
                   case SampleItemListView.routeName:
                   default:
-                    return const SampleItemListView();
+                    return const LoginView();
                 }
               },
             );
