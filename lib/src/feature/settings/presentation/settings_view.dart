@@ -1,8 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 // Project imports:
-import 'package:yomutube/src/settings/settings_controller.dart';
+import 'package:yomutube/src/feature/settings/presentation/settings_controller.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
@@ -19,7 +22,7 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(AppLocalizations.of(context)!.settingsTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

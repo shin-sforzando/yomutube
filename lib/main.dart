@@ -9,8 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 // Project imports:
 import 'package:yomutube/firebase_options.dart';
 import 'package:yomutube/src/app.dart';
-import 'package:yomutube/src/settings/settings_controller.dart';
-import 'package:yomutube/src/settings/settings_service.dart';
+import 'package:yomutube/src/feature/settings/application/settings_service.dart';
+import 'package:yomutube/src/feature/settings/presentation/settings_controller.dart';
 
 void main() async {
   // Set up the SettingsController, which will glue user settings to multiple
