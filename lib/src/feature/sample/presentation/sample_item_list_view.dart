@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Project imports:
+import 'package:yomutube/src/feature/sample/presentation/component/sample_item.dart';
+import 'package:yomutube/src/feature/sample/presentation/sample_item_details_view.dart';
 import 'package:yomutube/src/feature/settings/presentation/settings_view.dart';
-import 'package:yomutube/src/sample_feature/sample_item.dart';
-import 'package:yomutube/src/sample_feature/sample_item_details_view.dart';
 
 /// Displays a list of SampleItems.
 class SampleItemListView extends StatelessWidget {

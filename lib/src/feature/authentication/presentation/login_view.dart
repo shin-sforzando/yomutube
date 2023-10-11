@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 
 // Project imports:
-import 'package:yomutube/src/sample_feature/sample_item_list_view.dart';
+import 'package:yomutube/src/feature/sample/presentation/sample_item_list_view.dart';
 
 const users = {
+  // XXX: These are dummies.
   'bob@example.com': 'bob123',
   'alice@example.com': 'alice123',
 };
