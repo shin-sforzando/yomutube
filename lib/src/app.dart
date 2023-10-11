@@ -6,10 +6,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 // Project imports:
-import 'package:yomutube/src/sample_feature/sample_item_details_view.dart';
-import 'package:yomutube/src/sample_feature/sample_item_list_view.dart';
-import 'package:yomutube/src/settings/settings_controller.dart';
-import 'package:yomutube/src/settings/settings_view.dart';
+import 'package:yomutube/src/feature/authentication/presentation/login_view.dart';
+import 'package:yomutube/src/feature/sample/presentation/sample_item_details_view.dart';
+import 'package:yomutube/src/feature/sample/presentation/sample_item_list_view.dart';
+import 'package:yomutube/src/feature/settings/presentation/settings_controller.dart';
+import 'package:yomutube/src/feature/settings/presentation/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -77,7 +78,7 @@ class MyApp extends StatelessWidget {
                     return const SampleItemDetailsView();
                   case SampleItemListView.routeName:
                   default:
-                    return const SampleItemListView();
+                    return const LoginView();
                 }
               },
             );

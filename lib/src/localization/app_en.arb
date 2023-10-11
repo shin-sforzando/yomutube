@@ -1,6 +1,11 @@
 {
+  "@@locale": "en",
   "appTitle": "YomuTube",
   "@appTitle": {
-    "description": "A service gives transcribed YouTube for You"
+    "description": "Application Title"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings View Title"
   }
 }
