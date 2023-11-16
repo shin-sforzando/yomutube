@@ -8,6 +8,7 @@ SUBDIRS := ./pulumi
 .SILENT: $(SUBDIRS)
 
 OPEN_TARGET := http://0.0.0.0:8000/
+VERSION := $(shell git tag --sort=-v:refname | head -n 1)
 
 OPTS :=
 .DEFAULT_GOAL := default

@@ -8,6 +8,10 @@
     "editor.defaultFormatter": "Dart-Code.dart-code",
     "editor.formatOnSave": true
   },
+  "markdownlint.config": {
+    "default": true,
+    "MD041": false
+  },
   "cSpell.words": [
     "appspot",
     "conventionalcommits",
