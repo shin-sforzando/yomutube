@@ -51,6 +51,7 @@ All notable changes to this project will be documented in this file.
 - 2023-09-25 :paperclip: update .gitignore ([4166752](4166752278c4b5f38c3acf70cb3a0507a67595c3)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-28 :paperclip: ignore somefiles in hosting ([77a167f](77a167ffc50b3d65d2844ea177d66ae2f0ba03db)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-28 :paperclip: Merge pull request #5 from shin-sforzando/002_Pulumi ([7ba3dfd](7ba3dfd9d36d912a4425999fef867655ee5d2f08)) by [GitHub](noreply@github.com), feat::+1: build infrastructure using Pulumi
+- 2023-11-16 :paperclip: add cliff.toml ([f171669](f17166916e36774b8d30639d38c53809866d90b2)) by [Shin'ichiro Suzuki](shin@sforzando.co.jp)
 
 ### Styling
 
