@@ -113,11 +113,10 @@ See [Wiki](https://github.com/shin-sforzando/yomutube/wiki).
 
 #### CHANGELOG
 
-To update [CHANGELOG.md](./CHANGELOG.md) manually,
+`make tag VERSION=vX.Y.Z` to update [CHANGELOG.md](./CHANGELOG.md) and tag.
+`vX.Y.Z` must be in accordance with [semver](https://semver.org).
 
-```shell
-git cliff --output CHANGELOG.md
-```
+`git push origin --tags` to push all tags.
 
 ## Misc
 

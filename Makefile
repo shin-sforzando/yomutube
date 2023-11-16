@@ -11,7 +11,7 @@ OPEN_TARGET := http://0.0.0.0:8000/
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check emulator debug test build deploy clean help FORCE
+.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean help FORCE
 
 default: ## 常用
 	make debug
@@ -59,6 +59,12 @@ build: ## 構築
 
 deploy: build ## 配備
 	firebase deploy
+
+tag: ## 付箋
+	git cliff --tag $(VERSION) --output CHANGELOG.md
+	git add CHANGELOG.md && git commit -m "docs: :notebook: update CHANGELOG.md to $(VERSION)"
+	git tag $(VERSION)
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The tagging process is complete." ; fi
 
 clean: $(SUBDIRS) ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
