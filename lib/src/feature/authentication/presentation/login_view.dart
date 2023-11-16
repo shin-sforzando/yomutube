@@ -50,7 +50,7 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'YomuTube',
-      logo: 'assets/images/flutter_logo.png',
+      logo: 'assets/images/YomuTube_450x90.png',
       onLogin: _authUser,
       onSignup: _signupUser,
       onSubmitAnimationCompleted: () {

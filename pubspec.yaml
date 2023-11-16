@@ -10,9 +10,9 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.12.2
-  firebase_auth: ^4.12.1
-  firebase_core: ^2.21.0
+  cloud_firestore: ^4.13.1
+  firebase_auth: ^4.14.0
+  firebase_core: ^2.22.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -25,7 +25,7 @@ dev_dependencies:
   flutter_gen_runner: any
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.3
+  flutter_lints: ^3.0.1
   import_sorter: ^4.6.0
 
 flutter:
