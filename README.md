@@ -30,10 +30,10 @@ A service gives transcribed YouTube for You.
 
 ## Prerequisites
 
-- [Pulumi](https://www.pulumi.com) (Version `3.86.0` or higher)
-  - Google Cloud SDK (Version `447.0.0` or higher)
-  - Firebase CLI (Version `12.6.0` or higher)
-- Flutter SDK (Version `3.13.9` or higher)
+- [Pulumi](https://www.pulumi.com) (Version `3.94.0` or higher)
+  - Google Cloud SDK (Version `455.0.0` or higher)
+  - Firebase CLI (Version `12.9.1` or higher)
+- Flutter SDK (Version `3.16.0` or higher)
   - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
 - [direnv](https://direnv.net)
 - [lcov](https://github.com/linux-test-project/lcov)
@@ -113,11 +113,10 @@ See [Wiki](https://github.com/shin-sforzando/yomutube/wiki).
 
 #### CHANGELOG
 
-To update [CHANGELOG.md](./CHANGELOG.md) manually,
+`make tag VERSION=vX.Y.Z` to update [CHANGELOG.md](./CHANGELOG.md) and tag.
+`vX.Y.Z` must be in accordance with [semver](https://semver.org).
 
-```shell
-git cliff --output CHANGELOG.md
-```
+`git push origin --tags` to push all tags.
 
 ## Misc
 

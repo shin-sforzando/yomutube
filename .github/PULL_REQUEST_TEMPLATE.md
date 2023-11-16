@@ -36,10 +36,8 @@ Steps to check the behavior:
 1. Update Libraries `...`
 1. Import Database `...`
 1. Reload Pages `...`
-1. Click on `...`
+1. Check `...`
 
 ## Appendix
 
 (T. B. D.)
-
-Add any other context about the problem here.

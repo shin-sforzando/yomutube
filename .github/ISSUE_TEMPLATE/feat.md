@@ -11,29 +11,16 @@ assignees: 'shin-sforzando'
 
 (T. B. D.)
 
-ex. Automated testing should be completed with just a push.
-
 ### Describe the acceptance criteria
 
 (T. B. D.)
 
 ex.
 
-```python
-assert 1 == 1
+```shell
+make something; echo $? # should be 0
 ```
-
-## What are the possible options?
-
-(T. B. D.)
-
-ex.
-
-- GitHub Action with PyTest
-- Jenkins
 
 ## Appendix
 
 (T. B. D.)
-
-Add any other context or screenshots about the feature request here.

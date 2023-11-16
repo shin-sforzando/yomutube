@@ -1,4 +1,5 @@
 {
+  "editor.formatOnSave": true,
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true
@@ -6,6 +7,10 @@
   "[dart]": {
     "editor.defaultFormatter": "Dart-Code.dart-code",
     "editor.formatOnSave": true
+  },
+  "markdownlint.config": {
+    "default": true,
+    "MD041": false
   },
   "cSpell.words": [
     "appspot",
