@@ -1,0 +1,218 @@
+openapi: 3.1.0
+info:
+  title: YouTube Data API v3
+  summary: YouTube Data API v3 was defined in the OpenAPI 3.1 specification.
+  description: |-
+    See. [YouTube Data API v3](https://developers.google.com/youtube/v3)
+  version: 1.0.0
+servers:
+  - url: https://www.googleapis.com/youtube/v3
+    description: Google API
+tags:
+  - name: Captions
+    externalDocs:
+      url: https://developers.google.com/youtube/v3/docs/captions
+
+paths:
+  /captions:
+    get:
+      tags:
+        - Captions
+      summary: Returns a list of caption tracks associated with a given video.
+      description: |-
+        When this method is invoked, the allocation cost is **50** units.
+        See. [Captions:list](https://developers.google.com/youtube/v3/docs/captions/list)
+      operationId: captionsList
+      parameters:
+        - name: part
+          description: The part parameter specifies the caption resource parts that the API response will include.
+          in: query
+          schema:
+            type: string
+            enum:
+              - id
+              - snippet
+          required: true
+        - name: videoId
+          description: The videoId parameter specifies the YouTube video ID of the video for which the API should return caption tracks.
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaptionList"
+      security:
+        - ApiKey: []
+
+components:
+  schemas:
+    CaptionList:
+      description: |-
+        List of caption tracks associated with the specified video.
+      type: object
+      properties:
+        kind:
+          type: string
+          description: Identifies the API resource's type. The value will be `youtube#captionListResponse`.
+          examples:
+            - youtube#captionListResponse
+        etag:
+          type: string
+          description: The Etag of this resource.
+          examples:
+            - "etag"
+        items:
+          type: array
+          description: A list of captions that match the request criteria.
+          items:
+            $ref: "#/components/schemas/Caption"
+    Caption:
+      description: |-
+        The caption resource represents a YouTube caption track. A caption track is associated with a single YouTube video.
+        See. [Captions](https://developers.google.com/youtube/v3/docs/captions#resource)
+      type: object
+      properties:
+        kind:
+          type: string
+          description: Identifies the API resource's type. The value will be `youtube#caption`.
+          examples:
+            - youtube#caption
+        etag:
+          type: string
+          description: The Etag of this resource.
+          examples:
+            - "etag"
+        id:
+          type: string
+          description: The ID that YouTube uses to uniquely identify the caption track.
+          examples:
+            - "id"
+        snippet:
+          type: object
+          description: The snippet object contains basic details about the caption.
+          properties:
+            videoId:
+              type: string
+              description: The ID that YouTube uses to uniquely identify the video associated with the caption track.
+              examples:
+                - "videoId"
+            lastUpdated:
+              type: string
+              format: date-time
+              description: The date and time when the caption track was last updated. The value is specified in ISO 8601 format.
+              examples:
+                - "2020-01-23T12:34:56Z"
+            trackKind:
+              type: string
+              description: |-
+                The caption track's type.
+                Valid values for this property are
+                  - `standard` - A regular caption track. This is the default value.
+                  - `ASR` - A caption track generated using automatic speech recognition.
+                  - `forced` - A caption track that plays when no other track is selected in the player. For example, a video that shows aliens speaking in an alien language might have a forced caption track to only show subtitles for the alien language.
+              enum:
+                - standard
+                - ASR
+                - forced
+              examples:
+                - standard
+                - ASR
+                - forced
+            language:
+              type: string
+              description: The language of the caption track. The property value is a BCP-47 language tag.
+              examples:
+                - "ja-JP"
+            name:
+              type: string
+              description: The name of the caption track. The name is intended to be visible to the user as an option during playback.
+              examples:
+                - "name"
+            audioTrackType:
+              type: string
+              description: |-
+                The type of audio track associated with the caption track.
+                Valid values for this property are
+                - `unknown` - This is the default value.
+                - `commentary` - The caption track corresponds to an alternate audio track that includes commentary, such as directory commentary.
+                - `descriptive` - The caption track corresponds to an alternate audio track that includes additional descriptive audio.
+                - `primary` - The caption track corresponds to the primary audio track for the video, which is the audio track normally associated with the video.
+              enum:
+                - unknown
+                - commentary
+                - descriptive
+                - primary
+              examples:
+                - unknown
+                - commentary
+                - descriptive
+                - primary
+            isCC:
+              type: boolean
+              description: Indicates whether the track contains closed captions for the deaf and hard of hearing. The default value is false.
+              examples:
+                - false
+            isLarge:
+              type: boolean
+              description: Indicates whether the caption track uses large text for the vision-impaired. The default value is false.
+              examples:
+                - false
+            isEasyReader:
+              type: boolean
+              description: Indicates whether caption track is formatted for "easy reader," meaning it is at a third-grade level for language learners. The default value is false.
+              examples:
+                - false
+            isDraft:
+              type: boolean
+              description: Indicates whether the caption track is a draft. If the value is true, then the track is not publicly visible. The default value is false.
+              examples:
+                - false
+            isAutoSynced:
+              type: boolean
+              description: Indicates whether YouTube synchronized the caption track to the audio track in the video. The value will be true if a sync was explicitly requested when the caption track was uploaded. For example, when calling the captions.insert or captions.update methods, you can set the sync parameter to true to instruct YouTube to sync the uploaded track to the video. If the value is false, YouTube uses the time codes in the uploaded caption track to determine when to display captions.
+              examples:
+                - true
+            status:
+              type: string
+              description: |-
+                The caption track's status.
+                Valid values for this property are
+                - `failed`
+                - `serving`
+                - `syncing`
+              enum:
+                - failed
+                - serving
+                - syncing
+              examples:
+                - failed
+                - serving
+                - syncing
+            failureReason:
+              type: string
+              description: |-
+                The reason that YouTube failed to process the caption track. This property is only present if the state property's value is failed.
+                Valid values for this property are
+                - `processingFailed` - YouTube failed to process the uploaded caption track.
+                - `unknownFormat` - The caption track's format was not recognized.
+                - `unsupportedFormat` - The caption track's format is not supported.
+              enum:
+                - processingFailed
+                - unknownFormat
+                - unsupportedFormat
+              examples:
+                - processingFailed
+                - unknownFormat
+                - unsupportedFormat
+
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      name: key
+      description: API Key Authentication
+      in: query
