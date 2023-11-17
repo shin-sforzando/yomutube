@@ -34,6 +34,7 @@
     "venv",
     "virtualenv",
     "webframeworks",
+    "wontfix",
     "YomuTube"
   ]
 }

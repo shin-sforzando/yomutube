@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/coderabbit-overrides.v2.json
+language: "jp"
+early_access: true
+reviews:
+  high_level_summary: true
+  poem: true
+  review_status: true
+  collapse_walkthrough: false
+  path_filters:
+    - "!**/.github/**"
+    - "!**/.vscode/**"
+  path_instructions:
+    - path: "**.dart"
+      instructions: "Review the Dart code to ensure that it is appropriate for the latest Flutter Web, highlighting any deviations."
+    - path: "api/**.*"
+      instructions: "Review as a YAML file in accordance with the OpenAPI 3.1.0 specification, with emphasis on readability and applicability."
+    - path: "pulumi/**.*"
+      instructions: "As for the Google Cloud and Firebase DevOps code using Pulumi, review it rigorously, especially with regard to security and running costs."
+    - path: "test/**.*"
+      instructions: "Review the code for practicality as Unit and Widget tests for Flutter Web."
+  auto_review:
+    enabled: true
+    ignore_title_keywords:
+      - "wip"
+      - "wontfix"
+    drafts: true
+chat:
+  auto_reply: true
