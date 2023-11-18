@@ -17,6 +17,73 @@ tags:
       url: https://developers.google.com/youtube/v3/docs/captions
 
 paths:
+  /videoCategories:
+    get:
+      tags:
+        - Videos
+      summary: Returns a list of categories that can be associated with YouTube videos.
+      description: |-
+        Quota impact: A call to this method has a quota cost of **1** unit.
+        See. [VideoCategories:list](https://developers.google.com/youtube/v3/docs/videoCategories/list)
+      operationId: videoCategoriesList
+      parameters:
+        - name: part
+          description: The part parameter specifies the `videoCategory` resource properties that the API response will include. Set the parameter value to `snippet`.
+          in: query
+          schema:
+            type: string
+            enum:
+              - snippet
+            examples:
+              snippet:
+                summary: snippet
+                value: snippet
+          required: true
+        - name: id
+          description: The id parameter specifies a comma-separated list of video category IDs for the resources that you are retrieving.
+          in: query
+          schema:
+            type: string
+        - name: regionCode
+          description: |-
+            The regionCode parameter instructs the API to return the list of video categories available in the specified country.
+            The parameter value is an ISO 3166-1 alpha-2 country code.
+          in: query
+          schema:
+            type: string
+          examples:
+            JP:
+              summary: Japan
+              value: JP
+        - name: hl
+          description: |-
+            The hl parameter specifies the language that should be used for text values in the API response.
+            The default value is `en_US`.
+          in: query
+          schema:
+            type: string
+          examples:
+            ja_JP:
+              summary: Japanese
+              value: ja_JP
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VideoCategoryList"
+        "404":
+          description: |-
+            `videoCategoryNotFound` - The video category identified by the `id` parameter cannot be found.
+            Use the `videoCategories.list` method to retrieve a list of valid values.
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - ApiKey: []
+
   /videos:
     get:
       tags:
@@ -182,7 +249,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Video"
+                $ref: "#/components/schemas/VideoList"
+        "400":
+          description: |-
+            `videoChartNotFound` - The requested video chart is not supported or is not available.
+          content:
+            application/json:
+              schema:
+                type: object
+        "403":
+          description: |-
+            `forbidden` - The request is not properly authorized to access video file or processing information.
+            Note that the `fileDetails`, `processingDetails`, and `suggestions` parts are only available to that video's owner.
+            Or, the request cannot access user rating information.
+            This error may occur because the request is not properly authorized to use the `myRating` parameter.
+        "404":
+          description: |-
+            `videoNotFound` - The video that you are trying to retrieve cannot be found.
+            Check the value of the request's `id` parameter to ensure that it is correct.
+          content:
+            application/json:
+              schema:
+                type: object
       security:
         - ApiKey: []
 
@@ -329,6 +417,99 @@ paths:
 
 components:
   schemas:
+    VideoCategoryList:
+      type: object
+      properties:
+        kind:
+          type: string
+          description: Identifies the API resource's type. The value will be `youtube#videoCategoryListResponse`.
+          examples:
+            - youtube#videoCategoryListResponse
+        etag:
+          type: string
+          description: The Etag of this resource.
+        nextPageToken:
+          type: string
+          description: The token that can be used as the value of the `pageToken` parameter to retrieve the next page in the result set.
+        prevPageToken:
+          type: string
+          description: The token that can be used as the value of the `pageToken` parameter to retrieve the previous page in the result set.
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+        items:
+          type: array
+          description: A list of video categories that can be associated with YouTube videos.
+          items:
+            $ref: '#/components/schemas/VideoCategory'
+    VideoCategory:
+      type: object
+      description: |-
+        A videoCategory resource identifies a category that has been or could be associated with uploaded videos.
+        See. [VideoCategories](https://developers.google.com/youtube/v3/docs/videoCategories#resource)
+      properties:
+        kind:
+          type: string
+          description: Identifies the API resource's type. The value will be `youtube#videoCategory`.
+          examples:
+            - youtube#videoCategory
+        etag:
+          type: string
+          description: The Etag of this resource.
+        id:
+          type: string
+          description: The ID that YouTube uses to uniquely identify the video category.
+        snippet:
+          $ref: '#/components/schemas/VideoCategorySnippet'
+    VideoCategorySnippet:
+      type: object
+      properties:
+        channelId:
+          type: string
+          description: The YouTube channel that created the video category.
+        title:
+          type: string
+          description: The video category's title.
+        assignable:
+          type: boolean
+          description: |-
+            Indicates whether videos can be associated with the category.
+            If you set this value to `false`, then YouTube does not display the category in video metadata that it returns for searches.
+
+    VideoList:
+      type: object
+      properties:
+        kind:
+          type: string
+          description: Identifies the API resource's type. The value will be `youtube#videoListResponse`.
+          examples:
+            - youtube#videoListResponse
+        etag:
+          type: string
+          description: The Etag of this resource.
+        nextPageToken:
+          type: string
+          description: The token that can be used as the value of the `pageToken` parameter to retrieve the next page in the result set.
+        prevPageToken:
+          type: string
+          description: The token that can be used as the value of the `pageToken` parameter to retrieve the previous page in the result set.
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+        items:
+          type: array
+          description: A list of videos that match the request criteria.
+          items:
+            $ref: '#/components/schemas/Video'
+      description: The response from the YouTube API that contains the list of videos.
+    PageInfo:
+      type: object
+      description: The pageInfo object encapsulates paging information for the result set.
+      properties:
+        totalResults:
+          type: integer
+          description: The total number of results in the result set.
+        resultsPerPage:
+          type: integer
+          description: The number of results included in the API response.
     Video:
       type: object
       description: |-
