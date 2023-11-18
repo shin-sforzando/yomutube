@@ -348,8 +348,8 @@ components:
           description: The ID that YouTube uses to uniquely identify the video.
         snippet:
           $ref: '#/components/schemas/Snippet'
-        # contentDetails:
-        #   $ref: '#/components/schemas/ContentDetails'
+        contentDetails:
+          $ref: '#/components/schemas/ContentDetails'
         # status:
         #   $ref: '#/components/schemas/Status'
         # statistics:
@@ -460,6 +460,11 @@ components:
           description: The height of the thumbnail image in pixels.
     Localized:
       type: object
+      description: |-
+        The `snippet.localized` object contains either a localized title and description for the video or the title in the default language for the video's metadata.
+        - Localized text is returned in the resource snippet if the `videos.list` request used the hl parameter to specify a language for which localized text should be returned and localized text is available in that language.
+        - Metadata for the default language is returned if an hl parameter value is not specified or a value is specified but localized metadata is not available for the specified language.
+        The property contains a read-only value. Use the `localizations` object to add, update, or delete localized titles.
       properties:
         title:
           type: string
@@ -467,6 +472,312 @@ components:
         description:
           type: string
           description: The localized video description.
+    ContentDetails:
+      type: object
+      description: The contentDetails object contains information about the video content, including the length of the video and an indication of whether captions are available for the video.
+      properties:
+        duration:
+          type: string
+          description: |-
+              The length of the video.
+              The property value is an ISO 8601 duration.
+              For example, for a video that is at least one minute long and less than one hour long, the duration is in the format `PT#M#S`, in which the letters PT indicate that the value specifies a period of time, and the letters M and S refer to length in minutes and seconds, respectively.
+              The # characters preceding the M and S letters are both integers that specify the number of minutes (or seconds) of the video.
+              For example, a value of `PT15M33S` indicates that the video is 15 minutes and 33 seconds long.
+              If the video is at least one hour long, the duration is in the format PT#H#M#S, in which the # preceding the letter H specifies the length of the video in hours and all of the other details are the same as described above.
+              If the video is at least one day long, the letters P and T are separated, and the value's format is P#DT#H#M#S. Please refer to the ISO 8601 specification for complete details.
+        dimension:
+          type: string
+          description: Indicates whether the video is available in 3D or in 2D.
+        definition:
+          type: string
+          description: |-
+            Indicates whether the video is available in high definition (HD) or only in standard definition.
+            Valid values for this property are:
+            - `hd`
+            - `sd`
+          enum:
+            - hd
+            - sd
+          examples:
+            hd:
+              summary: HD
+              value: hd
+            sd:
+              summary: SD
+              value: sd
+        caption:
+          type: string
+          description: |-
+            Indicates whether captions are available for the video.
+            Valid values for this property are:
+            - `false`
+            - `true`
+          enum:
+            - false
+            - true
+          examples:
+            false:
+              summary: false
+              value: false
+            true:
+              summary: true
+              value: true
+        licensedContent:
+          type: boolean
+          description: Indicates whether the video represents licensed content, which means that the content was uploaded to a channel linked to a YouTube content partner and then claimed by that partner.
+        regionRestriction:
+          type: object
+          description: |-
+            The `regionRestriction` object contains information about the countries where a video is (or is not) viewable.
+            The object will contain either the `contentDetails.regionRestriction.allowed` property or the `contentDetails.regionRestriction.blocked` property.
+          properties:
+            allowed:
+              type: array
+              description: |-
+                A list of region codes that identify countries where the video is viewable.
+                If this property is present and a country is not listed in its value, then the video is blocked from appearing in that country.
+                If this property is present and contains an empty list, the video is blocked in all countries.
+              items:
+                type: string
+            blocked:
+              type: array
+              description: |-
+                A list of region codes that identify countries where the video is blocked.
+                If this property is present and a country is not listed in its value, then the video is viewable in that country.
+                If this property is present and contains an empty list, the video is viewable in all countries.
+              items:
+                type: string
+        contentRating:
+          $ref: '#/components/schemas/ContentRating'
+        projection:
+          type: string
+          description: |-
+            Specifies the projection format of the video.
+            Valid values for this property are:
+            - `360`
+            - `rectangular`
+        hasCustomThumbnail:
+          type: boolean
+          description: |-
+            Indicates whether the video uploader has provided a custom thumbnail image for the video.
+            This property is only visible to the video uploader.
+    ContentRating:
+      type: object
+      properties:
+        acbRating:
+          type: string
+          description: The ACB rating of the content.
+        agcomRating:
+          type: string
+          description: The AGCOM rating of the content.
+        anatelRating:
+          type: string
+          description: The Anatel rating of the content.
+        bbfcRating:
+          type: string
+          description: The BBFC rating of the content.
+        bfvcRating:
+          type: string
+          description: The BFVC rating of the content.
+        bmukkRating:
+          type: string
+          description: The BMUKK rating of the content.
+        catvRating:
+          type: string
+          description: The CATV rating of the content.
+        catvfrRating:
+          type: string
+          description: The CATVFR rating of the content.
+        cbfcRating:
+          type: string
+          description: The CBFC rating of the content.
+        cccRating:
+          type: string
+          description: The CCC rating of the content.
+        cceRating:
+          type: string
+          description: The CCE rating of the content.
+        chfilmRating:
+          type: string
+          description: The CHFilm rating of the content.
+        chvrsRating:
+          type: string
+          description: The CHVRS rating of the content.
+        cicfRating:
+          type: string
+          description: The CICF rating of the content.
+        cnaRating:
+          type: string
+          description: The CNA rating of the content.
+        cncRating:
+          type: string
+          description: The CNC rating of the content.
+        csaRating:
+          type: string
+          description: The CSA rating of the content.
+        cscfRating:
+          type: string
+          description: The CSCF rating of the content.
+        czfilmRating:
+          type: string
+          description: The CZFilm rating of the content.
+        djctqRating:
+          type: string
+          description: The DJCTQ rating of the content.
+        djctqRatingReasons:
+          type: array
+          items:
+            type: string
+          description: The DJCTQ rating reasons of the content.
+        ecbmctRating:
+          type: string
+          description: The ECBMCT rating of the content.
+        eefilmRating:
+          type: string
+          description: The EEFilm rating of the content.
+        egfilmRating:
+          type: string
+          description: The EGFilm rating of the content.
+        eirinRating:
+          type: string
+          description: The EIRIN rating of the content.
+        fcbmRating:
+          type: string
+          description: The FCBM rating of the content.
+        fcoRating:
+          type: string
+          description: The FCO rating of the content.
+        fmocRating:
+          type: string
+          description: |-
+            The FMOC rating of the content.
+            This property has been deprecated as of November 2, 2015. Use the `contentDetails.contentRating.cncRating` property instead.
+        fpbRating:
+          type: string
+          description: The FPB rating of the content.
+        fpbRatingReasons:
+          type: array
+          items:
+            type: string
+          description: The FPB rating reasons of the content.
+        fskRating:
+          type: string
+          description: The FSK rating of the content.
+        grfilmRating:
+          type: string
+          description: The GRFilm rating of the content.
+        icaaRating:
+          type: string
+          description: The ICAA rating of the content.
+        ifcoRating:
+          type: string
+          description: The IFCo rating of the content.
+        ilfilmRating:
+          type: string
+          description: The ILFilm rating of the content.
+        incaaRating:
+          type: string
+          description: The INCAA rating of the content.
+        kfcbRating:
+          type: string
+          description: The KFCB rating of the content.
+        kijkwijzerRating:
+          type: string
+          description: The Kijkwijzer rating of the content.
+        kmrbRating:
+          type: string
+          description: The KMRB rating of the content.
+        lsfRating:
+          type: string
+          description: The LSF rating of the content.
+        mccaaRating:
+          type: string
+          description: The MCCAA rating of the content.
+        mccypRating:
+          type: string
+          description: The MCCYP rating of the content.
+        mcstRating:
+          type: string
+          description: The MCST rating of the content.
+        mdaRating:
+          type: string
+          description: The MDA rating of the content.
+        medietilsynetRating:
+          type: string
+          description: The Medietilsynet rating of the content.
+        mekuRating:
+          type: string
+          description: The MEKU rating of the content.
+        mibacRating:
+          type: string
+          description: The MIBAC rating of the content.
+        mocRating:
+          type: string
+          description: The MOC rating of the content.
+        moctwRating:
+          type: string
+          description: The MOCTW rating of the content.
+        mpaaRating:
+          type: string
+          description: The MPAA rating of the content.
+        mpaatRating:
+          type: string
+          description: The MPAAT rating of the content.
+        mtrcbRating:
+          type: string
+          description: The MTRCB rating of the content.
+        nbcRating:
+          type: string
+          description: The NBC rating of the content.
+        nbcplRating:
+          type: string
+          description: The NBCPL rating of the content.
+        nfrcRating:
+          type: string
+          description: The NFRC rating of the content.
+        nfvcbRating:
+          type: string
+          description: The NFVCB rating of the content.
+        nkclvRating:
+          type: string
+          description: The NKCLV rating of the content.
+        oflcRating:
+          type: string
+          description: The OFLC rating of the content.
+        pefilmRating:
+          type: string
+          description: The PEFilm rating of the content.
+        rcnofRating:
+          type: string
+          description: The RCNOF rating of the content.
+        resorteviolenciaRating:
+          type: string
+          description: The RESORTEVIOLÊNCIA rating of the content.
+        rtcRating:
+          type: string
+          description: The RTC rating of the content.
+        rteRating:
+          type: string
+          description: The RTE rating of the content.
+        russiaRating:
+          type: string
+          description: The Russia rating of the content.
+        skfilmRating:
+          type: string
+          description: The SKFilm rating of the content.
+        smaisRating:
+          type: string
+          description: The SMAIS rating of the content.
+        smsaRating:
+          type: string
+          description: The SMSA rating of the content.
+        tvpgRating:
+          type: string
+          description: The TVPG rating of the content.
+        ytRating:
+          type: string
+          description: The YT rating of the content.
 
     CaptionList:
       description: |-
