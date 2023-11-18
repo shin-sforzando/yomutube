@@ -35,9 +35,7 @@ paths:
             enum:
               - snippet
             examples:
-              snippet:
-                summary: snippet
-                value: snippet
+              - snippet
           required: true
         - name: id
           description: The id parameter specifies a comma-separated list of video category IDs for the resources that you are retrieving.
