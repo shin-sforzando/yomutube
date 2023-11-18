@@ -330,10 +330,10 @@ paths:
 components:
   schemas:
     Video:
+      type: object
       description: |-
         A video resource represents a YouTube video.
         See. [Videos](https://developers.google.com/youtube/v3/docs/videos#resource)
-      type: object
       properties:
         kind:
           type: string
@@ -350,31 +350,31 @@ components:
           $ref: '#/components/schemas/Snippet'
         contentDetails:
           $ref: '#/components/schemas/ContentDetails'
-        # status:
-        #   $ref: '#/components/schemas/Status'
-        # statistics:
-        #   $ref: '#/components/schemas/Statistics'
-        # player:
-        #   $ref: '#/components/schemas/Player'
-        # topicDetails:
-        #   $ref: '#/components/schemas/TopicDetails'
-        # recordingDetails:
-        #   $ref: '#/components/schemas/RecordingDetails'
-        # fileDetails:
-        #   $ref: '#/components/schemas/FileDetails'
-        # processingDetails:
-        #   $ref: '#/components/schemas/ProcessingDetails'
-        # suggestions:
-        #   $ref: '#/components/schemas/Suggestions'
-        # liveStreamingDetails:
-        #   $ref: '#/components/schemas/LiveStreamingDetails'
-        # localizations:
-        #   type: object
-        #   additionalProperties:
-        #     $ref: '#/components/schemas/Localization'
+        status:
+          $ref: '#/components/schemas/Status'
+        statistics:
+          $ref: '#/components/schemas/Statistics'
+        player:
+          $ref: '#/components/schemas/Player'
+        topicDetails:
+          $ref: '#/components/schemas/TopicDetails'
+        recordingDetails:
+          $ref: '#/components/schemas/RecordingDetails'
+        fileDetails:
+          $ref: '#/components/schemas/FileDetails'
+        processingDetails:
+          $ref: '#/components/schemas/ProcessingDetails'
+        suggestions:
+          $ref: '#/components/schemas/Suggestions'
+        liveStreamingDetails:
+          $ref: '#/components/schemas/LiveStreamingDetails'
+        localizations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Localization'
     Snippet:
-      description: The snippet object contains basic details about the video, such as its title, description, and category.
       type: object
+      description: The snippet object contains basic details about the video, such as its title, description, and category.
       properties:
         publishedAt:
           type: string
@@ -500,12 +500,8 @@ components:
             - hd
             - sd
           examples:
-            hd:
-              summary: HD
-              value: hd
-            sd:
-              summary: SD
-              value: sd
+            - hd
+            - sd
         caption:
           type: string
           description: |-
@@ -517,12 +513,8 @@ components:
             - false
             - true
           examples:
-            false:
-              summary: false
-              value: false
-            true:
-              summary: true
-              value: true
+            - false
+            - true
         licensedContent:
           type: boolean
           description: Indicates whether the video represents licensed content, which means that the content was uploaded to a channel linked to a YouTube content partner and then claimed by that partner.
@@ -564,6 +556,7 @@ components:
             This property is only visible to the video uploader.
     ContentRating:
       type: object
+      description: Specifies the ratings that the video received under various rating schemes.
       properties:
         acbRating:
           type: string
@@ -778,6 +771,579 @@ components:
         ytRating:
           type: string
           description: The YT rating of the content.
+    Status:
+      type: object
+      description: The status object contains information about the video's uploading, processing, and privacy statuses.
+      properties:
+        uploadStatus:
+          type: string
+          description: The status of the uploaded video.
+          enum:
+            - deleted
+            - failed
+            - processed
+            - rejected
+            - uploaded
+          examples:
+            - deleted
+            - failed
+            - processed
+            - rejected
+            - uploaded
+        failureReason:
+          type: string
+          description: This value explains why a video failed to upload. This property is only present if the `uploadStatus` property indicates that the upload failed.
+          enum:
+            - codec
+            - conversion
+            - emptyFile
+            - invalidFile
+            - tooSmall
+            - uploadAborted
+          examples:
+            - codec
+            - conversion
+            - emptyFile
+            - invalidFile
+            - tooSmall
+            - uploadAborted
+        rejectionReason:
+          type: string
+          description: This value explains why YouTube rejected an uploaded video. This property is only present if the `uploadStatus` property indicates that the upload was rejected.
+          enum:
+            - claim
+            - copyright
+            - duplicate
+            - inappropriate
+            - legal
+            - length
+            - termsOfUse
+            - trademark
+            - uploaderAccountClosed
+            - uploaderAccountSuspended
+        privacyStatus:
+          type: string
+          description: The video's privacy status.
+          enum:
+            - private
+            - public
+            - unlisted
+          examples:
+            - private
+            - public
+            - unlisted
+        publishAt:
+          type: string
+          format: date-time
+          description: |-
+            The date and time when the video is scheduled to publish.
+            It can be set only if the privacy status of the video is private.
+            The value is specified in ISO 8601 format.
+            Note the following two additional points about this property's behavior:
+            - If you set this property's value when calling the videos.update method, you must also set the status.privacyStatus property value to private even if the video is already private.
+            - If your request schedules a video to be published at some time in the past, the video will be published right away. As such, the effect of setting the status.publishAt property to a past date and time is the same as of changing the video's privacyStatus from private to public.
+        license:
+          type: string
+          description: The license of the video.
+          enum:
+            - creativeCommon
+            - youtube
+          examples:
+            - creativeCommon
+            - youtube
+        embeddable:
+          type: boolean
+          description: This value indicates whether the video can be embedded on another website.
+        publicStatsViewable:
+          type: boolean
+          description: |-
+            This value indicates whether the extended video statistics on the video's watch page are publicly viewable.
+            By default, those statistics are viewable, and statistics like a video's `viewCount` and ratings will still be publicly visible even if this property's value is set to `false`.
+        madeForKids:
+          type: boolean
+          description: |-
+            This value indicates whether the video is designated as child-directed, and it contains the current "made for kids" status of the video.
+            For example, the status might be determined based on the value of the `selfDeclaredMadeForKids` property.
+        selfDeclaredMadeForKids:
+          type: boolean
+          description: |-
+            In a `videos.insert` or `videos.update` request, this property allows the channel owner to designate the video as being child-directed.
+            In a `videos.list` request, the property value is only returned if the channel owner authorized the API request.
+    Statistics:
+      type: object
+      description: The statistics object contains statistics about the video.
+      properties:
+        viewCount:
+          type: integer
+          format: int64
+          description: The view count of the video.
+        likeCount:
+          type: integer
+          format: int64
+          description: The like count of the video.
+        dislikeCount:
+          type: integer
+          format: int64
+          description: |-
+            The dislike count of the video.
+            The `statistics.dislikeCount` property was made private as of December 13, 2021.
+            This means that the property is included in an API response only if the API request was authenticated by the video owner.
+            See the [revision history](https://developers.google.com/youtube/v3/revision_history#release_notes_12_15_2021) for more information.
+        favoriteCount:
+          type: integer
+          format: int64
+          description: |-
+            The favorite count of the video.
+            This property has been deprecated.
+            The deprecation is effective as of August 28, 2015.
+            The property's value is now always set to `0`.
+          examples:
+            - 0
+        commentCount:
+          type: integer
+          format: int64
+          description: The comment count of the video.
+    Player:
+      type: object
+      description: The player object contains information that you would use to play the video in an embedded player.
+      properties:
+        embedHtml:
+          type: string
+          description: |-
+            An `<iframe>` tag that embeds a player that plays the video.
+            If the API request to retrieve the resource specifies a value for the maxHeight and/or maxWidth parameters, the size of the embedded player is scaled to satisfy the maxHeight and/or maxWidth requirements.
+            If the video's aspect ratio is unknown, the embedded player defaults to a 4:3 format.
+        embedHeight:
+          type: integer
+          format: int64
+          description: |-
+            The height of the embedded player returned in the `player.embedHtml` property.
+            This property is only returned if the request specified a value for the maxHeight and/or maxWidth parameters and the video's aspect ratio is known.
+        embedWidth:
+          type: integer
+          format: int64
+          description: |-
+            The width of the embedded player returned in the `player.embedHtml` property.
+            This property is only returned if the request specified a value for the maxHeight and/or maxWidth parameters and the video's aspect ratio is known.
+    TopicDetails:
+      type: object
+      description: |-
+        The topicDetails object encapsulates information about topics associated with the video.
+        Important: See the definitions of the `topicDetails.relevantTopicIds[]` and `topicDetails.topicIds[]` properties as well as the [revision history](https://developers.google.com/youtube/v3/revision_history#november-10-2016) for more details about upcoming changes related to topic IDs.
+      properties:
+        topicIds:
+          type: array
+          description: |-
+            Important: This property has been deprecated as of November 10, 2016.
+            The API no longer returns values for this property, and any topics associated with a video are now returned by the `topicDetails.relevantTopicIds[]` property value.
+          items:
+            type: string
+        relevantTopicIds:
+          type: array
+          description: |-
+            A list of topic IDs that are relevant to the video.
+            Important: This property has been deprecated as of November 10, 2016. It will be supported until November 10, 2017.
+          items:
+            type: string
+        topicCategories:
+          type: array
+          description: A list of Wikipedia URLs that provide a high-level description of the video's content.
+          items:
+            type: string
+    RecordingDetails:
+      type: object
+      description: The recordingDetails object encapsulates information about the location, date and address where the video was recorded.
+      properties:
+        recordingDate:
+          type: string
+          format: date-time
+          description: The date and time when the video was recorded. The value is specified in ISO 8601 (YYYY-MM-DDThh:mm:ss.sssZ) format.
+    FileDetails:
+      type: object
+      description: |-
+        The fileDetails object encapsulates information about the video file that was uploaded to YouTube, including the file's resolution, duration, audio and video codecs, stream bitrates, and more.
+        This data can only be retrieved by the video owner.
+        The fileDetails object will only be returned if the `processingDetails.fileAvailability` property has a value of available.
+      properties:
+        fileName:
+          type: string
+          description: The name of the file.
+        fileSize:
+          type: integer
+          format: int64
+          description: The size of the file in bytes.
+        fileType:
+          type: string
+          description: |-
+            The uploaded file's type as detected by YouTube's video processing engine.
+            Currently, YouTube only processes video files, but this field is present whether a video file or another type of file was uploaded.
+            Valid values for this property are:
+            - `video` - The file is a known video file type, such as an .mp4 file.
+            - `archive` - The file is an archive file, such as a .zip archive.
+            - `audio` - The file is a known audio file type, such as an .mp3 file.
+            - `document` - The file is a document or text file, such as a MS Word document.
+            - `image` - The file is an image file, such as a .jpeg image.
+            - `other` - The file is another non-video file type.
+            - `project` - The file is a video project file, such as a Microsoft Windows Movie Maker project, that does not contain actual video data.
+          enum:
+            - video
+            - archive
+            - audio
+            - document
+            - image
+            - other
+            - project
+          examples:
+            - video
+            - archive
+            - audio
+            - document
+            - image
+            - other
+            - project
+        container:
+          type: string
+          description: The uploaded video file's container format.
+        videoStreams:
+          type: array
+          description: |-
+            A list of video streams contained in the uploaded video file.
+            Each item in the list contains detailed metadata about a video stream.
+          items:
+            type: object
+            properties:
+              widthPixels:
+                type: integer
+                format: int32
+                description: |-
+                  The encoded video content's width in pixels.
+                  You can calculate the video's encoding aspect ratio as `width_pixels` / `height_pixels`.
+              heightPixels:
+                type: integer
+                format: int32
+                description: The encoded video content's height in pixels.
+              frameRateFps:
+                type: number
+                format: double
+                description: The video stream's frame rate, in frames per second.
+              aspectRatio:
+                type: number
+                format: double
+                description: The video content's display aspect ratio, which specifies the aspect ratio in which the video should be displayed.
+              codec:
+                type: string
+                description: The video codec that the stream uses.
+              bitrateBps:
+                type: integer
+                format: int64
+                description: The video stream's bitrate, in bits per second.
+              rotation:
+                type: string
+                description: |-
+                  The amount that YouTube needs to rotate the original source content to properly display the video.
+                  Valid values for this property are:
+                  - `none` - The video does not need to be rotated.
+                  - `clockwise` - The video needs to be rotated 90 degrees clockwise.
+                  - `counterClockwise` - The video needs to be rotated 90 degrees counter-clockwise.
+                  - `other` - The video needs to be rotated in some other, non-trivial way.
+                  - `upsideDown` - The video needs to be rotated upside down.
+                enum:
+                  - none
+                  - clockwise
+                  - counterClockwise
+                  - other
+                  - upsideDown
+                examples:
+                  - none
+                  - clockwise
+                  - counterClockwise
+                  - other
+                  - upsideDown
+              vendor:
+                type: string
+                description: A value that uniquely identifies a video vendor. Typically, the value is a four-letter vendor code.
+        audioStreams:
+          type: array
+          description: |-
+            A list of audio streams contained in the uploaded video file.
+            Each item in the list contains detailed metadata about an audio stream.
+          items:
+            type: object
+            properties:
+              channelCount:
+                type: integer
+                format: int32
+                description: TThe number of audio channels that the stream contains.
+              codec:
+                type: string
+                description: The codec of the audio stream.
+              bitrateBps:
+                type: integer
+                format: int64
+                description: The bitrate of the audio stream in bits per second.
+              vendor:
+                type: string
+                description: A value that uniquely identifies a video vendor. Typically, the value is a four-letter vendor code.
+        durationMs:
+          type: integer
+          format: int64
+          description: The length of the uploaded video in milliseconds.
+        bitrateBps:
+          type: integer
+          format: int64
+          description: The uploaded video file's combined (video and audio) bitrate in bits per second.
+        creationTime:
+          type: string
+          description: |-
+            The date and time when the uploaded video file was created.
+            The value is specified in ISO 8601 format. Currently, the following ISO 8601 formats are supported:
+            - Date only: `YYYY-MM-DD`
+            - Naive time: `YYYY-MM-DDTHH:MM:SS`
+            - Time with timezone: `YYYY-MM-DDTHH:MM:SS+HH:MM`
+    ProcessingDetails:
+      type: object
+      description: |-
+        The processingDetails object encapsulates information about YouTube's progress in processing the uploaded video file.
+        The properties in the object identify the current processing status and an estimate of the time remaining until YouTube finishes processing the video.
+        This part also indicates whether different types of data or content, such as file details or thumbnail images, are available for the video.
+        The processingProgress object is designed to be polled so that the video uploaded can track the progress that YouTube has made in processing the uploaded video file.
+        This data can only be retrieved by the video owner.
+      properties:
+        processingStatus:
+          type: string
+          description: |-
+            The video's processing status.
+            This value indicates whether YouTube was able to process the video or if the video is still being processed.
+            Valid values for this property are:
+            - `succeeded` - Video has been successfully processed.
+            - `failed` - Video processing has failed. See ProcessingFailureReason.
+            - `processing` - Video is currently being processed. See ProcessingProgress.
+            - `terminated` - Processing information is no longer available.
+          enum:
+            - succeeded
+            - failed
+            - processing
+            - terminated
+          examples:
+            - succeeded
+            - failed
+            - processing
+            - terminated
+        processingProgress:
+          type: object
+          description: |-
+            The processingProgress object contains information about the progress YouTube has made in processing the video.
+            The values are really only relevant if the video's processing status is processing.
+          properties:
+            partsTotal:
+              type: integer
+              format: int64
+              description: |-
+                An estimate of the total number of parts that need to be processed for the video.
+                The number may be updated with more precise estimates while YouTube processes the video.
+            partsProcessed:
+              type: integer
+              format: int64
+              description: |-
+                The number of parts of the video that YouTube has already processed.
+                You can estimate the percentage of the video that YouTube has already processed by calculating: `100 * parts_processed / parts_total`
+                Note that since the estimated number of parts could increase without a corresponding increase in the number of parts that have already been processed, it is possible that the calculated progress could periodically decrease while YouTube processes a video.
+            timeLeftMs:
+              type: integer
+              format: int64
+              description: An estimate of the amount of time, in milliseconds, that YouTube needs to finish processing the video.
+        processingFailureReason:
+          type: string
+          description: |-
+            The reason that YouTube failed to process the video.
+            This property will only have a value if the `processingStatus` property's value is `failed`.
+            Valid values for this property are:
+            - `other` - Some other processing component has failed.
+            - `streamingFailed` - Video could not be sent to streamers.
+            - `transcodeFailed` - Content transcoding has failed.
+            - `uploadFailed` - File delivery has failed.
+        fileDetailsAvailability:
+          type: string
+          description: |-
+            This value indicates whether file details are available for the uploaded video.
+            You can retrieve a video's file details by requesting the `fileDetails` part in your `videos.list()` request.
+        processingIssuesAvailability:
+          type: string
+          description: |-
+            This value indicates whether the video processing engine has generated suggestions that might improve YouTube's ability to process the the video, warnings that explain video processing problems, or errors that cause video processing problems.
+            You can retrieve these suggestions by requesting the `suggestions` part in your `videos.list()` request.
+        tagSuggestionsAvailability:
+          type: string
+          description: |-
+            This value indicates whether keyword (tag) suggestions are available for the video.
+            Tags can be added to a video's metadata to make it easier for other users to find the video.
+            You can retrieve these suggestions by requesting the `suggestions` part in your `videos.list()` request.
+        editorSuggestionsAvailability:
+          type: string
+          description: |-
+            This value indicates whether video editing suggestions, which might improve video quality or the playback experience, are available for the video.
+            You can retrieve these suggestions by requesting the `suggestions` part in your `videos.list()` request.
+        thumbnailsAvailability:
+          type: string
+          description: This value indicates whether thumbnail images have been generated for the video.
+    Suggestions:
+      type: object
+      description: |-
+        The suggestions object encapsulates suggestions that identify opportunities to improve the video quality or the metadata for the uploaded video.
+        This data can only be retrieved by the video owner.
+        The suggestions object will only be returned if the `processingDetails.tagSuggestionsAvailability` property or the `processingDetails.editorSuggestionsAvailability` property has a value of `available`.
+      properties:
+        processingErrors:
+          type: array
+          description: |-
+            A list of errors that will prevent YouTube from successfully processing the uploaded video.
+            These errors indicate that, regardless of the video's current processing status, eventually, that status will almost certainly be failed.
+            Valid values for this property are:
+            - `archiveFile` - An archive file (e.g., a ZIP archive).
+            - `audioFile` - File contains audio only (e.g., an MP3 file).
+            - `docFile` - Document or text file (e.g., MS Word document).
+            - `imageFile` - Image file (e.g., a JPEG image).
+            - `notAVideoFile` - Other non-video file.
+            - `projectFile` - Movie project file (e.g., Microsoft Windows Movie Maker project).
+          items:
+            type: string
+            enum:
+              - archiveFile
+              - audioFile
+              - docFile
+              - imageFile
+              - notAVideoFile
+              - projectFile
+        processingWarnings:
+          type: array
+          description: |-
+            A list of reasons why YouTube may have difficulty transcoding the uploaded video or that might result in an erroneous transcoding.
+            These warnings are generated before YouTube actually processes the uploaded video file.
+            In addition, they identify issues that do not necessarily indicate that video processing will fail but that still might cause problems such as sync issues, video artifacts, or a missing audio track.
+            Valid values for this property are:
+            - `hasEditlist` - Edit lists are not currently supported.
+            - `inconsistentResolution` - Conflicting container and stream resolutions.
+            - `problematicAudioCodec` - Audio codec that is known to cause problems was used.
+            - `problematicVideoCodec` - Video codec that is known to cause problems was used.
+            - `unknownAudioCodec` - Unrecognized audio codec, transcoding is likely to fail.
+            - `unknownContainer` - Unrecognized file format, transcoding is likely to fail.
+            - `unknownVideoCodec` - Unrecognized video codec, transcoding is likely to fail.
+          items:
+            type: string
+            enum:
+              - hasEditlist
+              - inconsistentResolution
+              - problematicAudioCodec
+              - problematicVideoCodec
+              - unknownAudioCodec
+              - unknownContainer
+              - unknownVideoCodec
+        processingHints:
+          type: array
+          description: |-
+            A list of suggestions that may improve YouTube's ability to process the video.
+            Valid values for this property are:
+            - `nonStreamableMov` - The MP4 file is not streamable, this will slow down the processing.
+            - `sendBestQualityVideo` - Probably a better quality version of the video exists.
+          items:
+            type: string
+            enum:
+              - nonStreamableMov
+              - sendBestQualityVideo
+        tagSuggestions:
+          type: array
+          description: A list of keyword tags that could be added to the video's metadata to increase the likelihood that users will locate your video when searching or browsing on YouTube.
+          items:
+            type: object
+            properties:
+              tag:
+                type: string
+                description: The keyword tag suggested for the video.
+              categoryRestricts:
+                type: array
+                items:
+                  type: string
+                description: |-
+                  A set of video categories for which the tag is relevant.
+                  You can use this information to display appropriate tag suggestions based on the video category that the video uploader associates with the video.
+                  By default, tag suggestions are relevant for all categories if there are no restricts defined for the keyword.
+        editorSuggestions:
+          type: array
+          description: |-
+            A list of video editing operations that might improve the video quality or playback experience of the uploaded video.
+            Valid values for this property are:
+            - `audioQuietAudioSwap` - The audio track appears silent and could be swapped with a better quality one.
+            - `videoAutoLevels` - Picture brightness levels seem off and could be corrected.
+            - `videoCrop` - Margins (mattes) detected around the picture could be cropped.
+            - `videoStabilize` - The video appears shaky and could be stabilized.
+          items:
+            type: string
+            enum:
+              - audioQuietAudioSwap
+              - videoAutoLevels
+              - videoCrop
+              - videoStabilize
+    LiveStreamingDetails:
+      type: object
+      description: |-
+        The liveStreamingDetails object contains metadata about a live video broadcast.
+        The object will only be present in a `video` resource if the video is an upcoming, live, or completed live broadcast.
+      properties:
+        actualStartTime:
+          type: string
+          format: date-time
+          description: |-
+            The time that the broadcast actually started.
+            The value is specified in ISO 8601 format.
+            This value will not be available until the broadcast begins.
+        actualEndTime:
+          type: string
+          format: date-time
+          description: |-
+            The time that the broadcast actually ended.
+            The value is specified in ISO 8601 format.
+            This value will not be available until the broadcast is over.
+        scheduledStartTime:
+          type: string
+          format: date-time
+          description: |-
+            The time that the broadcast is scheduled to begin.
+            The value is specified in ISO 8601 format.
+        scheduledEndTime:
+          type: string
+          format: date-time
+          description: |-
+            The time that the broadcast is scheduled to end.
+            The value is specified in ISO 8601 format.
+            If the value is empty or the property is not present, then the broadcast is scheduled to continue indefinitely.
+        concurrentViewers:
+          type: integer
+          format: int64
+          description: |-
+            The number of viewers currently watching the broadcast.
+            The property and its value will be present if the broadcast has current viewers and the broadcast owner has not hidden the `viewCount` for the video.
+            Note that YouTube stops tracking the number of concurrent viewers for a broadcast when the broadcast ends.
+            So, this property would not identify the number of viewers watching an archived video of a live broadcast that already ended.
+        activeLiveChatId:
+          type: string
+          description: |-
+            The ID of the currently active live chat attached to this video.
+            This field is filled only if the video is a currently live broadcast that has live chat.
+            Once the broadcast transitions to complete this field will be removed and the live chat closed down.
+            For persistent broadcasts that live chat id will no longer be tied to this video but rather to the new video being displayed at the persistent page.
+    Localization:
+      type: object
+      description: The localizations object contains translations of the video's metadata.
+      additionalProperties:
+        type: object
+        description: The language of the localized text associated with the key value. The value is a string that contains a BCP-47 language code.
+        properties:
+          title:
+            type: string
+            description: The localized video title.
+          description:
+            type: string
+            description: The localized video description.
 
     CaptionList:
       description: |-
