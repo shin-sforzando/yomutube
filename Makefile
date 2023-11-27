@@ -23,12 +23,14 @@ ifeq ($(OS_NAME),Darwin)
 	brew install firebase-cli
 	brew install git-cliff
 	brew install git-secret
+	brew install go-task
 	brew install lcov
 	brew install pre-commit
 	brew install --cask flutter
 endif
 	direnv allow
 	dart pub global activate flutterfire_cli
+	firebase experiments:enable webframeworks
 	pre-commit install && pre-commit autoupdate
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
 

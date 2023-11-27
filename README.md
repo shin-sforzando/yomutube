@@ -13,6 +13,8 @@ A service gives transcribed YouTube for You.
 あなたのためにYouTubeを書き起こしてくれるサービス。
 
 - [Prerequisites](#prerequisites)
+  - [for Back-End](#for-back-end)
+  - [for Front-End](#for-front-end)
 - [How to](#how-to)
   - [Setup](#setup)
     - [Firebase](#firebase)
@@ -30,14 +32,22 @@ A service gives transcribed YouTube for You.
 
 ## Prerequisites
 
-- [Pulumi](https://www.pulumi.com) (Version `3.94.0` or higher)
+- [Task](https://taskfile.dev) as **Task Runner**
+- [direnv](https://direnv.net) as **Env Loader**
+- [pre-commit](https://pre-commit.com) as **Git Hooks Manager**
+
+### for Back-End
+
+- [Pulumi](https://www.pulumi.com) (Version `3.94.2` or higher)
+  - Python 3.11
   - Google Cloud SDK (Version `455.0.0` or higher)
   - Firebase CLI (Version `12.9.1` or higher)
+
+### for Front-End
+
 - Flutter SDK (Version `3.16.0` or higher)
   - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
-- [direnv](https://direnv.net)
-- [lcov](https://github.com/linux-test-project/lcov)
-- [pre-commit](https://pre-commit.com)
+- [lcov](https://github.com/linux-test-project/lcov) as **Coverage HTML Generator**
 
 ## How to
 
