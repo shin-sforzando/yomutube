@@ -25,6 +25,7 @@ ifeq ($(OS_NAME),Darwin)
 	brew install git-secret
 	brew install go-task
 	brew install lcov
+	brew install openapi-generator
 	brew install pre-commit
 	brew install --cask flutter
 endif

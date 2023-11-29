@@ -45,7 +45,7 @@ A service gives transcribed YouTube for You.
 
 ### for Front-End
 
-- Flutter SDK (Version `3.16.0` or higher)
+- Flutter SDK (Version `3.16.1` or higher)
   - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
 - [lcov](https://github.com/linux-test-project/lcov) as **Coverage HTML Generator**
 

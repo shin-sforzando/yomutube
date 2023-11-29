@@ -10,6 +10,8 @@
   },
   "markdownlint.config": {
     "default": true,
+    "MD033": false,
+    "MD034": false,
     "MD041": false
   },
   "cSpell.words": [
@@ -72,10 +74,13 @@
     "OFLC",
     "openapi",
     "PEFilm",
+    "pprint",
     "Pulumi",
+    "pytest",
     "RCNOF",
     "RESORTEVIOLÊNCIA",
     "serviceaccount",
+    "Setuptools",
     "shellcheck",
     "Signup",
     "SKFilm",
