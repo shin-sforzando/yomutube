@@ -18,11 +18,12 @@ A service gives transcribed YouTube for You.
 - [How to](#how-to)
   - [Setup](#setup)
     - [Firebase](#firebase)
+      - [Firebase Emulator](#firebase-emulator)
   - [Develop](#develop)
-    - [Infrastructure](#infrastructure)
     - [Back-End](#back-end)
-      - [Emulator](#emulator)
-      - [Generate API Client](#generate-api-client)
+      - [Infrastructure](#infrastructure)
+      - [Cloud Functions for Firebase](#cloud-functions-for-firebase)
+        - [Generate API Client](#generate-api-client)
     - [Front-End](#front-end)
   - [Test](#test)
   - [Document](#document)
@@ -73,10 +74,12 @@ hide                 秘匿
 reveal               暴露
 check                検証
 emulator             模倣
+generate-api         生成
 debug                確認
 test                 試験
 build                構築
 deploy               配備
+tag                  付箋
 clean                掃除
 help                 助言
 FORCE                強制
@@ -97,24 +100,28 @@ flutterfire configure
 firebase experiments:enable webframeworks
 ```
 
-### Develop
-
-#### Infrastructure
-
-Change Directory to `pulumi` and `source venv/bin.activate` to activate virtual Python 3.11 environment.
-
-#### Back-End
-
-##### Emulator
+##### Firebase Emulator
 
 `make emulator` to start Firebase Emulator Suite.
 Emulator UI can be viewed at `http://0.0.0.0:4000`.
 
-##### Generate API Client
+### Develop
 
-```shell
-openapi-generator generate --input-spec ./api/YouTubeDataV3.yaml --generator-name python --config ./api/generator-config.json --output ./functions/api
-```
+#### Back-End
+
+##### Infrastructure
+
+Change Directory to `pulumi`.
+Then, `pip install -r requirements.txt` to install dependencies.
+
+##### Cloud Functions for Firebase
+
+Change Directory to `functions`.
+Then, `pip install -r requirements.txt` to install dependencies.
+
+###### Generate API Client
+
+`make generate-api` to generate API client codes.
 
 #### Front-End
 

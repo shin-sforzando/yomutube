@@ -12,7 +12,7 @@ VERSION := $(shell git tag --sort=-v:refname | head -n 1)
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean help FORCE
+.PHONY: default setup open hide reveal check emulator generate-api debug test build deploy tag clean help FORCE
 
 default: ## 常用
 	make debug
@@ -49,6 +49,9 @@ check: ## 検証
 
 emulator: ## 模倣
 	firebase emulators:start
+
+generate-api: ## 生成
+	openapi-generator generate --input-spec ./api/YouTubeDataV3.yaml --generator-name python --config ./api/generator-config.json --output ./functions/api
 
 debug: ## 確認
 	flutter pub get
