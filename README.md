@@ -22,6 +22,7 @@ A service gives transcribed YouTube for You.
     - [Infrastructure](#infrastructure)
     - [Back-End](#back-end)
       - [Emulator](#emulator)
+      - [Generate API Client](#generate-api-client)
     - [Front-End](#front-end)
   - [Test](#test)
   - [Document](#document)
@@ -108,6 +109,12 @@ Change Directory to `pulumi` and `source venv/bin.activate` to activate virtual 
 
 `make emulator` to start Firebase Emulator Suite.
 Emulator UI can be viewed at `http://0.0.0.0:4000`.
+
+##### Generate API Client
+
+```shell
+openapi-generator generate --input-spec ./api/YouTubeDataV3.yaml --generator-name python --config ./api/generator-config.json --output ./functions/api
+```
 
 #### Front-End
 
