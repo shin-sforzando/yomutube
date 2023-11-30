@@ -18,3 +18,14 @@ def on_request_example(req: https_fn.Request) -> https_fn.Response:
 def on_schedule_example(event: scheduler_fn.ScheduledEvent) -> None:
     print(f"{event.job_name=}")
     print(f"{event.schedule_time=}")
+
+
+def main():
+    from api.youtube_data_v3 import Configuration
+
+    configuration = Configuration(host="https://www.googleapis.com/youtube/v3")
+    print(f"{configuration=}")
+
+
+if __name__ == "__main__":
+    main()

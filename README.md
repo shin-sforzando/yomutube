@@ -67,6 +67,18 @@ $ make help
 ./pulumi/clean       掃除
 ./pulumi/cwd         現地
 ./pulumi/help        助言
+./functions/default     常用
+./functions/setup       準備
+./functions/open        閲覧
+./functions/hide        秘匿
+./functions/reveal      暴露
+./functions/api-client  生成
+./functions/check       検証
+./functions/test        試験
+./functions/deploy      反映
+./functions/clean       掃除
+./functions/cwd         現地
+./functions/help        助言
 default              常用
 setup                準備
 open                 閲覧
@@ -74,7 +86,6 @@ hide                 秘匿
 reveal               暴露
 check                検証
 emulator             模倣
-generate-api         生成
 debug                確認
 test                 試験
 build                構築
@@ -111,25 +122,27 @@ Emulator UI can be viewed at `http://0.0.0.0:4000`.
 
 ##### Infrastructure
 
-Change Directory to `pulumi`.
+Change Directory to `./pulumi`.
 Then, `pip install -r requirements.txt` to install dependencies.
 
 ##### Cloud Functions for Firebase
 
-Change Directory to `functions`.
+Change Directory to `./functions`.
 Then, `pip install -r requirements.txt` to install dependencies.
 
 ###### Generate API Client
 
-`make generate-api` to generate API client codes.
+`make api-client` to generate API client codes to `./functions/api`.
 
 #### Front-End
+
+Change Directory to `./`.
 
 `make debug` to preview the site on Chrome.
 
 ### Test
 
-(T. B. D.)
+`make test` to test and generate coverage report.
 
 ### Document
 

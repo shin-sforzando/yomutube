@@ -2,3 +2,5 @@ firebase_functions~=0.1.0
 
 -r ./api/requirements.txt
 -r ./api/test-requirements.txt
+
+-e ./api

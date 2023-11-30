@@ -8,10 +8,10 @@ OPEN_TARGET :=
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal generate-api check test preview clean help cwd
+.PHONY: default setup open hide reveal generate-api check test deploy clean help cwd
 
 default: ## 常用
-	make preview
+	make help
 
 setup: ## 準備
 ifeq ($(OS_NAME),Darwin)
@@ -29,7 +29,7 @@ hide: ## 秘匿
 reveal: ## 暴露
 	git secret reveal -vf
 
-generate-api: ## 生成
+api-client: ## 生成
 	openapi-generator generate --input-spec $(MAKEFILE_DIR)/api/YouTubeDataV3.yaml --generator-name python --config $(MAKEFILE_DIR)/api/generator-config.json --output $(MAKEFILE_DIR)/functions/api
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The API Client code generation process is complete." ; fi
 
