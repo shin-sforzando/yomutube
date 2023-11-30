@@ -38,6 +38,7 @@ check: ## 検証
 
 test: ## 試験
 	$(MAKEFILE_DIR)/venv/bin/python -m unittest
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The test process of Pulumi is complete." ; fi
 
 preview: ## 確認
 	$(CMD_PULUMI) preview --diff
@@ -52,7 +53,6 @@ clean: ## 掃除
 
 cwd: ## 現地
 	@echo $(MAKEFILE_DIR)
-	@echo $(CMD_PULUMI)
 
 help: ## 助言
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "./pulumi/\033[36m%-11s\033[0m %s\n", $$1, $$2}'

@@ -150,5 +150,3 @@ Authentication schemes defined for the API:
 - **Type**: API key
 - **API key parameter name**: key
 - **Location**: URL query string
-
-## Author

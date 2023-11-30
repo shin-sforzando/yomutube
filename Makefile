@@ -4,7 +4,7 @@ TIMESTAMP := $(shell date +%Y%m%d%H%M%S)
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 OS_NAME := $(shell uname -s)
 
-SUBDIRS := ./pulumi
+SUBDIRS := ./pulumi ./functions
 .SILENT: $(SUBDIRS)
 
 OPEN_TARGET := http://0.0.0.0:8000/
@@ -12,7 +12,7 @@ VERSION := $(shell git tag --sort=-v:refname | head -n 1)
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check emulator generate-api debug test build deploy tag clean help FORCE
+.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean help FORCE
 
 default: ## 常用
 	make debug
@@ -25,7 +25,6 @@ ifeq ($(OS_NAME),Darwin)
 	brew install git-secret
 	brew install go-task
 	brew install lcov
-	brew install openapi-generator
 	brew install pre-commit
 	brew install --cask flutter
 endif
@@ -33,7 +32,7 @@ endif
 	dart pub global activate flutterfire_cli
 	firebase experiments:enable webframeworks
 	pre-commit install && pre-commit autoupdate
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process of Flutter Web is complete." ; fi
 
 open: ## 閲覧
 	@if [ $(OS_NAME) = "Darwin" ]; then open ${OPEN_TARGET} ; fi
@@ -50,9 +49,6 @@ check: ## 検証
 emulator: ## 模倣
 	firebase emulators:start
 
-generate-api: ## 生成
-	openapi-generator generate --input-spec ./api/YouTubeDataV3.yaml --generator-name python --config ./api/generator-config.json --output ./functions/api
-
 debug: ## 確認
 	flutter pub get
 	flutter run --debug --verbose --device-id chrome
@@ -60,12 +56,14 @@ debug: ## 確認
 test: $(SUBDIRS) ## 試験
 	flutter test --coverage
 	genhtml coverage/lcov.info --output-directory coverage/html
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Flutter Web is complete." ; fi
 
 build: ## 構築
 	flutter build web --verbose --release
 
 deploy: build ## 配備
 	firebase deploy
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The deployment process of Flutter Web is complete." ; fi
 
 tag: ## 付箋
 	git cliff --tag $(VERSION) --output CHANGELOG.md
@@ -76,7 +74,7 @@ tag: ## 付箋
 clean: $(SUBDIRS) ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
 	flutter clean
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Flutter Web is complete." ; fi
 
 $(SUBDIRS): FORCE
 	make -C $@ $(MAKECMDGOALS)
