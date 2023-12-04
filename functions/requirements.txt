@@ -1,2 +1,2 @@
 firebase_functions~=0.1.0
-google-api-python-client
+google-api-python-client>=2.109.0,<3.0.0

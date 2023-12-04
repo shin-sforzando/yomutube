@@ -1,3 +1,6 @@
+import os
+
+from apiclient.discovery import build
 from firebase_admin import initialize_app
 from firebase_functions import https_fn
 from firebase_functions import options
@@ -21,7 +24,8 @@ def on_schedule_example(event: scheduler_fn.ScheduledEvent) -> None:
 
 
 def main():
-    pass
+    youtube = build("youtube", "v3", developerKey=os.environ.get("GOOGLE_API_KEY"))
+    print(f"{youtube=}")
 
 
 if __name__ == "__main__":

@@ -400,3 +400,4 @@ terraform.rc
 pulumi/yomutube-f5b5d-3aa0983f93d6.json
 
 ### Project Specific ###
+functions/.env.local

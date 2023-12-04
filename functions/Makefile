@@ -34,7 +34,7 @@ check: ## 検証
 	pre-commit run --all-files
 
 test: ## 試験
-	$(MAKEFILE_DIR)/venv/bin/pytest
+	echo "TODO: Not Implemented Yet!" 1>&2
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Cloud Functions is complete." ; fi
 
 deploy: ## 反映
@@ -42,7 +42,7 @@ deploy: ## 反映
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The deployment process of Cloud Functions is complete." ; fi
 
 clean: ## 掃除
-	find . -type f -name "*.log" -prune -exec rm -rf {} +
+	find . -type f -name "*.log" -exec rm -rf {} +
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Cloud Functions is complete." ; fi
 
