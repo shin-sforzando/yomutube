@@ -21,10 +21,7 @@ def on_schedule_example(event: scheduler_fn.ScheduledEvent) -> None:
 
 
 def main():
-    from api.youtube_data_v3 import Configuration
-
-    configuration = Configuration(host="https://www.googleapis.com/youtube/v3")
-    print(f"{configuration=}")
+    pass
 
 
 if __name__ == "__main__":

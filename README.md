@@ -23,7 +23,6 @@ A service gives transcribed YouTube for You.
     - [Back-End](#back-end)
       - [Infrastructure](#infrastructure)
       - [Cloud Functions for Firebase](#cloud-functions-for-firebase)
-        - [Generate API Client](#generate-api-client)
     - [Front-End](#front-end)
   - [Test](#test)
   - [Document](#document)
@@ -72,7 +71,6 @@ $ make help
 ./functions/open        閲覧
 ./functions/hide        秘匿
 ./functions/reveal      暴露
-./functions/api-client  生成
 ./functions/check       検証
 ./functions/test        試験
 ./functions/deploy      反映
@@ -129,10 +127,6 @@ Then, `pip install -r requirements.txt` to install dependencies.
 
 Change Directory to `./functions`.
 Then, `pip install -r requirements.txt` to install dependencies.
-
-###### Generate API Client
-
-`make api-client` to generate API client codes to `./functions/api`.
 
 #### Front-End
 
