@@ -1,0 +1,6 @@
+#!include:../.gitignore
+
+*.secret
+.envrc
+Makefile
+pytest.ini

@@ -398,6 +398,7 @@ terraform.rc
 !*.secret
 
 pulumi/yomutube-f5b5d-3aa0983f93d6.json
+functions/.env.local
+yomutube-f5b5d-firebase-adminsdk-gtj96-853a41ebc2.json
 
 ### Project Specific ###
-functions/.env.local

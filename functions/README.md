@@ -1,3 +1,3 @@
 ```shell
-firebase functions:secret:set GOOGLE_API_KEY
+firebase functions:secret:set YouTube_DATA_API_KEY
 ```
