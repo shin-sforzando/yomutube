@@ -39,10 +39,10 @@ A service gives transcribed YouTube for You.
 
 ### for Back-End
 
-- [Pulumi](https://www.pulumi.com) (Version `3.94.2` or higher)
+- [Pulumi](https://www.pulumi.com) (Version `3.96.1` or higher)
   - Python 3.11
   - Google Cloud SDK (Version `455.0.0` or higher)
-  - Firebase CLI (Version `12.9.1` or higher)
+  - Firebase CLI (Version `13.0.1` or higher)
 
 ### for Front-End
 
