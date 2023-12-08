@@ -14,9 +14,9 @@ options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
 
 
 @https_fn.on_request()
-def on_request_for_arbitrary_execution(req: https_fn.Request) -> https_fn.Response:
-    print("Arbitrary execution was invoked.")
-    return https_fn.Response("Hello world!")
+def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
+    print("Optional execution was invoked.")
+    return https_fn.Response(f"{req=}")
 
 
 @scheduler_fn.on_schedule(
