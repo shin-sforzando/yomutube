@@ -9,7 +9,7 @@ OPEN_TARGET := https://app.pulumi.com/shin-sforzando/YomuTube
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check test preview clean help cwd
+.PHONY: default setup open hide reveal check test preview clean pwd help
 
 default: ## 常用
 	make preview
@@ -51,8 +51,8 @@ clean: ## 掃除
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Pulumi is complete." ; fi
 
-cwd: ## 現地
+pwd: ## 現地
 	@echo $(MAKEFILE_DIR)
 
 help: ## 助言
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "./pulumi/\033[36m%-11s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "pulumi/\033[36m%-11s\033[0m %s\n", $$1, $$2}'

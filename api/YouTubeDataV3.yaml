@@ -479,6 +479,7 @@ components:
 
     VideoList:
       type: object
+      description: The response from the YouTube API that contains the list of videos.
       properties:
         kind:
           type: string
@@ -501,7 +502,10 @@ components:
           description: A list of videos that match the request criteria.
           items:
             $ref: '#/components/schemas/Video'
-      description: The response from the YouTube API that contains the list of videos.
+      required:
+        - kind
+        - etag
+        - items
     PageInfo:
       type: object
       description: The pageInfo object encapsulates paging information for the result set.
@@ -555,6 +559,11 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/Localization'
+      required:
+        - kind
+        - etag
+        - id
+        - snippet
     Snippet:
       type: object
       description: The snippet object contains basic details about the video, such as its title, description, and category.
@@ -623,6 +632,13 @@ components:
         defaultAudioLanguage:
           type: string
           description: The `default_audio_language` property specifies the language spoken in the video's default audio track.
+      required:
+        - publishedAt
+        - channelId
+        - title
+        - description
+        - thumbnails
+        - channelTitle
     Thumbnail:
       type: object
       description: |-
@@ -692,9 +708,6 @@ components:
             Valid values for this property are:
             - `false`
             - `true`
-          enum:
-            - false
-            - true
           examples:
             - false
             - true

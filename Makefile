@@ -12,7 +12,7 @@ VERSION := $(shell git tag --sort=-v:refname | head -n 1)
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean help FORCE
+.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean pwd help FORCE
 
 default: ## 常用
 	make debug
@@ -79,7 +79,7 @@ clean: $(SUBDIRS) ## 掃除
 $(SUBDIRS): FORCE
 	make -C $@ $(MAKECMDGOALS)
 
-cwd: $(SUBDIRS)
+pwd: $(SUBDIRS)
 
 help: $(SUBDIRS) ## 助言
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

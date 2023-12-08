@@ -10,6 +10,7 @@ from firebase_functions import scheduler_fn
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
 from models import VideoCategoryList
+from models import VideoList
 from periodic_models import PeriodicVideoCategoryList
 from pydantic import ValidationError
 from utils import JST
@@ -98,14 +99,20 @@ def fetch_popular_videos(
     )
     response = request.execute()
     formatted_response = json.dumps(response, indent=2, ensure_ascii=False)
-    print(f"{formatted_response}")
+    print(f"Formatted Response: {formatted_response}")
+    try:
+        vl = VideoList.model_validate(response)
+        for video in vl.items:
+            print(f"{video=}")
+    except ValidationError as ve:
+        print(ve)
 
 
 def main() -> None:
     """Entry point for local execution."""
-    print(get_video_categories())
-    print(get_video_categories(hl="en_US", regionCode="US"))
-    # fetch_popular_videos()
+    get_video_categories()
+    get_video_categories(hl="en_US", regionCode="US")
+    fetch_popular_videos()
 
 
 if __name__ == "__main__":
