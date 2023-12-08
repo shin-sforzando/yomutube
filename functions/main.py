@@ -1,12 +1,13 @@
 import json
 import os
 
-from apiclient.discovery import build
 from firebase_admin import firestore
 from firebase_admin import initialize_app
 from firebase_functions import https_fn
 from firebase_functions import options
 from firebase_functions import scheduler_fn
+from googleapiclient.discovery import build
+from googleapiclient.discovery import Resource
 
 app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
@@ -24,6 +25,14 @@ def on_request_for_arbitrary_execution(req: https_fn.Request) -> https_fn.Respon
 def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
     print(f"{event.job_name=}")
     print(f"{event.schedule_time=}")
+
+
+def get_youtube_client() -> Resource:
+    api_key = os.environ.get("YouTube_DATA_API_KEY")
+    if not api_key:
+        raise ValueError("The environment variable 'YouTube_DATA_API_KEY' is not set.")
+    youtube_client = build("youtube", "v3", developerKey=api_key)
+    return youtube_client
 
 
 def get_video_categories(hl: str = "ja_JP", regionCode: str = "JP") -> dict:
@@ -45,13 +54,8 @@ def get_video_categories(hl: str = "ja_JP", regionCode: str = "JP") -> dict:
         return video_categories
     else:
         print(f"Document video_categories/{hl} has not yet been stored.")
-        api_key = os.environ.get("YouTube_DATA_API_KEY")
-        if not api_key:
-            raise ValueError(
-                "The environment variable 'YouTube_DATA_API_KEY' is not set."
-            )
-        youtube = build("youtube", "v3", developerKey=api_key)
-        request = youtube.videoCategories().list(
+        youtube_client = get_youtube_client()
+        request = youtube_client.videoCategories().list(  # type: ignore
             part="snippet", regionCode=regionCode, hl=hl
         )
         response = request.execute()
@@ -62,11 +66,8 @@ def get_video_categories(hl: str = "ja_JP", regionCode: str = "JP") -> dict:
 def fetch_popular_videos(
     maxResult: int = 10, hl: str = "ja_JP", regionCode: str = "JP", **kwargs
 ) -> None:
-    api_key = os.environ.get("YouTube_DATA_API_KEY")
-    if not api_key:
-        raise ValueError("The environment variable 'YouTube_DATA_API_KEY' is not set.")
-    youtube = build("youtube", "v3", developerKey=api_key)
-    request = youtube.videos().list(
+    youtube_client = get_youtube_client()
+    request = youtube_client.videos().list(  # type: ignore
         part="snippet,contentDetails,statistics",
         chart="mostPopular",
         regionCode=regionCode,
@@ -79,10 +80,11 @@ def fetch_popular_videos(
     print(f"{formatted_response}")
 
 
-def main():
+def main() -> None:
     """Entry point for local execution."""
-    print(get_video_categories())
-    print(get_video_categories(hl="en_US", regionCode="US"))
+    print(f"{get_youtube_client()=}")
+    # print(get_video_categories())
+    # print(get_video_categories(hl="en_US", regionCode="US"))
     # fetch_popular_videos()
 
 

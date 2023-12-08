@@ -50,6 +50,7 @@
     "flutterfire",
     "FMOC",
     "gitsecret",
+    "googleapiclient",
     "GRFilm",
     "ICAA",
     "IFCo",
@@ -101,5 +102,7 @@
     "webframeworks",
     "wontfix",
     "YomuTube"
-  ]
+  ],
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true
 }
