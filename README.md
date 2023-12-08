@@ -14,6 +14,8 @@ A service gives transcribed YouTube for You.
 
 - [Prerequisites](#prerequisites)
   - [for Back-End](#for-back-end)
+    - [Pulumi](#pulumi)
+    - [Cloud Functions](#cloud-functions)
   - [for Front-End](#for-front-end)
 - [How to](#how-to)
   - [Setup](#setup)
@@ -39,10 +41,16 @@ A service gives transcribed YouTube for You.
 
 ### for Back-End
 
+#### Pulumi
+
 - [Pulumi](https://www.pulumi.com) (Version `3.96.1` or higher)
   - Python 3.11
   - Google Cloud SDK (Version `455.0.0` or higher)
   - Firebase CLI (Version `13.0.1` or higher)
+
+#### Cloud Functions
+
+- Python 3.11
 
 ### for Front-End
 

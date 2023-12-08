@@ -1,0 +1,18 @@
+[project]
+name = "yomutube-functions"
+version = "0.1.0"
+description = "Cloud Functions for Yomutube"
+readme = "README.md"
+authors = [{ name = "Shin'ichiro Suzuki", email = "shin@sforzando.co.jp" }]
+license = { file = "../LICENSE" }
+requires-python = "3.11"
+
+[project.urls]
+repository = "https://github.com/shin-sforzando/yomutube"
+
+[tool.datamodel-codegen]
+allow-extra-fields = true
+input-file-type = "openapi"
+output-model-type = "pydantic_v2.BaseModel"
+target-python-version = "3.11"
+use-schema-description = true
