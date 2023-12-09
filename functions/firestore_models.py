@@ -1,4 +1,3 @@
-import string
 from datetime import datetime
 
 from models import Video

@@ -476,6 +476,9 @@ components:
           description: |-
             Indicates whether videos can be associated with the category.
             If you set this value to `false`, then YouTube does not display the category in video metadata that it returns for searches.
+      required:
+        - channelId
+        - title
 
     VideoList:
       type: object

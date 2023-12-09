@@ -1,7 +1,7 @@
 [project]
-name = "yomutube-functions"
+name = "yomutube-pulumi"
 version = "0.1.0"
-description = "Cloud Functions for Yomutube"
+description = "Pulumi for Yomutube"
 readme = "../README.md"
 authors = [{ name = "Shin'ichiro Suzuki", email = "shin@sforzando.co.jp" }]
 license = { file = "../LICENSE" }
@@ -12,9 +12,3 @@ repository = "https://github.com/shin-sforzando/yomutube"
 
 [tool.black]
 target-version = ["py311"]
-
-[tool.datamodel-codegen]
-input-file-type = "openapi"
-output-model-type = "pydantic_v2.BaseModel"
-target-python-version = "3.11"
-use-schema-description = true

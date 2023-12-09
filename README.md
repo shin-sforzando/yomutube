@@ -25,10 +25,13 @@ A service gives transcribed YouTube for You.
     - [Back-End](#back-end)
       - [Infrastructure](#infrastructure)
       - [Cloud Functions for Firebase](#cloud-functions-for-firebase)
+        - [Set API Key](#set-api-key)
+        - [Generate Models](#generate-models)
     - [Front-End](#front-end)
   - [Test](#test)
   - [Document](#document)
     - [CHANGELOG](#changelog)
+  - [Deploy](#deploy)
 - [Misc](#misc)
   - [LICENSE](#license)
   - [Contributors](#contributors)
@@ -137,6 +140,24 @@ Then, `pip install -r requirements.txt` to install dependencies.
 Change Directory to `./functions`.
 Then, `pip install -r requirements.txt` to install dependencies.
 
+###### Set API Key
+
+```shell
+firebase functions:secret:set YouTube_DATA_API_KEY
+```
+
+###### Generate Models
+
+`make gen-models` to generate `models.py`.
+
+Other arguments are specified in `pyproject.toml`.
+
+> [!NOTE]
+> [datamodel-code-generator](https://docs.pydantic.dev/latest/integrations/datamodel_code_generator/) can't parse `format:` in the OpenAPI definition, the following warnings can be ignored with `--disable-warnings`.
+>
+> - `UserWarning: format of 'uint32' not understood for 'integer' - using default`
+> - `warn(f'format of {format__!r} not understood for {type_!r} - using default' '')`
+
 #### Front-End
 
 Change Directory to `./`.
@@ -157,6 +178,10 @@ See [Wiki](https://github.com/shin-sforzando/yomutube/wiki).
 `vX.Y.Z` must be in accordance with [semver](https://semver.org).
 
 `git push origin --tags` to push all tags.
+
+### Deploy
+
+`make deploy` to deploy all.
 
 ## Misc
 
