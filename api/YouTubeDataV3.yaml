@@ -1526,6 +1526,10 @@ components:
           description: A list of captions that match the request criteria.
           items:
             $ref: "#/components/schemas/Caption"
+      required:
+        - kind
+        - etag
+        - items
     Caption:
       description: |-
         The caption resource represents a YouTube caption track.
