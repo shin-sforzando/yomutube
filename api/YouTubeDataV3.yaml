@@ -1649,6 +1649,11 @@ components:
                 - processingFailed
                 - unknownFormat
                 - unsupportedFormat
+      required:
+        - kind
+        - etag
+        - id
+        - snippet
 
   securitySchemes:
     ApiKey:

@@ -22,8 +22,16 @@ app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
 
 
-@https_fn.on_request()
+@https_fn.on_request(cors=True)
 def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
+    """HTTP trigger for execution at arbitrary timing.
+
+    Args:
+        req (https_fn.Request): The raw request handled by the callable.
+
+    Returns:
+        https_fn.Response: The response object that is used by default in Flask.
+    """
     print("Optional execution was invoked.")
     return https_fn.Response(f"{req=}")
 
@@ -32,11 +40,24 @@ def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
     schedule="0 6,12,18 * * *", timezone=scheduler_fn.Timezone("Asia/Tokyo")
 )
 def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
+    """Periodic execution triggers that run three times a day.
+
+    Args:
+        event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
+    """
     print(f"{event.job_name=}")
     print(f"{event.schedule_time=}")
 
 
 def get_youtube_client() -> Resource:
+    """Initialize and return a YouTube Data API client.
+
+    Raises:
+        ValueError: YouTube_DATA_API_KEY is not set properly.
+
+    Returns:
+        Resource: Google API Client Resource of YouTube Data API v3.
+    """
     api_key = os.environ.get("YouTube_DATA_API_KEY")
     if not api_key:
         raise ValueError("The environment variable 'YouTube_DATA_API_KEY' is not set.")
@@ -44,9 +65,39 @@ def get_youtube_client() -> Resource:
     return youtube_client
 
 
+def increment_youtube_data_api_quota(increment: int) -> None:
+    """
+    Upsert the daily YouTube Data API estimated quota consumption.
+
+    Args:
+        increment (int): Estimated quota consumption.
+
+    Returns:
+        None
+    """
+    firestore_client = firestore.client()
+    doc_ref = (
+        firestore_client.collection("stats")
+        .document(datetime.now(JST).strftime("%Y-%m-%d"))
+        .set({"youtube_data_api_quota": firestore.Increment(increment)}, merge=True)
+    )
+
+
 def get_video_categories(
     update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
 ) -> FirestoreVideoCategoryList | None:
+    """
+    Retrieves the video categories from Firestore or YouTube API.
+
+    Args:
+        update (bool, optional): Flag indicating whether to update the categories from YouTube API. Defaults to True.
+        hl (str, optional): The language code for the categories. Defaults to "ja_JP".
+        regionCode (str, optional): The region code for the categories. Defaults to "JP".
+
+    Returns:
+        FirestoreVideoCategoryList | None: The retrieved video categories as a FirestoreVideoCategoryList object,
+        or None if an error occurred.
+    """
     firestore_client = firestore.client()
     youtube_client = get_youtube_client()
     if not update:
@@ -63,6 +114,7 @@ def get_video_categories(
         regionCode=regionCode,
     )
     response = request.execute()
+    increment_youtube_data_api_quota(1)
     try:
         VideoCategoryList.model_validate(response)
         response["updated_at"] = datetime.now(JST)
@@ -74,9 +126,21 @@ def get_video_categories(
         return None
 
 
-async def fetch_popular_videos(
+async def update_popular_videos(
     maxResult: int = 10, hl: str = "ja_JP", regionCode: str = "JP", **kwargs
 ):
+    """
+    Updates the popular videos in the Firestore database.
+
+    Args:
+        maxResult (int): The maximum number of videos to retrieve. Default is 10.
+        hl (str): The language code for the video's metadata. Default is "ja_JP".
+        regionCode (str): The region code for the videos. Default is "JP".
+        **kwargs: Additional keyword arguments to be passed to the YouTube API.
+
+    Returns:
+        None
+    """
     firestore_client = firestore_async.client()
     youtube_client = get_youtube_client()
     request = youtube_client.videos().list(  # type: ignore
@@ -88,16 +152,34 @@ async def fetch_popular_videos(
         **kwargs,
     )
     response = request.execute()
+    increment_youtube_data_api_quota(1)
     # print(f"Formatted Response: {json.dumps(response, indent=2, ensure_ascii=False)}")
     try:
         vl = VideoList.model_validate(response)
         for video in vl.items:
             video_dict = video.model_dump()
             Video.model_validate(video_dict)
-            video_dict["created_at"] = datetime.now(JST)
-            video_dict["updated_at"] = datetime.now(JST)
+            existing_video_ref = firestore_client.collection("videos").document(
+                video.id
+            )
+            existing_video = await existing_video_ref.get()
+            if existing_video.exists:
+                print(f"{video.id} already exists.")
+                fv = FirestoreVideo.model_validate(existing_video.to_dict())
+                video_dict = fv.model_dump()
+                await existing_video_ref.update({"updated_at": datetime.now(JST)})
+                continue
+            else:
+                video_dict["created_at"] = datetime.now(JST)
+                video_dict["updated_at"] = datetime.now(JST)
+                video_dict["caption"] = {
+                    "row": "",
+                    "s": "",
+                    "m": "",
+                    "l": "",
+                    "keywords": [],
+                }
             fv = FirestoreVideo.model_validate(video_dict)
-            print(f"{fv=}")
             await firestore_client.collection("videos").document(fv.id).set(video_dict)
             print(f"Finished saving {fv.id}.")
     except ValidationError as ve:
@@ -108,7 +190,7 @@ async def main() -> None:
     """Entry point for local execution."""
     get_video_categories()
     get_video_categories(update=False, hl="en_US", regionCode="US")
-    await fetch_popular_videos()
+    await update_popular_videos()
 
 
 if __name__ == "__main__":
