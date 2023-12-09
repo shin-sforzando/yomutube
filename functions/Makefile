@@ -31,7 +31,7 @@ reveal: ## 暴露
 	git secret reveal -vf
 
 gen-models: ## 生成
-	datamodel-codegen --debug --input $(MAKEFILE_DIR)/../api/YouTubeDataV3.yaml --output $(MAKEFILE_DIR)/models.py
+	datamodel-codegen --debug --input $(MAKEFILE_DIR)../api/YouTubeDataV3.yaml --output $(MAKEFILE_DIR)models.py
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The model generating process of Cloud Functions is complete." ; fi
 
 check: ## 検証

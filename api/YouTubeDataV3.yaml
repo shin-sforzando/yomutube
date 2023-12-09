@@ -620,7 +620,7 @@ components:
             - `live`
             - `none`
             - `upcoming`
-          enum:
+          examples:
             - live
             - none
             - upcoming
@@ -647,16 +647,15 @@ components:
       properties:
         url:
           type: string
-          format: uri
           description: The URL of the thumbnail image.
         width:
           type: integer
-          format: uint32
           description: The width of the thumbnail image in pixels.
         height:
           type: integer
-          format: uint32
           description: The height of the thumbnail image in pixels.
+      required:
+        - url
     Localized:
       type: object
       description: |-
@@ -695,9 +694,6 @@ components:
             Valid values for this property are:
             - `hd`
             - `sd`
-          enum:
-            - hd
-            - sd
           examples:
             - hd
             - sd
@@ -709,8 +705,8 @@ components:
             - `false`
             - `true`
           examples:
-            - false
-            - true
+            - "false"
+            - "true"
         licensedContent:
           type: boolean
           description: Indicates whether the video represents licensed content, which means that the content was uploaded to a channel linked to a YouTube content partner and then claimed by that partner.
@@ -974,12 +970,6 @@ components:
         uploadStatus:
           type: string
           description: The status of the uploaded video.
-          enum:
-            - deleted
-            - failed
-            - processed
-            - rejected
-            - uploaded
           examples:
             - deleted
             - failed
@@ -989,13 +979,6 @@ components:
         failureReason:
           type: string
           description: This value explains why a video failed to upload. This property is only present if the `uploadStatus` property indicates that the upload failed.
-          enum:
-            - codec
-            - conversion
-            - emptyFile
-            - invalidFile
-            - tooSmall
-            - uploadAborted
           examples:
             - codec
             - conversion
@@ -1006,7 +989,7 @@ components:
         rejectionReason:
           type: string
           description: This value explains why YouTube rejected an uploaded video. This property is only present if the `uploadStatus` property indicates that the upload was rejected.
-          enum:
+          examples:
             - claim
             - copyright
             - duplicate
@@ -1020,10 +1003,6 @@ components:
         privacyStatus:
           type: string
           description: The video's privacy status.
-          enum:
-            - private
-            - public
-            - unlisted
           examples:
             - private
             - public
@@ -1041,9 +1020,6 @@ components:
         license:
           type: string
           description: The license of the video.
-          enum:
-            - creativeCommon
-            - youtube
           examples:
             - creativeCommon
             - youtube
@@ -1181,14 +1157,6 @@ components:
             - `image` - The file is an image file, such as a .jpeg image.
             - `other` - The file is another non-video file type.
             - `project` - The file is a video project file, such as a Microsoft Windows Movie Maker project, that does not contain actual video data.
-          enum:
-            - video
-            - archive
-            - audio
-            - document
-            - image
-            - other
-            - project
           examples:
             - video
             - archive
@@ -1243,12 +1211,6 @@ components:
                   - `counterClockwise` - The video needs to be rotated 90 degrees counter-clockwise.
                   - `other` - The video needs to be rotated in some other, non-trivial way.
                   - `upsideDown` - The video needs to be rotated upside down.
-                enum:
-                  - none
-                  - clockwise
-                  - counterClockwise
-                  - other
-                  - upsideDown
                 examples:
                   - none
                   - clockwise
@@ -1315,11 +1277,6 @@ components:
             - `failed` - Video processing has failed. See ProcessingFailureReason.
             - `processing` - Video is currently being processed. See ProcessingProgress.
             - `terminated` - Processing information is no longer available.
-          enum:
-            - succeeded
-            - failed
-            - processing
-            - terminated
           examples:
             - succeeded
             - failed
@@ -1403,7 +1360,7 @@ components:
             - `projectFile` - Movie project file (e.g., Microsoft Windows Movie Maker project).
           items:
             type: string
-            enum:
+            examples:
               - archiveFile
               - audioFile
               - docFile
@@ -1426,7 +1383,7 @@ components:
             - `unknownVideoCodec` - Unrecognized video codec, transcoding is likely to fail.
           items:
             type: string
-            enum:
+            examples:
               - hasEditlist
               - inconsistentResolution
               - problematicAudioCodec
@@ -1443,7 +1400,7 @@ components:
             - `sendBestQualityVideo` - Probably a better quality version of the video exists.
           items:
             type: string
-            enum:
+            examples:
               - nonStreamableMov
               - sendBestQualityVideo
         tagSuggestions:
@@ -1474,7 +1431,7 @@ components:
             - `videoStabilize` - The video appears shaky and could be stabilized.
           items:
             type: string
-            enum:
+            examples:
               - audioQuietAudioSwap
               - videoAutoLevels
               - videoCrop
@@ -1606,10 +1563,6 @@ components:
                   - `standard` - A regular caption track. This is the default value.
                   - `ASR` - A caption track generated using automatic speech recognition.
                   - `forced` - A caption track that plays when no other track is selected in the player. For example, a video that shows aliens speaking in an alien language might have a forced caption track to only show subtitles for the alien language.
-              enum:
-                - standard
-                - ASR
-                - forced
               examples:
                 - standard
                 - ASR
@@ -1637,11 +1590,6 @@ components:
                 - `commentary` - The caption track corresponds to an alternate audio track that includes commentary, such as directory commentary.
                 - `descriptive` - The caption track corresponds to an alternate audio track that includes additional descriptive audio.
                 - `primary` - The caption track corresponds to the primary audio track for the video, which is the audio track normally associated with the video.
-              enum:
-                - unknown
-                - commentary
-                - descriptive
-                - primary
               examples:
                 - unknown
                 - commentary
@@ -1684,10 +1632,6 @@ components:
                 - `failed`
                 - `serving`
                 - `syncing`
-              enum:
-                - failed
-                - serving
-                - syncing
               examples:
                 - failed
                 - serving
@@ -1701,10 +1645,6 @@ components:
                 - `processingFailed` - YouTube failed to process the uploaded caption track.
                 - `unknownFormat` - The caption track's format was not recognized.
                 - `unsupportedFormat` - The caption track's format is not supported.
-              enum:
-                - processingFailed
-                - unknownFormat
-                - unsupportedFormat
               examples:
                 - processingFailed
                 - unknownFormat

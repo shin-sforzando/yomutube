@@ -1,15 +1,18 @@
-import json
+import asyncio
 import os
 from datetime import datetime
 
 from firebase_admin import firestore
+from firebase_admin import firestore_async
 from firebase_admin import initialize_app
 from firebase_functions import https_fn
 from firebase_functions import options
 from firebase_functions import scheduler_fn
+from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
+from models import Video
 from models import VideoCategoryList
 from models import VideoList
 from pydantic import ValidationError
@@ -43,7 +46,7 @@ def get_youtube_client() -> Resource:
 
 def get_video_categories(
     update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
-):
+) -> FirestoreVideoCategoryList | None:
     firestore_client = firestore.client()
     youtube_client = get_youtube_client()
     if not update:
@@ -61,7 +64,7 @@ def get_video_categories(
     )
     response = request.execute()
     try:
-        vcl = VideoCategoryList.model_validate(response)
+        VideoCategoryList.model_validate(response)
         response["updated_at"] = datetime.now(JST)
         firestore_vcl = FirestoreVideoCategoryList.model_validate(response)
         firestore_client.collection("video_categories").document(hl).set(response)
@@ -71,9 +74,10 @@ def get_video_categories(
         return None
 
 
-def fetch_popular_videos(
+async def fetch_popular_videos(
     maxResult: int = 10, hl: str = "ja_JP", regionCode: str = "JP", **kwargs
-) -> None:
+):
+    firestore_client = firestore_async.client()
     youtube_client = get_youtube_client()
     request = youtube_client.videos().list(  # type: ignore
         part="snippet,contentDetails,statistics",
@@ -84,22 +88,28 @@ def fetch_popular_videos(
         **kwargs,
     )
     response = request.execute()
-    formatted_response = json.dumps(response, indent=2, ensure_ascii=False)
-    print(f"Formatted Response: {formatted_response}")
+    # print(f"Formatted Response: {json.dumps(response, indent=2, ensure_ascii=False)}")
     try:
         vl = VideoList.model_validate(response)
         for video in vl.items:
-            print(f"{video=}")
+            video_dict = video.model_dump()
+            Video.model_validate(video_dict)
+            video_dict["created_at"] = datetime.now(JST)
+            video_dict["updated_at"] = datetime.now(JST)
+            fv = FirestoreVideo.model_validate(video_dict)
+            print(f"{fv=}")
+            await firestore_client.collection("videos").document(fv.id).set(video_dict)
+            print(f"Finished saving {fv.id}.")
     except ValidationError as ve:
         print(ve)
 
 
-def main() -> None:
+async def main() -> None:
     """Entry point for local execution."""
     get_video_categories()
     get_video_categories(update=False, hl="en_US", regionCode="US")
-    fetch_popular_videos()
+    await fetch_popular_videos()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
