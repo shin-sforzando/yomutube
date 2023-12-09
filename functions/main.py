@@ -93,11 +93,9 @@ def increment_youtube_data_api_quota(increment: int) -> None:
         None
     """
     firestore_client = firestore.client()
-    doc_ref = (
-        firestore_client.collection("stats")
-        .document(datetime.now(JST).strftime("%Y-%m-%d"))
-        .set({"youtube_data_api_quota": firestore.Increment(increment)}, merge=True)
-    )
+    firestore_client.collection("stats").document(
+        datetime.now(JST).strftime("%Y-%m-%d")
+    ).set({"youtube_data_api_quota": firestore.Increment(increment)}, merge=True)
 
 
 def get_video_categories(

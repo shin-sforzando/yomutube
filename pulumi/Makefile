@@ -22,6 +22,7 @@ ifeq ($(OS_NAME),Darwin)
 endif
 	direnv allow
 	pre-commit install
+	gcloud auth application-default login
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process of Pulumi is complete." ; fi
 
 open: ## 閲覧
