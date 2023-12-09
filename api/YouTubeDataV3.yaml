@@ -462,6 +462,11 @@ components:
           description: The ID that YouTube uses to uniquely identify the video category.
         snippet:
           $ref: '#/components/schemas/VideoCategorySnippet'
+      required:
+        - kind
+        - etag
+        - id
+        - snippet
     VideoCategorySnippet:
       type: object
       properties:
@@ -1652,6 +1657,8 @@ components:
                 - processingFailed
                 - unknownFormat
                 - unsupportedFormat
+          required:
+            - videoId
       required:
         - kind
         - etag

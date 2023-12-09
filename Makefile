@@ -61,8 +61,8 @@ test: $(SUBDIRS) ## 試験
 build: ## 構築
 	flutter build web --verbose --release
 
-deploy: build ## 配備
-	firebase deploy
+deploy: build $(SUBDIRS) ## 配備
+	firebase deploy --only hosting
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The deployment process of Flutter Web is complete." ; fi
 
 tag: ## 付箋

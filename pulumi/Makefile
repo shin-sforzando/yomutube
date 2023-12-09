@@ -9,7 +9,7 @@ OPEN_TARGET := https://app.pulumi.com/shin-sforzando/YomuTube
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check test preview clean pwd help
+.PHONY: default setup open hide reveal check test preview up deploy clean pwd help
 
 default: ## 常用
 	make preview
@@ -45,6 +45,9 @@ preview: ## 確認
 
 up: ## 反映
 	$(CMD_PULUMI) up
+
+deploy: up ## 配置
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The deployment process of Pulumi is complete." ; fi
 
 clean: ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +

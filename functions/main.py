@@ -37,16 +37,33 @@ def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
 
 
 @scheduler_fn.on_schedule(
-    schedule="0 6,12,18 * * *", timezone=scheduler_fn.Timezone("Asia/Tokyo")
+    timeout_sec=540,
+    schedule="50 23 * * 5",
+    timezone=scheduler_fn.Timezone("Asia/Tokyo"),
 )
-def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
-    """Periodic execution triggers that run three times a day.
+def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> None:
+    """Periodic execution trigger that run every Friday at 23:50.
 
     Args:
         event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
     """
-    print(f"{event.job_name=}")
-    print(f"{event.schedule_time=}")
+    print(f"{event.job_name} at {event.schedule_time}")
+    get_video_categories(update=True)
+
+
+@scheduler_fn.on_schedule(
+    timeout_sec=540,
+    schedule="0 6,12,18 * * *",
+    timezone=scheduler_fn.Timezone("Asia/Tokyo"),
+)
+def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
+    """Periodic execution trigger that run three times a day.
+
+    Args:
+        event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
+    """
+    print(f"{event.job_name} at {event.schedule_time}")
+    get_video_categories()
 
 
 def get_youtube_client() -> Resource:

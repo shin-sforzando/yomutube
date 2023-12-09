@@ -1,4 +1,4 @@
-name: CI for Back-End
+name: CI for Pulumi
 
 on:
   workflow_dispatch:

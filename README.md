@@ -2,7 +2,8 @@
 
 [![Last Commit](https://img.shields.io/github/last-commit/shin-sforzando/yomutube)](https://github.com/shin-sforzando/yomutube/graphs/commit-activity)
 [![CI for Front-End](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-front.yml/badge.svg)](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-front.yml)
-[![CI for Back-End](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-back.yml/badge.svg)](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-back.yml)
+[![CI for Pulumi](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-pulumi.yml/badge.svg)](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-pulumi.yml)
+[![CI for Cloud Functions](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-functions.yml/badge.svg)](https://github.com/shin-sforzando/yomutube/actions/workflows/ci-functions.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
