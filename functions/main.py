@@ -7,11 +7,11 @@ from firebase_admin import initialize_app
 from firebase_functions import https_fn
 from firebase_functions import options
 from firebase_functions import scheduler_fn
+from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
 from models import VideoCategoryList
 from models import VideoList
-from periodic_models import PeriodicVideoCategoryList
 from pydantic import ValidationError
 from utils import JST
 
@@ -42,47 +42,33 @@ def get_youtube_client() -> Resource:
 
 
 def get_video_categories(
-    hl: str = "ja_JP", regionCode: str = "JP"
-) -> VideoCategoryList | None:
+    update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
+):
     firestore_client = firestore.client()
-
-    def get_video_categories_from_firestore() -> VideoCategoryList | None:
-        doc_ref = firestore_client.collection("video_categories").document(hl)
-        doc = doc_ref.get()
+    youtube_client = get_youtube_client()
+    if not update:
+        doc = firestore_client.collection("video_categories").document(hl).get()
         if doc.exists:
             try:
-                periodic_vcl = PeriodicVideoCategoryList.model_validate(doc.to_dict())
-                if periodic_vcl.is_expired():
-                    print(f"video_categories/{doc.id} has expired.")
-                    return None
-                else:
-                    return periodic_vcl
+                vcl = FirestoreVideoCategoryList.model_validate(doc.to_dict())
+                return vcl
             except ValidationError as ve:
                 print(ve)
-                return None
-        else:
-            print(f"video_categories/{doc.id} does not exist.")
-            return None
-
-    vcl = get_video_categories_from_firestore()
-    if vcl:
-        print(f"Valid video_categories/{hl} has been stored.")
-        return vcl
-    else:
-        print(f"Valid video_categories/{hl} has not yet been stored.")
-        youtube_client = get_youtube_client()
-        request = youtube_client.videoCategories().list(  # type: ignore
-            part="snippet", regionCode=regionCode, hl=hl
-        )
-        response = request.execute()
-        try:
-            VideoCategoryList.model_validate(response)
-            response["updated_at"] = datetime.now(JST)
-            firestore_client.collection("video_categories").document(hl).set(response)
-            return get_video_categories_from_firestore()
-        except ValidationError as ve:
-            print(ve)
-            return None
+    request = youtube_client.videoCategories().list(  # type: ignore
+        part="snippet",
+        hl=hl,
+        regionCode=regionCode,
+    )
+    response = request.execute()
+    try:
+        vcl = VideoCategoryList.model_validate(response)
+        response["updated_at"] = datetime.now(JST)
+        firestore_vcl = FirestoreVideoCategoryList.model_validate(response)
+        firestore_client.collection("video_categories").document(hl).set(response)
+        return firestore_vcl
+    except ValidationError as ve:
+        print(ve)
+        return None
 
 
 def fetch_popular_videos(
@@ -111,7 +97,7 @@ def fetch_popular_videos(
 def main() -> None:
     """Entry point for local execution."""
     get_video_categories()
-    get_video_categories(hl="en_US", regionCode="US")
+    get_video_categories(update=False, hl="en_US", regionCode="US")
     fetch_popular_videos()
 
 
