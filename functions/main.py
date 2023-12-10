@@ -22,7 +22,7 @@ app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
 
 
-@https_fn.on_request(cors=True)
+@https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])
 async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
     """HTTP trigger for execution at arbitrary timing.
 
@@ -40,6 +40,7 @@ async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Respo
     timeout_sec=540,
     schedule="50 23 * * 5",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
+    secrets=["YOUTUBE_DATA_API_KEY"],
 )
 async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run every Friday at 23:50.
@@ -55,6 +56,7 @@ async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) 
     timeout_sec=540,
     schedule="0 4,12,20 * * *",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
+    secrets=["YOUTUBE_DATA_API_KEY"],
 )
 async def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run three times a day.
@@ -70,14 +72,14 @@ def get_youtube_client() -> Resource:
     """Initialize and return a YouTube Data API client.
 
     Raises:
-        ValueError: YouTube_DATA_API_KEY is not set properly.
+        ValueError: YOUTUBE_DATA_API_KEY is not set properly.
 
     Returns:
         Resource: Google API Client Resource of YouTube Data API v3.
     """
-    api_key = os.environ.get("YouTube_DATA_API_KEY")
+    api_key = os.environ.get("YOUTUBE_DATA_API_KEY")
     if not api_key:
-        raise ValueError("The environment variable 'YouTube_DATA_API_KEY' is not set.")
+        raise ValueError("The environment variable 'YOUTUBE_DATA_API_KEY' is not set.")
     youtube_client = build("youtube", "v3", developerKey=api_key)
     return youtube_client
 

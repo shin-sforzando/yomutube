@@ -5,6 +5,7 @@ from models import VideoCategoryList
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
+from utils import JST
 
 
 class FirestoreVideoCategoryList(VideoCategoryList):
@@ -31,9 +32,9 @@ class FirestoreVideo(Video):
     model_config = ConfigDict(use_enum_values=True)
 
     created_at: datetime = Field(
-        None, description="The date and time when the document was created."
+        None, description="The timestamp of the video was stored."
     )
     updated_at: datetime = Field(
-        None, description="The date and time when the document was last updated."
+        datetime.now(JST), description="The timestamp of the video was last updated."
     )
     caption: Caption

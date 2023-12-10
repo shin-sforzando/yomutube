@@ -143,9 +143,14 @@ Then, `pip install -r requirements.txt` to install dependencies.
 
 ###### Set API Key
 
+Register a YouTube Data API Key in Google Cloud Secret Manager.
+
 ```shell
-firebase functions:secret:set YouTube_DATA_API_KEY
+firebase functions:secret:set YOUTUBE_DATA_API_KEY
 ```
+
+> [!NOTE]
+> When running locally, the API key listed in `functions/.env.local` is used.
 
 ###### Generate Models
 
@@ -176,7 +181,9 @@ See [Wiki](https://github.com/shin-sforzando/yomutube/wiki).
 #### CHANGELOG
 
 `make tag VERSION=vX.Y.Z` to update [CHANGELOG.md](./CHANGELOG.md) and tag.
-`vX.Y.Z` must be in accordance with [semver](https://semver.org).
+
+> [!NOTE]
+> `vX.Y.Z` must be in accordance with [semver](https://semver.org).
 
 `git push origin --tags` to push all tags.
 
