@@ -5,6 +5,7 @@ from datetime import datetime
 from firebase_admin import firestore
 from firebase_admin import firestore_async
 from firebase_admin import initialize_app
+from firebase_admin.exceptions import FirebaseError
 from firebase_functions import https_fn
 from firebase_functions import options
 from firebase_functions import scheduler_fn
@@ -141,6 +142,9 @@ async def get_video_categories(
     except ValidationError as ve:
         print(ve)
         return None
+    except FirebaseError as fe:
+        print(fe)
+        return None
 
 
 async def update_popular_videos(
@@ -182,29 +186,34 @@ async def update_popular_videos(
             existing_video = await existing_video_ref.get()
             if existing_video.exists:
                 print(f"{video.id} already exists.")
-                fv = FirestoreVideo.model_validate(existing_video.to_dict())
-                video_dict = fv.model_dump()
-                await existing_video_ref.update({"updated_at": datetime.now(JST)})
-                continue
-            else:
-                video_dict["created_at"] = datetime.now(JST)
-                video_dict["updated_at"] = datetime.now(JST)
-                video_dict["caption"] = {
-                    "row": "",
-                    "s": "",
-                    "m": "",
-                    "l": "",
-                    "keywords": [],
-                }
+                try:
+                    """If a correctly stored video already exists, update `updated_at` and go to the next video processing."""
+                    fv = FirestoreVideo.model_validate(existing_video.to_dict())
+                    video_dict = fv.model_dump()
+                    await existing_video_ref.update({"updated_at": datetime.now(JST)})
+                    continue
+                except ValidationError as ve:
+                    print(ve)
+            video_dict["created_at"] = datetime.now(JST)
+            video_dict["updated_at"] = datetime.now(JST)
+            video_dict["caption"] = {
+                "row": "",
+                "s": "",
+                "m": "",
+                "l": "",
+                "keywords": [],
+            }
             fv = FirestoreVideo.model_validate(video_dict)
             await firestore_client.collection("videos").document(fv.id).set(video_dict)
             print(f"Finished saving {fv.id}.")
     except ValidationError as ve:
         print(ve)
+    except FirebaseError as fe:
+        print(fe)
 
 
 async def main() -> None:
-    """Entry point for local execution."""
+    """Entry point for local (debug) execution."""
     await get_video_categories()
     await get_video_categories(update=False, hl="en_US", regionCode="US")
     await update_popular_videos()
