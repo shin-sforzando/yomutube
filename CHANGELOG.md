@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - 2023-09-25 :bug: GitHub Actions ([ebd20ce](ebd20cebb53fe73eb5ee5aa13fb5eb410fb8e5c1)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-26 :bug: add FIREBASE_CLI_EXPERIMENTS: webframeworks to CI ([691d9fd](691d9fd91654acf9356745ecc20d24c842d7ae11)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
-- 2023-09-26 :bug: add channelId: prebiew to PR CI ([dc24286](dc242863b8b1188f351ff24e0b1f799e14a45adc)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
+- 2023-09-26 :bug: add channelId: preview to PR CI ([dc24286](dc242863b8b1188f351ff24e0b1f799e14a45adc)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-27 :bug: add GOOGLE_CREDENTIALS to Pulumi step on CI ([c3d354b](c3d354badece86aa0b13abdb5d9d12e5ce366a98)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-10-11 :bug: delete lecture codes ([112230e](112230e819d71a83165ec0c51fdf8b2ef3fe484e)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-12-10 :bug: env keys to use google cloud secret manager ([cc5a62a](cc5a62a223580988655fa29608ff187f57a2d31e)) by [Shin'ichiro Suzuki](shin@sforzando.co.jp)
@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 - 2023-09-25 :+1: introduce dependency_validator ([6cbc6e5](6cbc6e578421eb096dcac191d543b3f0a8f30933)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-25 :+1: link Firebase hosting ([33b04c5](33b04c567afca3a55cdb137b907e52ce8b588af0)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-25 :+1: enable experiments:webframeworks ([bb1bdbb](bb1bdbba7911374d913299dcb7d7bef80bb8d8fb)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
-- 2023-09-26 :+1: put Firebase Hosting unser Pulumi's control ([7bd23e9](7bd23e9538cd5c735c0d1bc83fc9066b60d67b52)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
+- 2023-09-26 :+1: put Firebase Hosting under Pulumi's control ([7bd23e9](7bd23e9538cd5c735c0d1bc83fc9066b60d67b52)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-27 :+1: add pulumi preview step to CI ([909f071](909f071a500316f3728aa4ea8599c3b2cc235733)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-27 :+1: import Firestore to Pulumi ([2976dc6](2976dc6e7009fb8ca40d071b712693d317040bd8)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
 - 2023-09-27 :+1: add cloud_firestore ([3eaa9a4](3eaa9a4ba514a9eebd2b1f9155e226ee1daad055)) by [SHINICHIRO SUZUKI](shin@sforzando.co.jp)
