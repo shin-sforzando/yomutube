@@ -116,10 +116,10 @@ async def get_video_categories(
         FirestoreVideoCategoryList | None: The retrieved video categories as a FirestoreVideoCategoryList object,
         or None if an error occurred.
     """
-    firestore_client = firestore.client()
+    firestore_client = firestore_async.client()
     youtube_client = get_youtube_client()
     if not update:
-        doc = firestore_client.collection("video_categories").document(hl).get()
+        doc = await firestore_client.collection("video_categories").document(hl).get()
         if doc.exists:
             try:
                 vcl = FirestoreVideoCategoryList.model_validate(doc.to_dict())
@@ -137,7 +137,7 @@ async def get_video_categories(
         VideoCategoryList.model_validate(response)
         response["updated_at"] = datetime.now(JST)
         firestore_vcl = FirestoreVideoCategoryList.model_validate(response)
-        firestore_client.collection("video_categories").document(hl).set(response)
+        await firestore_client.collection("video_categories").document(hl).set(response)
         return firestore_vcl
     except ValidationError as ve:
         print(ve)
