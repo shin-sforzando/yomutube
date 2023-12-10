@@ -1,0 +1,14 @@
+[project]
+name = "yomutube-pulumi"
+version = "0.1.0"
+description = "Pulumi for Yomutube"
+readme = "../README.md"
+authors = [{ name = "Shin'ichiro Suzuki", email = "shin@sforzando.co.jp" }]
+license = { file = "../LICENSE" }
+requires-python = "3.11"
+
+[project.urls]
+repository = "https://github.com/shin-sforzando/yomutube"
+
+[tool.black]
+target-version = ["py311"]

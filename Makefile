@@ -4,7 +4,7 @@ TIMESTAMP := $(shell date +%Y%m%d%H%M%S)
 MAKEFILE_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 OS_NAME := $(shell uname -s)
 
-SUBDIRS := ./pulumi
+SUBDIRS := ./pulumi ./functions
 .SILENT: $(SUBDIRS)
 
 OPEN_TARGET := http://0.0.0.0:8000/
@@ -12,7 +12,7 @@ VERSION := $(shell git tag --sort=-v:refname | head -n 1)
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean help FORCE
+.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean pwd help FORCE
 
 default: ## 常用
 	make debug
@@ -23,14 +23,16 @@ ifeq ($(OS_NAME),Darwin)
 	brew install firebase-cli
 	brew install git-cliff
 	brew install git-secret
+	brew install go-task
 	brew install lcov
 	brew install pre-commit
 	brew install --cask flutter
 endif
 	direnv allow
 	dart pub global activate flutterfire_cli
+	firebase experiments:enable webframeworks
 	pre-commit install && pre-commit autoupdate
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process of Flutter Web is complete." ; fi
 
 open: ## 閲覧
 	@if [ $(OS_NAME) = "Darwin" ]; then open ${OPEN_TARGET} ; fi
@@ -54,12 +56,14 @@ debug: ## 確認
 test: $(SUBDIRS) ## 試験
 	flutter test --coverage
 	genhtml coverage/lcov.info --output-directory coverage/html
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Flutter Web is complete." ; fi
 
 build: ## 構築
 	flutter build web --verbose --release
 
-deploy: build ## 配備
-	firebase deploy
+deploy: build $(SUBDIRS) ## 配備
+	firebase deploy --only hosting
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The deployment process of Flutter Web is complete." ; fi
 
 tag: ## 付箋
 	git cliff --tag $(VERSION) --output CHANGELOG.md
@@ -70,12 +74,12 @@ tag: ## 付箋
 clean: $(SUBDIRS) ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
 	flutter clean
-	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process is complete." ; fi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Flutter Web is complete." ; fi
 
 $(SUBDIRS): FORCE
 	make -C $@ $(MAKECMDGOALS)
 
-cwd: $(SUBDIRS)
+pwd: $(SUBDIRS)
 
 help: $(SUBDIRS) ## 助言
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

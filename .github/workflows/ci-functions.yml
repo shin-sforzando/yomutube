@@ -1,0 +1,31 @@
+name: CI for Cloud Functions
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "functions/**"
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Git Secret Reveal
+        uses: entrostat/git-secret-action@v4
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-private-key-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
+      - name: Load functions/.env.local
+        id: dotenv
+        uses: falti/dotenv-action@v1.0.4
+        with:
+          path: functions/.env.local
+          mask-variables: true
+      - run: pip install -r requirements.txt
+        working-directory: functions

@@ -9,7 +9,7 @@ OPEN_TARGET := https://app.pulumi.com/shin-sforzando/YomuTube
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check test preview clean help cwd
+.PHONY: default setup open hide reveal check test preview up deploy clean pwd help
 
 default: ## 常用
 	make preview
@@ -22,6 +22,7 @@ ifeq ($(OS_NAME),Darwin)
 endif
 	direnv allow
 	pre-commit install
+	gcloud auth application-default login
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The setup process of Pulumi is complete." ; fi
 
 open: ## 閲覧
@@ -38,6 +39,7 @@ check: ## 検証
 
 test: ## 試験
 	$(MAKEFILE_DIR)/venv/bin/python -m unittest
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The test process of Pulumi is complete." ; fi
 
 preview: ## 確認
 	$(CMD_PULUMI) preview --diff
@@ -45,14 +47,16 @@ preview: ## 確認
 up: ## 反映
 	$(CMD_PULUMI) up
 
+deploy: up ## 配置
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The deployment process of Pulumi is complete." ; fi
+
 clean: ## 掃除
 	find . -type f -name "*.log" -prune -exec rm -rf {} +
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Pulumi is complete." ; fi
 
-cwd: ## 現地
+pwd: ## 現地
 	@echo $(MAKEFILE_DIR)
-	@echo $(CMD_PULUMI)
 
 help: ## 助言
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "./pulumi/\033[36m%-11s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "pulumi/\033[36m%-11s\033[0m %s\n", $$1, $$2}'
