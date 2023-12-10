@@ -23,7 +23,7 @@ options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
 
 
 @https_fn.on_request(cors=True)
-def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
+async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
     """HTTP trigger for execution at arbitrary timing.
 
     Args:
@@ -41,7 +41,7 @@ def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
     schedule="50 23 * * 5",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
 )
-def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> None:
+async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run every Friday at 23:50.
 
     Args:
@@ -53,10 +53,10 @@ def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> Non
 
 @scheduler_fn.on_schedule(
     timeout_sec=540,
-    schedule="0 6,12,18 * * *",
+    schedule="0 4,12,20 * * *",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
 )
-def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
+async def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run three times a day.
 
     Args:
@@ -82,7 +82,7 @@ def get_youtube_client() -> Resource:
     return youtube_client
 
 
-def increment_youtube_data_api_quota(increment: int) -> None:
+async def increment_youtube_data_api_quota(increment: int) -> None:
     """
     Upsert the daily YouTube Data API estimated quota consumption.
 
@@ -92,13 +92,13 @@ def increment_youtube_data_api_quota(increment: int) -> None:
     Returns:
         None
     """
-    firestore_client = firestore.client()
-    firestore_client.collection("stats").document(
+    firestore_client = firestore_async.client()
+    await firestore_client.collection("stats").document(
         datetime.now(JST).strftime("%Y-%m-%d")
     ).set({"youtube_data_api_quota": firestore.Increment(increment)}, merge=True)
 
 
-def get_video_categories(
+async def get_video_categories(
     update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
 ) -> FirestoreVideoCategoryList | None:
     """
@@ -129,7 +129,7 @@ def get_video_categories(
         regionCode=regionCode,
     )
     response = request.execute()
-    increment_youtube_data_api_quota(1)
+    await increment_youtube_data_api_quota(1)
     try:
         VideoCategoryList.model_validate(response)
         response["updated_at"] = datetime.now(JST)
@@ -167,7 +167,7 @@ async def update_popular_videos(
         **kwargs,
     )
     response = request.execute()
-    increment_youtube_data_api_quota(1)
+    await increment_youtube_data_api_quota(1)
     # print(f"Formatted Response: {json.dumps(response, indent=2, ensure_ascii=False)}")
     try:
         vl = VideoList.model_validate(response)
@@ -203,8 +203,8 @@ async def update_popular_videos(
 
 async def main() -> None:
     """Entry point for local execution."""
-    get_video_categories()
-    get_video_categories(update=False, hl="en_US", regionCode="US")
+    await get_video_categories()
+    await get_video_categories(update=False, hl="en_US", regionCode="US")
     await update_popular_videos()
 
 
