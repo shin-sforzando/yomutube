@@ -13,7 +13,6 @@ from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
-from models import CaptionList
 from models import Video
 from models import VideoCategoryList
 from models import VideoList
@@ -21,6 +20,7 @@ from pydantic import ValidationError
 from utils import JST
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import CouldNotRetrieveTranscript
+from youtube_transcript_api.formatters import TextFormatter
 
 app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
@@ -88,7 +88,7 @@ def get_youtube_client() -> Resource:
     return youtube_client
 
 
-async def increment_youtube_data_api_quota(increment: int) -> None:
+async def increment_youtube_data_api_quota(increment: int = 1) -> None:
     """
     Upsert the daily YouTube Data API estimated quota consumption.
 
@@ -115,6 +115,7 @@ def get_caption(video: Video, primary_language: str = "ja") -> str:
     Returns:
         str: The caption of the video in the specified primary language.
     """
+    formatter = TextFormatter()
     try:
         transcripts = YouTubeTranscriptApi.list_transcripts(video.id)
         transcript = transcripts.find_transcript([primary_language, "en"])
@@ -123,7 +124,10 @@ def get_caption(video: Video, primary_language: str = "ja") -> str:
             caption = transcript.fetch()
         else:
             caption = transcript.translate(primary_language).fetch()
-        return "".join([c["text"] for c in caption])
+        return formatter.format_transcript(caption)
+    except CouldNotRetrieveTranscript:
+        print(f"Could not retrieve transcript for {video.id}.")
+        return ""
     except Exception as e:
         print(e)
         return ""
