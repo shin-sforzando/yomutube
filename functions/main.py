@@ -125,13 +125,13 @@ def get_summarized_text(text: str) -> str:
     if text == "":
         return ""
 
-    first_template = """以下の文章はある1つの動画から抜き出した音声である。句読点が欠落しているが、句読点を補いながら簡潔に日本語で要約してください。
+    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。表記揺れと句読点の欠落を補いながら日本語で要約してください。
 ------
 {text}
 ------
 """
     first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
-    subsequent_template = """以下の文章はある1つの動画から抜き出した音声である。句読点が欠落しているが、句読点を補いながら簡潔に日本語で要約してください。
+    subsequent_template = """以下の文章について、表記揺れと句読点の欠落を補いながら500文字以内になるよう日本語で要約してください。
 ------
 {existing_answer}
 {text}
@@ -141,9 +141,12 @@ def get_summarized_text(text: str) -> str:
         input_variables=["existing_answer", "text"], template=subsequent_template
     )
     vertex_ai = VertexAI(
-        location="asia-northeast1", temperature=0.2, max_output_tokens=1024
+        location="asia-northeast1",
+        model_name="text-bison-32k",
+        temperature=0.2,
+        max_output_tokens=2048,
     )
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2048, chunk_overlap=0)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=4096, chunk_overlap=0)
     texts = text_splitter.split_text(text)
     print(f"Split into {len(texts)} chunks.")
     print(f"First chunk: {texts[0]}")
@@ -272,7 +275,7 @@ async def fetch_popular_videos(
 
 async def main() -> None:
     """Entry point for local (debug) execution."""
-    await fetch_popular_videos(max_result=5)
+    await fetch_popular_videos(max_result=20)
 
 
 if __name__ == "__main__":
