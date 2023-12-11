@@ -13,14 +13,12 @@ from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
+from langchain.document_loaders import YoutubeLoader
 from models import Video
 from models import VideoCategoryList
 from models import VideoList
 from pydantic import ValidationError
 from utils import JST
-from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api._errors import CouldNotRetrieveTranscript
-from youtube_transcript_api.formatters import TextFormatter
 
 app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
@@ -104,33 +102,18 @@ async def increment_youtube_data_api_quota(increment: int = 1) -> None:
     ).set({"youtube_data_api_quota": firestore.Increment(increment)}, merge=True)
 
 
-def get_caption(video: Video, primary_language: str = "ja") -> str:
-    """
-    Retrieves the caption of a video in the specified primary language.
-
-    Args:
-        video (Video): The video object for which to retrieve the caption.
-        primary_language (str, optional): The primary language in which to retrieve the caption. Defaults to "ja".
-
-    Returns:
-        str: The caption of the video in the specified primary language.
-    """
-    formatter = TextFormatter()
-    try:
-        transcripts = YouTubeTranscriptApi.list_transcripts(video.id)
-        transcript = transcripts.find_transcript([primary_language, "en"])
-        caption = ""
-        if transcript.language == primary_language:
-            caption = transcript.fetch()
-        else:
-            caption = transcript.translate(primary_language).fetch()
-        return formatter.format_transcript(caption)
-    except CouldNotRetrieveTranscript:
-        print(f"Could not retrieve transcript for {video.id}.")
-        return ""
-    except Exception as e:
-        print(e)
-        return ""
+def get_caption(video: Video, preferred_language: str = "ja") -> str:
+    loader = YoutubeLoader(
+        video_id=video.id,
+        add_video_info=False,
+        language=["ja", "en"],
+        translation=preferred_language,
+        continue_on_failure=True,
+    )
+    documents = loader.load()
+    if len(documents):
+        return documents[0].page_content
+    return ""
 
 
 async def get_video_categories(
@@ -205,8 +188,8 @@ async def fetch_popular_videos(
         **kwargs,
     )
     response = request.execute()
-    await increment_youtube_data_api_quota(1)
     # print(f"Formatted Response: {json.dumps(response, indent=2, ensure_ascii=False)}")
+    await increment_youtube_data_api_quota(1)
     try:
         vl = VideoList.model_validate(response)
         for video in vl.items:
@@ -223,17 +206,17 @@ async def fetch_popular_videos(
                     fv = FirestoreVideo.model_validate(existing_video.to_dict())
                     video_dict = fv.model_dump()
                     await existing_video_ref.update({"updated_at": datetime.now(JST)})
-                    print(f"{get_caption(video)=}")
                     continue
                 except ValidationError as ve:
                     print(ve)
                 except Exception as e:
                     print(e)
                     continue
+            row_caption = get_caption(video)
             video_dict["created_at"] = datetime.now(JST)
             video_dict["updated_at"] = datetime.now(JST)
             video_dict["caption"] = {
-                "row": "",
+                "row": row_caption,
                 "s": "",
                 "m": "",
                 "l": "",
