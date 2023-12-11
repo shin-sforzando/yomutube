@@ -13,7 +13,12 @@ from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
+from langchain.chains.summarize import load_summarize_chain
+from langchain.docstore.document import Document
 from langchain.document_loaders import YoutubeLoader
+from langchain.llms import VertexAI
+from langchain.prompts import PromptTemplate
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from models import Video
 from models import VideoCategoryList
 from models import VideoList
@@ -116,6 +121,44 @@ def get_caption(video: Video, preferred_language: str = "ja") -> str:
     return ""
 
 
+def get_summarized_text(text: str) -> str:
+    if text == "":
+        return ""
+
+    first_template = """以下の文章はある1つの動画から抜き出した音声である。句読点が欠落しているが、句読点を補いながら簡潔に日本語で要約してください。
+------
+{text}
+------
+"""
+    first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
+    subsequent_template = """以下の文章はある1つの動画から抜き出した音声である。句読点が欠落しているが、句読点を補いながら簡潔に日本語で要約してください。
+------
+{existing_answer}
+{text}
+------
+"""
+    subsequent_prompt = PromptTemplate(
+        input_variables=["existing_answer", "text"], template=subsequent_template
+    )
+    vertex_ai = VertexAI(
+        location="asia-northeast1", temperature=0.2, max_output_tokens=1024
+    )
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2048, chunk_overlap=0)
+    texts = text_splitter.split_text(text)
+    print(f"Split into {len(texts)} chunks.")
+    print(f"First chunk: {texts[0]}")
+    docs = [Document(page_content=text) for text in texts]
+    chain = load_summarize_chain(
+        vertex_ai,
+        chain_type="refine",
+        question_prompt=first_prompt,
+        refine_prompt=subsequent_prompt,
+        verbose=True,
+    )
+    result = chain.run(docs)
+    return result
+
+
 async def get_video_categories(
     update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
 ) -> FirestoreVideoCategoryList | None:
@@ -131,10 +174,10 @@ async def get_video_categories(
         FirestoreVideoCategoryList | None: The retrieved video categories as a FirestoreVideoCategoryList object,
         or None if an error occurred.
     """
-    firestore_client = firestore_async.client()
+    firestore = firestore_async.client()
     youtube_client = get_youtube_client()
     if not update:
-        doc = await firestore_client.collection("video_categories").document(hl).get()
+        doc = await firestore.collection("video_categories").document(hl).get()
         if doc.exists:
             try:
                 vcl = FirestoreVideoCategoryList.model_validate(doc.to_dict())
@@ -152,7 +195,7 @@ async def get_video_categories(
         VideoCategoryList.model_validate(response)
         response["updated_at"] = datetime.now(JST)
         firestore_vcl = FirestoreVideoCategoryList.model_validate(response)
-        await firestore_client.collection("video_categories").document(hl).set(response)
+        await firestore.collection("video_categories").document(hl).set(response)
         return firestore_vcl
     except ValidationError as ve:
         print(ve)
@@ -163,8 +206,8 @@ async def get_video_categories(
 
 
 async def fetch_popular_videos(
-    maxResult: int = 10, hl: str = "ja_JP", regionCode: str = "JP", **kwargs
-):
+    max_result: int = 10, hl: str = "ja_JP", regionCode: str = "JP", **kwargs
+) -> None:
     """
     Updates the popular videos in the Firestore database.
 
@@ -177,13 +220,13 @@ async def fetch_popular_videos(
     Returns:
         None
     """
-    firestore_client = firestore_async.client()
+    firestore = firestore_async.client()
     youtube_client = get_youtube_client()
     request = youtube_client.videos().list(  # type: ignore
         part="snippet,contentDetails,statistics",
         chart="mostPopular",
         regionCode=regionCode,
-        maxResults=maxResult,
+        maxResults=max_result,
         hl=hl,
         **kwargs,
     )
@@ -195,9 +238,7 @@ async def fetch_popular_videos(
         for video in vl.items:
             video_dict = video.model_dump()
             Video.model_validate(video_dict)
-            existing_video_ref = firestore_client.collection("videos").document(
-                video.id
-            )
+            existing_video_ref = firestore.collection("videos").document(video.id)
             existing_video = await existing_video_ref.get()
             if existing_video.exists:
                 print(f"{video.id} already exists.")
@@ -212,19 +253,17 @@ async def fetch_popular_videos(
                 except Exception as e:
                     print(e)
                     continue
-            row_caption = get_caption(video)
+            raw_caption = get_caption(video)
             video_dict["created_at"] = datetime.now(JST)
             video_dict["updated_at"] = datetime.now(JST)
             video_dict["caption"] = {
-                "row": row_caption,
-                "s": "",
-                "m": "",
-                "l": "",
+                "raw": raw_caption,
+                "summarized": get_summarized_text(raw_caption),
                 "keywords": [],
             }
             fv = FirestoreVideo.model_validate(video_dict)
-            await firestore_client.collection("videos").document(fv.id).set(video_dict)
-            print(f"Finished saving {fv.id}.")
+            await firestore.collection("videos").document(fv.id).set(video_dict)
+            print(f"Finished storing {fv.id}.")
     except ValidationError as ve:
         print(ve)
     except FirebaseError as fe:
@@ -233,7 +272,7 @@ async def fetch_popular_videos(
 
 async def main() -> None:
     """Entry point for local (debug) execution."""
-    await fetch_popular_videos()
+    await fetch_popular_videos(max_result=5)
 
 
 if __name__ == "__main__":
