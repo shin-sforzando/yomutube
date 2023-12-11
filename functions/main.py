@@ -13,7 +13,6 @@ from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
-from models import Caption
 from models import CaptionList
 from models import Video
 from models import VideoCategoryList
@@ -21,11 +20,10 @@ from models import VideoList
 from pydantic import ValidationError
 from utils import JST
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api._errors import CouldNotRetrieveTranscript
 
 app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
-
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # TODO: for Debug only
 
 
 @https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])
@@ -106,69 +104,29 @@ async def increment_youtube_data_api_quota(increment: int) -> None:
     ).set({"youtube_data_api_quota": firestore.Increment(increment)}, merge=True)
 
 
-async def get_proper_caption(
-    video_id: str, expected_language: str = "ja", expected_kind: str = "standard"
-):
-    youtube_client = get_youtube_client()
-    request = youtube_client.captions().list(
-        part="snippet",
-        videoId=video_id,
-    )
-    response = request.execute()
-    await increment_youtube_data_api_quota(50)
+def get_caption(video: Video, primary_language: str = "ja") -> str:
+    """
+    Retrieves the caption of a video in the specified primary language.
+
+    Args:
+        video (Video): The video object for which to retrieve the caption.
+        primary_language (str, optional): The primary language in which to retrieve the caption. Defaults to "ja".
+
+    Returns:
+        str: The caption of the video in the specified primary language.
+    """
     try:
-        caption_list = CaptionList.model_validate(response)
-        captions = caption_list.items
-        if len(captions) == 0:
-            print("There were no captions for this video.")
-            return
-        proper_language_captions = list(
-            filter(
-                lambda caption: caption.snippet.language == expected_language,
-                captions,
-            )
-        )
-        match len(proper_language_captions):
-            case 0:
-                print("There were no captions in the expected language.")
-            case 1:
-                print("There was only one caption in the expected language.")
-                return proper_language_captions[0]
-            case _:
-                print("There were several captions in the expected language.")
-                captions = proper_language_captions
-        proper_kind_captions = list(
-            filter(lambda caption: caption.kind == expected_kind, captions)
-        )
-        match len(proper_kind_captions):
-            case 0:
-                print("There were no captions in the expected kind.")
-                return captions[0]
-            case 1:
-                print("There was only one caption in the expected kind.")
-                return proper_kind_captions[0]
-            case _:
-                print("There were several captions in the expected kind.")
-                return proper_kind_captions[0]
-    except ValidationError as ve:
-        print(ve)
-
-
-async def download_caption(caption: Caption):
-    flow = InstalledAppFlow.from_client_secrets_file(
-        "client_secret_1009724725603-aup5b86jvu8tclf9o13cjfdapikcf8tr.apps.googleusercontent.com.json",
-        scopes=["https://www.googleapis.com/auth/youtube.force-ssl"],
-    )
-    credentials = flow.run_local_server(port=0)
-    youtube_client = build("youtube", "v3", credentials=credentials)  # type: ignore
-    request = youtube_client.captions().download(
-        id=caption.id,
-        tfmt="vtt",
-    )
-    print(f"{request=}")
-    response = request.execute()
-    await increment_youtube_data_api_quota(200)
-    return response
+        transcripts = YouTubeTranscriptApi.list_transcripts(video.id)
+        transcript = transcripts.find_transcript([primary_language, "en"])
+        caption = ""
+        if transcript.language == primary_language:
+            caption = transcript.fetch()
+        else:
+            caption = transcript.translate(primary_language).fetch()
+        return "".join([c["text"] for c in caption])
+    except Exception as e:
+        print(e)
+        return ""
 
 
 async def get_video_categories(
@@ -217,7 +175,7 @@ async def get_video_categories(
         return None
 
 
-async def update_popular_videos(
+async def fetch_popular_videos(
     maxResult: int = 10, hl: str = "ja_JP", regionCode: str = "JP", **kwargs
 ):
     """
@@ -261,9 +219,13 @@ async def update_popular_videos(
                     fv = FirestoreVideo.model_validate(existing_video.to_dict())
                     video_dict = fv.model_dump()
                     await existing_video_ref.update({"updated_at": datetime.now(JST)})
+                    print(f"{get_caption(video)=}")
                     continue
                 except ValidationError as ve:
                     print(ve)
+                except Exception as e:
+                    print(e)
+                    continue
             video_dict["created_at"] = datetime.now(JST)
             video_dict["updated_at"] = datetime.now(JST)
             video_dict["caption"] = {
@@ -284,11 +246,7 @@ async def update_popular_videos(
 
 async def main() -> None:
     """Entry point for local (debug) execution."""
-    # await get_video_categories()
-    # await get_video_categories(update=False, hl="en_US", regionCode="US")
-    await update_popular_videos()
-    transcript = YouTubeTranscriptApi.get_transcript("8JgXa2MW4BI", languages=["ja"])
-    print(f"{transcript=}")
+    await fetch_popular_videos()
 
 
 if __name__ == "__main__":
