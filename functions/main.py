@@ -14,7 +14,7 @@ from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
-from langchain import LLMChain
+from langchain.chains import LLMChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 from langchain.document_loaders import YoutubeLoader
@@ -50,6 +50,7 @@ async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Respo
 
 @scheduler_fn.on_schedule(
     timeout_sec=540,
+    memory=options.MemoryOption.GB_1,
     schedule="50 23 * * 5",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
@@ -66,6 +67,7 @@ async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) 
 
 @scheduler_fn.on_schedule(
     timeout_sec=540,
+    memory=options.MemoryOption.GB_1,
     schedule="0 4,12,20 * * *",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
@@ -185,13 +187,16 @@ def get_summarized_text(
         str: The summarized text.
     """
     first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
-句読点の欠落を考慮し、表記揺れに気をつけながら動画を見てない人にもわかりやすく要約してください。
+文章は句読点が欠落していたり、表記揺れがあったりします。
+動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
 ------
 {text}
 ------
 """
     first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
-    subsequent_template = """以下の文章について、句読点の欠落を考慮し、表記揺れに気をつけながら500文字以内になるよう動画を見てない人にもわかりやすく要約してください。
+    subsequent_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
+文章は句読点が欠落していたり、表記揺れがあったりします。
+動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
 ------
 {existing_answer}
 {text}
@@ -468,7 +473,8 @@ async def fetch_popular_videos(
 async def main() -> None:
     """Entry point for local (debug) execution."""
     await fetch_popular_videos(max_result=3)
-    await fetch_video_by_id("18mwiVRIFBc")
+    await fetch_video_by_id("amCzO2awqlQ")
+    await fetch_video_by_id("w1gn81SaHqY")
 
 
 if __name__ == "__main__":
