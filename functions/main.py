@@ -68,18 +68,18 @@ async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) 
 @scheduler_fn.on_schedule(
     timeout_sec=540,
     memory=options.MemoryOption.GB_1,
-    schedule="0 4,12,20 * * *",
+    schedule="0 */4 * * *",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
 )  # type: ignore
-async def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
+async def scheduled_execution_6_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run three times a day.
 
     Args:
         event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
     """
     print(f"{event.job_name} at {event.schedule_time}")
-    await fetch_popular_videos(max_result=5)
+    await fetch_popular_videos(max_result=3)
 
 
 def get_youtube_client() -> Resource:
