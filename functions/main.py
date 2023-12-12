@@ -1,5 +1,6 @@
 import asyncio
 import os
+import re
 from datetime import datetime
 
 from firebase_admin import firestore
@@ -108,30 +109,36 @@ async def increment_youtube_data_api_quota(increment: int = 1) -> None:
 
 
 def get_caption(video: Video, preferred_language: str = "ja") -> str:
-    loader = YoutubeLoader(
-        video_id=video.id,
-        add_video_info=False,
-        language=["ja", "en"],
-        translation=preferred_language,
-        continue_on_failure=True,
-    )
-    documents = loader.load()
-    if len(documents):
-        return documents[0].page_content
-    return ""
+    try:
+        loader = YoutubeLoader(
+            video_id=video.id,
+            add_video_info=False,
+            language=["ja", "en"],
+            translation=preferred_language,
+            continue_on_failure=True,
+        )
+        documents = loader.load()
+        if len(documents):
+            return documents[0].page_content
+        return ""
+    except Exception as e:
+        print(e)
+        return ""
+
+
+def get_formatted_text(text: str) -> str:
+    text = re.sub(r"\[.*\]", "", text)
+    return text
 
 
 def get_summarized_text(text: str) -> str:
-    if text == "":
-        return ""
-
-    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。表記揺れと句読点の欠落を補いながら日本語で要約してください。
+    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。表記揺れと句読点の欠落を補いながら動画を見てない人にもわかりやすく要約してください。
 ------
 {text}
 ------
 """
     first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
-    subsequent_template = """以下の文章について、表記揺れと句読点の欠落を補いながら500文字以内になるよう日本語で要約してください。
+    subsequent_template = """以下の文章について、表記揺れと句読点の欠落を補いながら500文字以内になるよう動画を見てない人にもわかりやすく要約してください。
 ------
 {existing_answer}
 {text}
@@ -146,7 +153,7 @@ def get_summarized_text(text: str) -> str:
         temperature=0.2,
         max_output_tokens=2048,
     )
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=4096, chunk_overlap=0)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=8192, chunk_overlap=0)
     texts = text_splitter.split_text(text)
     print(f"Split into {len(texts)} chunks.")
     print(f"First chunk: {texts[0]}")
@@ -166,7 +173,7 @@ async def get_video_categories(
     update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
 ) -> FirestoreVideoCategoryList | None:
     """
-    Retrieves the video categories from Firestore or YouTube API.
+    Retrieves the video categories from Firestore or YouTube API asynchronously.
 
     Args:
         update (bool, optional): Flag indicating whether to update the categories from YouTube API. Defaults to True.
@@ -257,6 +264,12 @@ async def fetch_popular_videos(
                     print(e)
                     continue
             raw_caption = get_caption(video)
+            raw_caption = (
+                get_formatted_text(raw_caption)
+                if raw_caption
+                else "No captions were available."
+            )
+            print(f"raw_caption length: {len(raw_caption)}")
             video_dict["created_at"] = datetime.now(JST)
             video_dict["updated_at"] = datetime.now(JST)
             video_dict["caption"] = {
@@ -275,7 +288,7 @@ async def fetch_popular_videos(
 
 async def main() -> None:
     """Entry point for local (debug) execution."""
-    await fetch_popular_videos(max_result=20)
+    await fetch_popular_videos(max_result=25)
 
 
 if __name__ == "__main__":
