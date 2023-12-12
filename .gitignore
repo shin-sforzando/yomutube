@@ -402,3 +402,4 @@ functions/.env.local
 yomutube-f5b5d-firebase-adminsdk-gtj96-853a41ebc2.json
 
 ### Project Specific ###
+functions/memray-*

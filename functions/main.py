@@ -14,6 +14,7 @@ from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
+from langchain import LLMChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 from langchain.document_loaders import YoutubeLoader
@@ -25,12 +26,15 @@ from models import VideoCategoryList
 from models import VideoList
 from pydantic import ValidationError
 from utils import JST
+from utils import print_json_response
 
 app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
 
+NO_CAPTION_MESSAGE = "【No captions were available.】"
 
-@https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])
+
+@https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])  # type: ignore
 async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
     """HTTP trigger for execution at arbitrary timing.
 
@@ -49,7 +53,7 @@ async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Respo
     schedule="50 23 * * 5",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
-)
+)  # type: ignore
 async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run every Friday at 23:50.
 
@@ -65,7 +69,7 @@ async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) 
     schedule="0 4,12,20 * * *",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
-)
+)  # type: ignore
 async def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run three times a day.
 
@@ -73,7 +77,7 @@ async def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) 
         event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
     """
     print(f"{event.job_name} at {event.schedule_time}")
-    await get_video_categories()
+    await fetch_popular_videos(max_result=5)
 
 
 def get_youtube_client() -> Resource:
@@ -102,13 +106,45 @@ async def increment_youtube_data_api_quota(increment: int = 1) -> None:
     Returns:
         None
     """
-    firestore_client = firestore_async.client()
+    firestore_client = firestore_async.client()  # type: ignore
     await firestore_client.collection("stats").document(
         datetime.now(JST).strftime("%Y-%m-%d")
-    ).set({"youtube_data_api_quota": firestore.Increment(increment)}, merge=True)
+    ).set(
+        {"youtube_data_api_quota": firestore.Increment(increment)}, merge=True  # type: ignore
+    )
 
 
-def get_caption(video: Video, preferred_language: str = "ja") -> str:
+def get_formatted_text(text: str) -> str:
+    """
+    Removes square brackets and their contents from the input text.
+
+    Args:
+        text (str): The input text.
+
+    Returns:
+        str: The formatted text with square brackets removed.
+    """
+    text = re.sub(r"\[.*\]", "", text)
+    return text
+
+
+def get_caption(
+    video: Video, preferred_language: str = "ja", lower_limit_chars: int = 256
+) -> str:
+    """
+    Retrieves the caption for a given video.
+
+    Args:
+        video (Video): The video object for which to retrieve the caption.
+        preferred_language (str, optional): The preferred language for the caption. Defaults to "ja".
+        lower_limit_chars (int, optional): The lower limit of characters for the caption. Defaults to 64.
+
+    Returns:
+        str: The formatted caption text.
+
+    Raises:
+        Exception: If an error occurs during the caption retrieval process.
+    """
     try:
         loader = YoutubeLoader(
             video_id=video.id,
@@ -118,27 +154,44 @@ def get_caption(video: Video, preferred_language: str = "ja") -> str:
             continue_on_failure=True,
         )
         documents = loader.load()
-        if len(documents):
-            return documents[0].page_content
-        return ""
+        if 0 < len(documents):
+            formatted_text = get_formatted_text(documents[0].page_content)
+            if lower_limit_chars < len(formatted_text):
+                return formatted_text
+            else:
+                print(f'"{formatted_text}" ({len(formatted_text)} chars) is too short.')
     except Exception as e:
         print(e)
-        return ""
+    print(f"Failed to retrieve caption for {video.id}.")
+    return NO_CAPTION_MESSAGE
 
 
-def get_formatted_text(text: str) -> str:
-    text = re.sub(r"\[.*\]", "", text)
-    return text
+def get_summarized_text(
+    text: str,
+    chunk_size: int = 16384,
+    temperature: float = 0.3,
+    max_output_tokens: int = 2048,
+) -> str:
+    """
+    Summarizes the given text by extracting audio subtitles from a YouTube video.
 
+    Args:
+        text (str): The input text to be summarized.
+        chunk_size (int, optional): The size of each text chunk for processing. Defaults to 8192.
+        temperature (float, optional): The temperature parameter for text generation. Defaults to 0.2.
+        max_output_tokens (int, optional): The maximum number of tokens in the generated summary. Defaults to 2048.
 
-def get_summarized_text(text: str) -> str:
-    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。表記揺れと句読点の欠落を補いながら動画を見てない人にもわかりやすく要約してください。
+    Returns:
+        str: The summarized text.
+    """
+    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
+句読点の欠落を考慮し、表記揺れに気をつけながら動画を見てない人にもわかりやすく要約してください。
 ------
 {text}
 ------
 """
     first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
-    subsequent_template = """以下の文章について、表記揺れと句読点の欠落を補いながら500文字以内になるよう動画を見てない人にもわかりやすく要約してください。
+    subsequent_template = """以下の文章について、句読点の欠落を考慮し、表記揺れに気をつけながら500文字以内になるよう動画を見てない人にもわかりやすく要約してください。
 ------
 {existing_answer}
 {text}
@@ -150,13 +203,16 @@ def get_summarized_text(text: str) -> str:
     vertex_ai = VertexAI(
         location="asia-northeast1",
         model_name="text-bison-32k",
-        temperature=0.2,
-        max_output_tokens=2048,
+        temperature=temperature,
+        max_output_tokens=max_output_tokens,
     )
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=8192, chunk_overlap=0)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size, chunk_overlap=0
+    )
     texts = text_splitter.split_text(text)
-    print(f"Split into {len(texts)} chunks.")
-    print(f"First chunk: {texts[0]}")
+    print(
+        f"{len(text)} chars divided into {len(texts)} chunks by {chunk_size} like: {texts[0][:100]} ..."
+    )
     docs = [Document(page_content=text) for text in texts]
     chain = load_summarize_chain(
         vertex_ai,
@@ -169,11 +225,55 @@ def get_summarized_text(text: str) -> str:
     return result
 
 
+def get_keywords(
+    text: str,
+    existing_keywords: list[str] = [],
+    temperature: float = 0.0,
+    max_output_tokens: int = 1024,
+) -> list[str]:
+    """
+    Extracts keywords from the given text using a language model.
+
+    Args:
+        text (str): The input text from which keywords will be extracted.
+        temperature (float, optional): The temperature parameter for the language model.
+            Higher values (e.g., 1.0) result in more random outputs, while lower values (e.g., 0.2)
+            make the outputs more focused and deterministic. Defaults to 0.2.
+        max_output_tokens (int, optional): The maximum number of tokens in the generated output.
+            Defaults to 1024.
+
+    Returns:
+        list[str]: A list of extracted keywords.
+    """
+    prompt_template = """以下の文章から、最大10個のキーワードを抽出し、 `|` で区切って重要度の高い順に出力してください。
+------
+{text}
+------
+"""
+    prompt = PromptTemplate(input_variables=["text"], template=prompt_template)
+    vertex_ai = VertexAI(
+        location="asia-northeast1",
+        model_name="text-bison-32k",
+        temperature=temperature,
+        max_output_tokens=max_output_tokens,
+    )
+    chain = LLMChain(llm=vertex_ai, prompt=prompt, verbose=True)
+    result = chain({"text": text})["text"]
+    result = [keyword.strip() for keyword in result.split("|")]
+    print(f"Existing keywords: {existing_keywords}")
+    print(f"Extracted keywords: {result}")
+    result = list(
+        set([keyword for keyword in result if keyword != ""] + existing_keywords)
+    )
+    print(f"Keywords: {result}")
+    return result
+
+
 async def get_video_categories(
     update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
 ) -> FirestoreVideoCategoryList | None:
     """
-    Retrieves the video categories from Firestore or YouTube API asynchronously.
+    Retrieves the video categories from Firestore or YouTube API asynchronously and returns a FirestoreVideoCategoryList object or None if an error occurred.
 
     Args:
         update (bool, optional): Flag indicating whether to update the categories from YouTube API. Defaults to True.
@@ -184,7 +284,7 @@ async def get_video_categories(
         FirestoreVideoCategoryList | None: The retrieved video categories as a FirestoreVideoCategoryList object,
         or None if an error occurred.
     """
-    firestore = firestore_async.client()
+    firestore = firestore_async.client()  # type: ignore
     youtube_client = get_youtube_client()
     if not update:
         doc = await firestore.collection("video_categories").document(hl).get()
@@ -215,8 +315,122 @@ async def get_video_categories(
         return None
 
 
+async def check_existing_video(video: str | Video) -> bool:
+    """
+    Check if a video already exists in the Firestore database.
+
+    Args:
+        video (str | Video): The video ID or a Video object.
+
+    Returns:
+        bool: True if the video already exists, False otherwise.
+    """
+    video_id = video if isinstance(video, str) else video.id
+    firestore = firestore_async.client()  # type: ignore
+    try:
+        existing_video_ref = firestore.collection("videos").document(video_id)
+        existing_video = await existing_video_ref.get()
+        if existing_video.exists:
+            print(f"{video_id} already exists.")
+            """If a correctly stored video already exists, update `updated_at` and go to the next video processing."""
+            fv = FirestoreVideo.model_validate(existing_video.to_dict())
+            fv.model_dump()
+            raw_caption = get_caption(fv)
+            if raw_caption != fv.caption.raw:
+                print(f"{video_id} caption has been updated and will be restored.")
+                summarized_caption = NO_CAPTION_MESSAGE  # Initialize "summarized_caption" variable with NO_CAPTION_MESSAGE
+                existing_keywords = fv.snippet.tags or []
+                keywords = existing_keywords
+                if raw_caption != NO_CAPTION_MESSAGE:
+                    summarized_caption = get_summarized_text(raw_caption)
+                    keywords = get_keywords(
+                        summarized_caption, existing_keywords=existing_keywords
+                    )
+                await existing_video_ref.update(
+                    {
+                        "caption": {
+                            "raw": raw_caption,
+                            "summarized": summarized_caption,
+                            "keywords": keywords,
+                        },
+                    }
+                )
+            await existing_video_ref.update({"updated_at": datetime.now(JST)})
+            return True
+    except Exception as e:
+        print(e)
+    return False
+
+
+async def store_video(video: Video) -> None:
+    """
+    Stores the given video in Firestore.
+
+    Args:
+        video (Video): The video to be stored.
+
+    Returns:
+        None
+    """
+    firestore = firestore_async.client()  # type: ignore
+    try:
+        video_dict = video.model_dump()
+        raw_caption = get_caption(video)
+        summarized_caption = NO_CAPTION_MESSAGE
+        existing_keywords = video.snippet.tags or []
+        keywords = existing_keywords
+        if raw_caption != NO_CAPTION_MESSAGE:
+            summarized_caption = get_summarized_text(raw_caption)
+            keywords = get_keywords(
+                summarized_caption, existing_keywords=existing_keywords
+            )
+        video_dict["created_at"] = datetime.now(JST)
+        video_dict["updated_at"] = datetime.now(JST)
+        video_dict["caption"] = {
+            "raw": raw_caption,
+            "summarized": summarized_caption,
+            "keywords": keywords,
+        }
+        fv = FirestoreVideo.model_validate(video_dict)
+        await firestore.collection("videos").document(fv.id).set(video_dict)
+        print(f"Finished storing {fv.id}.")
+    except Exception as e:
+        print(e)
+
+
+async def fetch_video_by_id(
+    video_id: str, hl: str = "ja_JP", region_code: str = "JP"
+) -> None:
+    """
+    Fetches a video by its ID from YouTube and stores it if it doesn't already exist.
+
+    Args:
+        video_id (str): The ID of the video to fetch.
+        hl (str, optional): The language parameter for the YouTube API. Defaults to "ja_JP".
+        region_code (str, optional): The region code parameter for the YouTube API. Defaults to "JP".
+    """
+    if await check_existing_video(video_id):
+        return
+    youtube_client = get_youtube_client()
+    request = youtube_client.videos().list(  # type: ignore
+        part="snippet,contentDetails,statistics",
+        id=video_id,
+        hl=hl,
+        regionCode=region_code,
+    )
+    response = request.execute()
+    await increment_youtube_data_api_quota(1)
+    print_json_response(response)
+    try:
+        vl = VideoList.model_validate(response)
+        for video in vl.items:
+            await store_video(video)
+    except Exception as e:
+        print(e)
+
+
 async def fetch_popular_videos(
-    max_result: int = 10, hl: str = "ja_JP", regionCode: str = "JP", **kwargs
+    max_result: int = 10, hl: str = "ja_JP", region_code: str = "JP", **kwargs
 ) -> None:
     """
     Updates the popular videos in the Firestore database.
@@ -230,65 +444,31 @@ async def fetch_popular_videos(
     Returns:
         None
     """
-    firestore = firestore_async.client()
     youtube_client = get_youtube_client()
     request = youtube_client.videos().list(  # type: ignore
         part="snippet,contentDetails,statistics",
         chart="mostPopular",
-        regionCode=regionCode,
         maxResults=max_result,
         hl=hl,
+        regionCode=region_code,
         **kwargs,
     )
     response = request.execute()
-    # print(f"Formatted Response: {json.dumps(response, indent=2, ensure_ascii=False)}")
     await increment_youtube_data_api_quota(1)
     try:
         vl = VideoList.model_validate(response)
         for video in vl.items:
-            video_dict = video.model_dump()
-            Video.model_validate(video_dict)
-            existing_video_ref = firestore.collection("videos").document(video.id)
-            existing_video = await existing_video_ref.get()
-            if existing_video.exists:
-                print(f"{video.id} already exists.")
-                try:
-                    """If a correctly stored video already exists, update `updated_at` and go to the next video processing."""
-                    fv = FirestoreVideo.model_validate(existing_video.to_dict())
-                    video_dict = fv.model_dump()
-                    await existing_video_ref.update({"updated_at": datetime.now(JST)})
-                    continue
-                except ValidationError as ve:
-                    print(ve)
-                except Exception as e:
-                    print(e)
-                    continue
-            raw_caption = get_caption(video)
-            raw_caption = (
-                get_formatted_text(raw_caption)
-                if raw_caption
-                else "No captions were available."
-            )
-            print(f"raw_caption length: {len(raw_caption)}")
-            video_dict["created_at"] = datetime.now(JST)
-            video_dict["updated_at"] = datetime.now(JST)
-            video_dict["caption"] = {
-                "raw": raw_caption,
-                "summarized": get_summarized_text(raw_caption),
-                "keywords": [],
-            }
-            fv = FirestoreVideo.model_validate(video_dict)
-            await firestore.collection("videos").document(fv.id).set(video_dict)
-            print(f"Finished storing {fv.id}.")
-    except ValidationError as ve:
-        print(ve)
-    except FirebaseError as fe:
-        print(fe)
+            if await check_existing_video(video):
+                continue
+            await store_video(video)
+    except Exception as e:
+        print(e)
 
 
 async def main() -> None:
     """Entry point for local (debug) execution."""
-    await fetch_popular_videos(max_result=25)
+    await fetch_popular_videos(max_result=3)
+    await fetch_video_by_id("18mwiVRIFBc")
 
 
 if __name__ == "__main__":
