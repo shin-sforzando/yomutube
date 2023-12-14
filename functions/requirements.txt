@@ -2,4 +2,7 @@ datamodel-code-generator[debug]~=0.25.1
 firebase-admin~=6.2.0
 firebase_functions~=0.1.2
 google-api-python-client>=2.110.0,<3.0.0
+google-cloud-aiplatform~=1.37.0
+langchain~=0.0.348
 pydantic>=2.5.2
+youtube-transcript-api~=0.6.1

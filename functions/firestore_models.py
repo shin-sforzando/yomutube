@@ -19,10 +19,8 @@ class FirestoreVideoCategoryList(VideoCategoryList):
 class Caption(BaseModel):
     """Represents the caption of a video."""
 
-    row: str = Field("", description="The row caption of the video.")
-    s: str = Field("", description="The s-size summary of the video.")
-    m: str = Field("", description="The m-size summary of the video.")
-    l: str = Field("", description="The l-size summary of the video.")
+    raw: str = Field("", description="The raw caption of the video.")
+    summarized: str = Field("", description="The summarized caption of the video.")
     keywords: list[str] = Field([], description="The keywords extracted from caption.")
 
 
