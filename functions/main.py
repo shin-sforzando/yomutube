@@ -353,10 +353,10 @@ def fetch_popular_videos(
 
 def main() -> None:
     """Entry point for local (debug) execution."""
-    fetch_popular_videos(max_result=3)
-    fetch_popular_videos(max_result=3, region_code="US")
-    fetch_video_by_id("vLOmOiIgCDg")
-    fetch_video_by_url("https://www.youtube.com/watch?v=6P0jGPefV8U")
+    fetch_popular_videos(max_result=5)
+    fetch_popular_videos(max_result=5, region_code="US")
+    fetch_video_by_id("Om7sx23ceLc")  # 【前編】河野太郎大臣 x YouTube CEO スーザン・ウォジスキ対談動画
+    fetch_video_by_url("https://www.youtube.com/watch?v=Lme5HJ-4x_w")  # 【後編】〃
 
 
 if __name__ == "__main__":
