@@ -4,6 +4,7 @@ from datetime import timezone
 
 
 JST = timezone(timedelta(hours=9), "JST")
+NO_CAPTION_MESSAGE = "【No captions were available.】"
 
 
 def print_json_response(json_obj):

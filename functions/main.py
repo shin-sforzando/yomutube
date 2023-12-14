@@ -1,7 +1,9 @@
 import os
-import re
 from datetime import datetime
+from urllib.parse import parse_qs
+from urllib.parse import urlparse
 
+from caption import get_caption
 from firebase_admin import firestore
 from firebase_admin import initialize_app
 from firebase_admin.exceptions import FirebaseError
@@ -12,24 +14,18 @@ from firestore_models import FirestoreVideo
 from firestore_models import FirestoreVideoCategoryList
 from googleapiclient.discovery import build
 from googleapiclient.discovery import Resource
-from langchain.chains import LLMChain
-from langchain.chains.summarize import load_summarize_chain
-from langchain.docstore.document import Document
-from langchain.document_loaders import YoutubeLoader
-from langchain.llms import VertexAI
-from langchain.prompts import PromptTemplate
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from models import Video
 from models import VideoCategoryList
 from models import VideoList
 from pydantic import ValidationError
+from summarize import get_keywords
+from summarize import get_summarized_text
 from utils import JST
+from utils import NO_CAPTION_MESSAGE
 from utils import print_json_response
 
 app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
-
-NO_CAPTION_MESSAGE = "【No captions were available.】"
 
 
 @https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])  # type: ignore
@@ -66,18 +62,37 @@ def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> Non
 @scheduler_fn.on_schedule(
     timeout_sec=540,
     memory=options.MemoryOption.GB_1,
-    schedule="0 */4 * * *",
+    schedule="0 */5 * * *",
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
 )  # type: ignore
-def scheduled_execution_6_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
-    """Periodic execution trigger that run 6 times a day.
+def scheduled_execution_4_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
+    """Periodic execution trigger that run 4 times a day.
 
     Args:
         event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
     """
     print(f"{event.job_name} at {event.schedule_time}")
-    fetch_popular_videos(max_result=3)
+    updated_count = fetch_popular_videos(max_result=5, region_code="JP")
+    print(f"Updated {updated_count} videos.")
+
+
+@scheduler_fn.on_schedule(
+    timeout_sec=540,
+    memory=options.MemoryOption.GB_1,
+    schedule="0 */7 * * *",
+    timezone=scheduler_fn.Timezone("Asia/Tokyo"),
+    secrets=["YOUTUBE_DATA_API_KEY"],
+)  # type: ignore
+def scheduled_execution_3_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
+    """Periodic execution trigger that run 3 times a day.
+
+    Args:
+        event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
+    """
+    print(f"{event.job_name} at {event.schedule_time}")
+    updated_count = fetch_popular_videos(max_result=5, region_code="US")
+    print(f"Updated {updated_count} videos.")
 
 
 def get_youtube_client() -> Resource:
@@ -112,164 +127,6 @@ def increment_youtube_data_api_quota(increment: int = 1) -> None:
     ).set(
         {"youtube_data_api_quota": firestore.Increment(increment)}, merge=True  # type: ignore
     )
-
-
-def get_formatted_text(text: str) -> str:
-    """
-    Removes square brackets and their contents from the input text.
-
-    Args:
-        text (str): The input text.
-
-    Returns:
-        str: The formatted text with square brackets removed.
-    """
-    text = re.sub(r"\[.*\]", "", text)
-    return text
-
-
-def get_caption(
-    video: Video, preferred_language: str = "ja", lower_limit_chars: int = 256
-) -> str:
-    """
-    Retrieves the caption for a given video.
-
-    Args:
-        video (Video): The video object for which to retrieve the caption.
-        preferred_language (str, optional): The preferred language for the caption. Defaults to "ja".
-        lower_limit_chars (int, optional): The lower limit of characters for the caption. Defaults to 64.
-
-    Returns:
-        str: The formatted caption text.
-
-    Raises:
-        Exception: If an error occurs during the caption retrieval process.
-    """
-    try:
-        loader = YoutubeLoader(
-            video_id=video.id,
-            add_video_info=False,
-            language=["ja", "en"],
-            translation=preferred_language,
-            continue_on_failure=True,
-        )
-        documents = loader.load()
-        if 0 < len(documents):
-            formatted_text = get_formatted_text(documents[0].page_content)
-            if lower_limit_chars < len(formatted_text):
-                return formatted_text
-            else:
-                print(f'"{formatted_text}" ({len(formatted_text)} chars) is too short.')
-    except Exception as e:
-        print(e)
-    print(f"Failed to retrieve caption for {video.id}.")
-    return NO_CAPTION_MESSAGE
-
-
-def get_summarized_text(
-    text: str,
-    chunk_size: int = 16384,
-    temperature: float = 0.3,
-    max_output_tokens: int = 2048,
-) -> str:
-    """
-    Summarizes the given text by extracting audio subtitles from a YouTube video.
-
-    Args:
-        text (str): The input text to be summarized.
-        chunk_size (int, optional): The size of each text chunk for processing. Defaults to 8192.
-        temperature (float, optional): The temperature parameter for text generation. Defaults to 0.2.
-        max_output_tokens (int, optional): The maximum number of tokens in the generated summary. Defaults to 2048.
-
-    Returns:
-        str: The summarized text.
-    """
-    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
-文章は句読点が欠落していたり、表記揺れがあったりします。
-動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
-------
-{text}
-------
-"""
-    first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
-    subsequent_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
-文章は句読点が欠落していたり、表記揺れがあったりします。
-動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
-------
-{existing_answer}
-{text}
-------
-"""
-    subsequent_prompt = PromptTemplate(
-        input_variables=["existing_answer", "text"], template=subsequent_template
-    )
-    vertex_ai = VertexAI(
-        location="asia-northeast1",
-        model_name="text-bison-32k",
-        temperature=temperature,
-        max_output_tokens=max_output_tokens,
-    )
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size, chunk_overlap=0
-    )
-    texts = text_splitter.split_text(text)
-    print(
-        f"{len(text)} chars divided into {len(texts)} chunks by {chunk_size} like: {texts[0][:100]} ..."
-    )
-    docs = [Document(page_content=text) for text in texts]
-    chain = load_summarize_chain(
-        vertex_ai,
-        chain_type="refine",
-        question_prompt=first_prompt,
-        refine_prompt=subsequent_prompt,
-        verbose=True,
-    )
-    result = chain.run(docs)
-    return result
-
-
-def get_keywords(
-    text: str,
-    existing_keywords: list[str] = [],
-    temperature: float = 0.0,
-    max_output_tokens: int = 1024,
-) -> list[str]:
-    """
-    Extracts keywords from the given text using a language model.
-
-    Args:
-        text (str): The input text from which keywords will be extracted.
-        temperature (float, optional): The temperature parameter for the language model.
-            Higher values (e.g., 1.0) result in more random outputs, while lower values (e.g., 0.2)
-            make the outputs more focused and deterministic. Defaults to 0.2.
-        max_output_tokens (int, optional): The maximum number of tokens in the generated output.
-            Defaults to 1024.
-
-    Returns:
-        list[str]: A list of extracted keywords.
-    """
-    prompt_template = """以下の文章から、最大10個のキーワードを抽出し、 `|` で区切って重要度の高い順に出力してください。
-------
-{text}
-------
-"""
-    prompt = PromptTemplate(input_variables=["text"], template=prompt_template)
-    vertex_ai = VertexAI(
-        location="asia-northeast1",
-        model_name="text-bison-32k",
-        temperature=temperature,
-        max_output_tokens=max_output_tokens,
-    )
-    chain = LLMChain(llm=vertex_ai, prompt=prompt, verbose=True)
-    result = chain({"text": text})["text"]
-    result = [keyword.strip() for keyword in result.split("|")]
-    print(f"Existing keywords: {existing_keywords}")
-    print(f"Extracted keywords: {result}")
-    result = list(
-        set([keyword for keyword in result if keyword != ""] + existing_keywords)
-    )
-    print(f"Keywords: {result}")
-    return result
 
 
 def get_video_categories(
@@ -387,6 +244,8 @@ def store_video(video: Video) -> None:
             keywords = get_keywords(
                 summarized_caption, existing_keywords=existing_keywords
             )
+            print(f"Summarized caption: {summarized_caption}")
+            print(f"Keywords: {keywords}")
         video_dict["created_at"] = datetime.now(JST)
         video_dict["updated_at"] = datetime.now(JST)
         video_dict["caption"] = {
@@ -432,21 +291,43 @@ def fetch_video_by_id(
         print(e)
 
 
-def fetch_popular_videos(
-    max_result: int = 10, hl: str = "ja_JP", region_code: str = "JP", **kwargs
-) -> None:
+def fetch_video_by_url(url: str, hl: str = "ja_JP", region_code: str = "JP") -> None:
     """
-    Updates the popular videos in the Firestore database.
+    Fetches a video by its URL.
 
     Args:
-        maxResult (int): The maximum number of videos to retrieve. Default is 10.
-        hl (str): The language code for the video's metadata. Default is "ja_JP".
-        regionCode (str): The region code for the videos. Default is "JP".
-        **kwargs: Additional keyword arguments to be passed to the YouTube API.
+        url (str): The URL of the video.
+        hl (str, optional): The language code for the video's localization. Defaults to "ja_JP".
+        region_code (str, optional): The region code for the video's localization. Defaults to "JP".
 
     Returns:
         None
     """
+    parsed_url = urlparse(url)
+    query_params = parse_qs(parsed_url.query)
+    video_id = query_params["v"][0]
+    fetch_video_by_id(video_id, hl, region_code)
+
+
+def fetch_popular_videos(
+    max_result: int = 10, hl: str = "ja_JP", region_code: str = "JP", **kwargs
+) -> int:
+    """
+    Fetches popular videos from YouTube using the YouTube Data API.
+
+    Args:
+        max_result (int): The maximum number of videos to fetch. Default is 10.
+        hl (str): The language parameter for the API request. Default is "ja_JP".
+        region_code (str): The region code parameter for the API request. Default is "JP".
+        **kwargs: Additional keyword arguments to be passed to the API request.
+
+    Returns:
+        int: The number of videos that were successfully fetched and stored.
+
+    Raises:
+        Any exceptions that occur during the API request.
+    """
+    updated_count = 0
     youtube_client = get_youtube_client()
     request = youtube_client.videos().list(  # type: ignore
         part="snippet,contentDetails,statistics",
@@ -464,15 +345,18 @@ def fetch_popular_videos(
             if check_existing_video(video):
                 continue
             store_video(video)
+            updated_count += 1
     except Exception as e:
         print(e)
+    return updated_count
 
 
 def main() -> None:
     """Entry point for local (debug) execution."""
     fetch_popular_videos(max_result=3)
-    fetch_video_by_id("amCzO2awqlQ")
-    fetch_video_by_id("w1gn81SaHqY")
+    fetch_popular_videos(max_result=3, region_code="US")
+    fetch_video_by_id("vLOmOiIgCDg")
+    fetch_video_by_url("https://www.youtube.com/watch?v=6P0jGPefV8U")
 
 
 if __name__ == "__main__":
