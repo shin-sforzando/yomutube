@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 from utils import JST
+from utils import print_json
 
 
 class FirestoreVideoCategoryList(VideoCategoryList):
@@ -36,3 +37,8 @@ class FirestoreVideo(Video):
         datetime.now(JST), description="The timestamp of the video was last updated."
     )
     caption: Caption
+
+
+if __name__ == "__main__":
+    print_json(FirestoreVideoCategoryList.model_json_schema())
+    print_json(FirestoreVideo.model_json_schema())
