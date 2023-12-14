@@ -22,7 +22,7 @@ from summarize import get_keywords
 from summarize import get_summarized_text
 from utils import JST
 from utils import NO_CAPTION_MESSAGE
-from utils import print_json_response
+from utils import print_json
 
 app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
@@ -282,7 +282,7 @@ def fetch_video_by_id(
     )
     response = request.execute()
     increment_youtube_data_api_quota(1)
-    print_json_response(response)
+    print_json(response)
     try:
         vl = VideoList.model_validate(response)
         for video in vl.items:
