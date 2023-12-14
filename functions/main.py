@@ -1,10 +1,8 @@
-import asyncio
 import os
 import re
 from datetime import datetime
 
 from firebase_admin import firestore
-from firebase_admin import firestore_async
 from firebase_admin import initialize_app
 from firebase_admin.exceptions import FirebaseError
 from firebase_functions import https_fn
@@ -35,7 +33,7 @@ NO_CAPTION_MESSAGE = "【No captions were available.】"
 
 
 @https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])  # type: ignore
-async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
+def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
     """HTTP trigger for execution at arbitrary timing.
 
     Args:
@@ -55,14 +53,14 @@ async def on_request_optional_execution(req: https_fn.Request) -> https_fn.Respo
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
 )  # type: ignore
-async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> None:
+def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) -> None:
     """Periodic execution trigger that run every Friday at 23:50.
 
     Args:
         event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
     """
     print(f"{event.job_name} at {event.schedule_time}")
-    await get_video_categories(update=True)
+    get_video_categories(update=True)
 
 
 @scheduler_fn.on_schedule(
@@ -72,14 +70,14 @@ async def scheduled_execution_every_weekend(event: scheduler_fn.ScheduledEvent) 
     timezone=scheduler_fn.Timezone("Asia/Tokyo"),
     secrets=["YOUTUBE_DATA_API_KEY"],
 )  # type: ignore
-async def scheduled_execution_6_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
-    """Periodic execution trigger that run three times a day.
+def scheduled_execution_6_times_daily(event: scheduler_fn.ScheduledEvent) -> None:
+    """Periodic execution trigger that run 6 times a day.
 
     Args:
         event (scheduler_fn.ScheduledEvent): A ScheduleEvent that is passed to the function handler.
     """
     print(f"{event.job_name} at {event.schedule_time}")
-    await fetch_popular_videos(max_result=3)
+    fetch_popular_videos(max_result=3)
 
 
 def get_youtube_client() -> Resource:
@@ -98,7 +96,7 @@ def get_youtube_client() -> Resource:
     return youtube_client
 
 
-async def increment_youtube_data_api_quota(increment: int = 1) -> None:
+def increment_youtube_data_api_quota(increment: int = 1) -> None:
     """
     Upsert the daily YouTube Data API estimated quota consumption.
 
@@ -108,8 +106,8 @@ async def increment_youtube_data_api_quota(increment: int = 1) -> None:
     Returns:
         None
     """
-    firestore_client = firestore_async.client()  # type: ignore
-    await firestore_client.collection("stats").document(
+    firestore_client = firestore.client()  # type: ignore
+    firestore_client.collection("stats").document(
         datetime.now(JST).strftime("%Y-%m-%d")
     ).set(
         {"youtube_data_api_quota": firestore.Increment(increment)}, merge=True  # type: ignore
@@ -274,11 +272,11 @@ def get_keywords(
     return result
 
 
-async def get_video_categories(
+def get_video_categories(
     update: bool = True, hl: str = "ja_JP", regionCode: str = "JP"
 ) -> FirestoreVideoCategoryList | None:
     """
-    Retrieves the video categories from Firestore or YouTube API asynchronously and returns a FirestoreVideoCategoryList object or None if an error occurred.
+    Retrieves the video categories from Firestore or YouTube API and returns a FirestoreVideoCategoryList object or None if an error occurred.
 
     Args:
         update (bool, optional): Flag indicating whether to update the categories from YouTube API. Defaults to True.
@@ -289,10 +287,10 @@ async def get_video_categories(
         FirestoreVideoCategoryList | None: The retrieved video categories as a FirestoreVideoCategoryList object,
         or None if an error occurred.
     """
-    firestore = firestore_async.client()  # type: ignore
+    firestore_client = firestore.client()  # type: ignore
     youtube_client = get_youtube_client()
     if not update:
-        doc = await firestore.collection("video_categories").document(hl).get()
+        doc = firestore_client.collection("video_categories").document(hl).get()
         if doc.exists:
             try:
                 vcl = FirestoreVideoCategoryList.model_validate(doc.to_dict())
@@ -305,12 +303,12 @@ async def get_video_categories(
         regionCode=regionCode,
     )
     response = request.execute()
-    await increment_youtube_data_api_quota(1)
+    increment_youtube_data_api_quota(1)
     try:
         VideoCategoryList.model_validate(response)
         response["updated_at"] = datetime.now(JST)
         firestore_vcl = FirestoreVideoCategoryList.model_validate(response)
-        await firestore.collection("video_categories").document(hl).set(response)
+        firestore_client.collection("video_categories").document(hl).set(response)
         return firestore_vcl
     except ValidationError as ve:
         print(ve)
@@ -320,7 +318,7 @@ async def get_video_categories(
         return None
 
 
-async def check_existing_video(video: str | Video) -> bool:
+def check_existing_video(video: str | Video) -> bool:
     """
     Check if a video already exists in the Firestore database.
 
@@ -331,10 +329,10 @@ async def check_existing_video(video: str | Video) -> bool:
         bool: True if the video already exists, False otherwise.
     """
     video_id = video if isinstance(video, str) else video.id
-    firestore = firestore_async.client()  # type: ignore
+    firestore_client = firestore.client()  # type: ignore
     try:
-        existing_video_ref = firestore.collection("videos").document(video_id)
-        existing_video = await existing_video_ref.get()
+        existing_video_ref = firestore_client.collection("videos").document(video_id)
+        existing_video = existing_video_ref.get()
         if existing_video.exists:
             print(f"{video_id} already exists.")
             """If a correctly stored video already exists, update `updated_at` and go to the next video processing."""
@@ -351,7 +349,7 @@ async def check_existing_video(video: str | Video) -> bool:
                     keywords = get_keywords(
                         summarized_caption, existing_keywords=existing_keywords
                     )
-                await existing_video_ref.update(
+                existing_video_ref.update(
                     {
                         "caption": {
                             "raw": raw_caption,
@@ -360,14 +358,14 @@ async def check_existing_video(video: str | Video) -> bool:
                         },
                     }
                 )
-            await existing_video_ref.update({"updated_at": datetime.now(JST)})
+            existing_video_ref.update({"updated_at": datetime.now(JST)})
             return True
     except Exception as e:
         print(e)
     return False
 
 
-async def store_video(video: Video) -> None:
+def store_video(video: Video) -> None:
     """
     Stores the given video in Firestore.
 
@@ -377,7 +375,7 @@ async def store_video(video: Video) -> None:
     Returns:
         None
     """
-    firestore = firestore_async.client()  # type: ignore
+    firestore_client = firestore.client()  # type: ignore
     try:
         video_dict = video.model_dump()
         raw_caption = get_caption(video)
@@ -397,13 +395,13 @@ async def store_video(video: Video) -> None:
             "keywords": keywords,
         }
         fv = FirestoreVideo.model_validate(video_dict)
-        await firestore.collection("videos").document(fv.id).set(video_dict)
+        firestore_client.collection("videos").document(fv.id).set(video_dict)
         print(f"Finished storing {fv.id}.")
     except Exception as e:
         print(e)
 
 
-async def fetch_video_by_id(
+def fetch_video_by_id(
     video_id: str, hl: str = "ja_JP", region_code: str = "JP"
 ) -> None:
     """
@@ -414,7 +412,7 @@ async def fetch_video_by_id(
         hl (str, optional): The language parameter for the YouTube API. Defaults to "ja_JP".
         region_code (str, optional): The region code parameter for the YouTube API. Defaults to "JP".
     """
-    if await check_existing_video(video_id):
+    if check_existing_video(video_id):
         return
     youtube_client = get_youtube_client()
     request = youtube_client.videos().list(  # type: ignore
@@ -424,17 +422,17 @@ async def fetch_video_by_id(
         regionCode=region_code,
     )
     response = request.execute()
-    await increment_youtube_data_api_quota(1)
+    increment_youtube_data_api_quota(1)
     print_json_response(response)
     try:
         vl = VideoList.model_validate(response)
         for video in vl.items:
-            await store_video(video)
+            store_video(video)
     except Exception as e:
         print(e)
 
 
-async def fetch_popular_videos(
+def fetch_popular_videos(
     max_result: int = 10, hl: str = "ja_JP", region_code: str = "JP", **kwargs
 ) -> None:
     """
@@ -459,23 +457,23 @@ async def fetch_popular_videos(
         **kwargs,
     )
     response = request.execute()
-    await increment_youtube_data_api_quota(1)
+    increment_youtube_data_api_quota(1)
     try:
         vl = VideoList.model_validate(response)
         for video in vl.items:
-            if await check_existing_video(video):
+            if check_existing_video(video):
                 continue
-            await store_video(video)
+            store_video(video)
     except Exception as e:
         print(e)
 
 
-async def main() -> None:
+def main() -> None:
     """Entry point for local (debug) execution."""
-    await fetch_popular_videos(max_result=3)
-    await fetch_video_by_id("amCzO2awqlQ")
-    await fetch_video_by_id("w1gn81SaHqY")
+    fetch_popular_videos(max_result=3)
+    fetch_video_by_id("amCzO2awqlQ")
+    fetch_video_by_id("w1gn81SaHqY")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
