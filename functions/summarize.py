@@ -13,12 +13,12 @@ def get_summarized_text(
     max_output_tokens: int = 2048,
 ) -> str:
     """
-    Summarizes the given text by extracting audio subtitles from a YouTube video.
+    Summarizes the given text by extracting subtitles from YouTube videos.
 
     Args:
         text (str): The input text to be summarized.
-        chunk_size (int, optional): The size of each text chunk for processing. Defaults to 8192.
-        temperature (float, optional): The temperature parameter for text generation. Defaults to 0.2.
+        chunk_size (int, optional): The size of each text chunk for processing. Defaults to 16384.
+        temperature (float, optional): The temperature parameter for text generation. Defaults to 0.25.
         max_output_tokens (int, optional): The maximum number of tokens in the generated summary. Defaults to 2048.
 
     Returns:
@@ -75,18 +75,16 @@ def get_keywords(
     max_output_tokens: int = 256,
 ) -> list[str]:
     """
-    Extracts keywords from the given text using a language model.
+    Extracts keywords from the given text and returns them in descending order of importance.
 
     Args:
-        text (str): The input text from which keywords will be extracted.
-        temperature (float, optional): The temperature parameter for the language model.
-            Higher values (e.g., 1.0) result in more random outputs, while lower values (e.g., 0.2)
-            make the outputs more focused and deterministic. Defaults to 0.2.
-        max_output_tokens (int, optional): The maximum number of tokens in the generated output.
-            Defaults to 1024.
+        text (str): The input text from which keywords need to be extracted.
+        existing_keywords (list[str], optional): A list of existing keywords to consider. Defaults to an empty list.
+        temperature (float, optional): The temperature parameter for keyword extraction. Defaults to 0.0.
+        max_output_tokens (int, optional): The maximum number of output tokens. Defaults to 256.
 
     Returns:
-        list[str]: A list of extracted keywords.
+        list[str]: A list of extracted keywords in descending order of importance.
     """
     prompt_template = """以下の文章から、最大10個のキーワードを抽出し、 `|` で区切って重要度の高い順に出力してください。
 ------
