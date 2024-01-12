@@ -51,7 +51,7 @@ A service gives transcribed YouTube for You.
 - [Pulumi](https://www.pulumi.com) (Version `3.96.1` or higher)
   - Python 3.11
   - Google Cloud SDK (Version `455.0.0` or higher)
-  - Firebase CLI (Version `13.0.1` or higher)
+  - Firebase CLI (Version `13.0.3` or higher)
 
 #### Cloud Functions
 
@@ -59,7 +59,7 @@ A service gives transcribed YouTube for You.
 
 ### for Front-End
 
-- Flutter SDK (Version `3.16.1` or higher)
+- Flutter SDK (Version `3.16.7` or higher)
   - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
 - [lcov](https://github.com/linux-test-project/lcov) as **Coverage HTML Generator**
 

@@ -11,8 +11,9 @@ class VideoListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String targetDate =
-        dateLikeString ?? DateFormat('yyyy-MM-dd').format(DateTime.now());
+    String targetDate = dateLikeString ?? DateTime.now().toString();
+    targetDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(targetDate));
+
     return Scaffold(
         appBar: AppBar(
           title: Text(targetDate),
@@ -21,7 +22,7 @@ class VideoListView extends StatelessWidget {
                 onPressed: () {
                   debugPrint(FirebaseFirestore.instance.databaseURL);
                 },
-                icon: const Icon(Icons.settings))
+                icon: const Icon(Icons.info))
           ],
         ),
         body: ListView(
