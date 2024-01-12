@@ -1,29 +1,36 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Project imports:
-import 'package:yomutube/src/feature/video_list/presentation/component/video_list_item.dart';
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
-class VideoListView extends StatefulWidget {
-  const VideoListView({
-    super.key,
-    this.items = const [VideoListItem(1), VideoListItem(2), VideoListItem(3)],
-  });
+class VideoListView extends StatelessWidget {
+  final String? dateLikeString;
+  const VideoListView({super.key, this.dateLikeString});
 
-  final List<VideoListItem> items;
-
-  @override
-  State<VideoListView> createState() => _VideoListViewState();
-}
-
-class _VideoListViewState extends State<VideoListView> {
   @override
   Widget build(BuildContext context) {
+    String targetDate =
+        dateLikeString ?? DateFormat('yyyy-MM-dd').format(DateTime.now());
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Video List'),
-      ),
-      body: const Text('Video List'),
-    );
+        appBar: AppBar(
+          title: Text(targetDate),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  debugPrint(FirebaseFirestore.instance.databaseURL);
+                },
+                icon: const Icon(Icons.settings))
+          ],
+        ),
+        body: ListView(
+          children: const [
+            ListTile(
+              title: Text('test'),
+              subtitle: Text('test'),
+            )
+          ],
+        ));
   }
 }
