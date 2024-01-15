@@ -29,7 +29,7 @@ repos:
     hooks:
       - id: reorder-python-imports
   - repo: https://github.com/psf/black
-    rev: 23.11.0
+    rev: 23.12.1
     hooks:
       - id: black
   - repo: https://github.com/guid-empty/flutter-dependency-validation-pre-commit
@@ -40,11 +40,12 @@ repos:
     rev: 'f350497a11b1285c695595049e95a420068e7a9f'
     hooks:
       - id: flutter-import-sorter
-  - repo: https://github.com/dluksza/flutter-analyze-pre-commit
-    rev: "4afcaa82fc368d40d486256bf4edba329bf667bb"
+  - repo: local
     hooks:
       - id: flutter-analyze
-        args: [lib/*]
+        name: Flutter analyze
+        language: system
+        entry: flutter analyze
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.9.0.6
     hooks:

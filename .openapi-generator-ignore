@@ -1,0 +1,5 @@
+.gitignore
+.openapi-generator-ignore
+.travis.yml
+analysis_options.yaml
+git_push.sh

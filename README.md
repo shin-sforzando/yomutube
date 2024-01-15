@@ -76,6 +76,7 @@ pulumi/check       検証
 pulumi/test        試験
 pulumi/preview     確認
 pulumi/up          反映
+pulumi/deploy      配置
 pulumi/clean       掃除
 pulumi/pwd         現地
 pulumi/help        助言
@@ -85,6 +86,7 @@ functions/open        閲覧
 functions/hide        秘匿
 functions/reveal      暴露
 functions/gen-models  生成
+functions/debug       試行
 functions/check       検証
 functions/test        試験
 functions/deploy      反映
@@ -98,9 +100,11 @@ hide                 秘匿
 reveal               暴露
 check                検証
 emulator             模倣
-debug                確認
+debug                試行
 test                 試験
-build                構築
+gen-openapi          生成
+build-runner         構築
+build                清書
 deploy               配備
 tag                  付箋
 clean                掃除
