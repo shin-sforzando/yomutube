@@ -19,6 +19,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.1
+  openapi:
+    path: openapi
 
 dev_dependencies:
   build_runner: ^2.4.8

@@ -33,10 +33,6 @@ dependencies:
     path: /path/to/openapi
 ```
 
-## Tests
-
-TODO
-
 ## Getting Started
 
 Please follow the [installation procedure](#installation--usage) and then run the following:

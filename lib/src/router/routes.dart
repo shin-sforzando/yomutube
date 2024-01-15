@@ -22,8 +22,8 @@ Handler videoListHandler =
 class Routes {
   static void configureRoutes(FluroRouter router) {
     router
-      ..define('/', handler: createBasicHandler(const VideoListView()))
-      ..define('/videos', handler: createBasicHandler(const VideoListView()))
+      ..define('/', handler: createBasicHandler(VideoListView()))
+      ..define('/videos', handler: createBasicHandler(VideoListView()))
       ..define('/videos/:dateLikeString', handler: videoListHandler);
   }
 }
