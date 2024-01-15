@@ -564,9 +564,7 @@ components:
         liveStreamingDetails:
           $ref: '#/components/schemas/LiveStreamingDetails'
         localizations:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Localization'
+          $ref: '#/components/schemas/Localization'
       required:
         - kind
         - etag
@@ -601,8 +599,17 @@ components:
           description: The video's description. The property value has a maximum length of 5000 bytes and may contain all valid UTF-8 characters except < and >.
         thumbnails:
           type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Thumbnail'
+          properties:
+            default:
+              $ref: '#/components/schemas/Thumbnail'
+            medium:
+              $ref: '#/components/schemas/Thumbnail'
+            high:
+              $ref: '#/components/schemas/Thumbnail'
+            standard:
+              $ref: '#/components/schemas/Thumbnail'
+            maxres:
+              $ref: '#/components/schemas/Thumbnail'
         channelTitle:
           type: string
           description: The title of the channel that the video belongs to.
@@ -1495,16 +1502,13 @@ components:
     Localization:
       type: object
       description: The localizations object contains translations of the video's metadata.
-      additionalProperties:
-        type: object
-        description: The language of the localized text associated with the key value. The value is a string that contains a BCP-47 language code.
-        properties:
-          title:
-            type: string
-            description: The localized video title.
-          description:
-            type: string
-            description: The localized video description.
+      properties:
+        title:
+          type: string
+          description: The localized video title.
+        description:
+          type: string
+          description: The localized video description.
 
     CaptionList:
       description: |-

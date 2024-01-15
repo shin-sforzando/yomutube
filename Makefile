@@ -12,7 +12,7 @@ VERSION := $(shell git tag --sort=-v:refname | head -n 1)
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean pwd help FORCE
+.PHONY: default setup open hide reveal check emulator debug test gen-openapi build-runner build deploy tag clean pwd help FORCE
 
 default: ## 常用
 	make debug
@@ -25,6 +25,7 @@ ifeq ($(OS_NAME),Darwin)
 	brew install git-secret
 	brew install go-task
 	brew install lcov
+	brew install openapi-generator
 	brew install pre-commit
 	brew install --cask flutter
 endif
@@ -49,7 +50,7 @@ check: ## 検証
 emulator: ## 模倣
 	firebase emulators:start
 
-debug: ## 確認
+debug: ## 試行
 	flutter pub get
 	flutter run --debug --verbose --device-id chrome
 
@@ -58,7 +59,14 @@ test: $(SUBDIRS) ## 試験
 	genhtml coverage/lcov.info --output-directory coverage/html
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Flutter Web is complete." ; fi
 
-build: ## 構築
+gen-openapi: ## 生成
+	openapi-generator generate --input-spec ./api/YouTubeDataV3.yaml --generator-name dart --global-property models,supportingFiles,apiDocs=false,apiTests=false,modelDocs=false,modelTests=false --output ./openapi
+	@if [ $(OS_NAME) = "Darwin" ]; then say "The model generating process of Flutter Web is complete." ; fi
+
+build-runner: ## 構築
+	dart run build_runner build --delete-conflicting-outputs
+
+build: ## 清書
 	flutter build web --verbose --release
 
 deploy: build $(SUBDIRS) ## 配備

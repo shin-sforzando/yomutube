@@ -4,9 +4,9 @@ from typing import TypeAlias
 from langchain.chains import LLMChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
-from langchain.llms import VertexAI
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.llms import VertexAI
 
 
 ModelName: TypeAlias = Literal["gemini-pro", "text-bison-32k"]

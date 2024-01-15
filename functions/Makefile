@@ -8,10 +8,10 @@ OPEN_TARGET :=
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal gen-models check test deploy clean pwd help
+.PHONY: default setup open hide reveal gen-models debug check test deploy clean pwd help
 
 default: ## 常用
-	make help
+	make debug
 
 setup: ## 準備
 ifeq ($(OS_NAME),Darwin)
@@ -31,8 +31,16 @@ reveal: ## 暴露
 	git secret reveal -vf
 
 gen-models: ## 生成
-	datamodel-codegen --debug --input $(MAKEFILE_DIR)../api/YouTubeDataV3.yaml --output $(MAKEFILE_DIR)models.py
+	datamodel-codegen --input $(MAKEFILE_DIR)../api/YouTubeDataV3.yaml --output $(MAKEFILE_DIR)models.py
+ifeq ($(OS_NAME),Darwin)
+	sed -i '' 's/\\n/ /g' $(MAKEFILE_DIR)models.py
+else
+	sed -i 's/\\n/ /g' $(MAKEFILE_DIR)models.py
+endif
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The model generating process of Cloud Functions is complete." ; fi
+
+debug: ## 試行
+	python main.py
 
 check: ## 検証
 	pre-commit run --all-files
