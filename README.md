@@ -102,7 +102,6 @@ check                検証
 emulator             模倣
 debug                試行
 test                 試験
-gen-openapi          生成
 build-runner         構築
 build                清書
 deploy               配備

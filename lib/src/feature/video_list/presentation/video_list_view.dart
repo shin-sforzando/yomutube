@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-// import 'package:openapi/api.dart';
-
 class VideoListView extends StatelessWidget {
   final String? dateLikeString;
   VideoListView({super.key, this.dateLikeString});
@@ -21,18 +19,6 @@ class VideoListView extends StatelessWidget {
     Timestamp TargetDateTimestamp = Timestamp.fromDate(targetDate);
     Timestamp nextDateTimestamp = Timestamp.fromDate(nextDate);
 
-    // FirebaseFirestore.instance
-    //     .collection('videos')
-    //     .orderBy('updated_at', descending: false)
-    //     .startAt([TargetDateTimestamp])
-    //     .endAt([nextDateTimestamp])
-    //     .get()
-    //     .then((QuerySnapshot querySnapshot) {
-    //       querySnapshot.docs.forEach((doc) {
-    //         debugPrint(doc['id'] + ':' + doc['updated_at'].toString());
-    //         debugPrint(doc.toString());
-    //       });
-    //     });
     return Scaffold(
       appBar: AppBar(title: Text(targetDateString)),
       body: FutureBuilder<QuerySnapshot>(
@@ -42,7 +28,7 @@ class VideoListView extends StatelessWidget {
             .startAt([TargetDateTimestamp]).endAt([nextDateTimestamp]).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return const Text('Something went wrong');
+            return const Text('Something went wrong!');
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
@@ -58,7 +44,7 @@ class VideoListView extends StatelessWidget {
             );
           }
 
-          return const Text('loading');
+          return const Text('Loading...');
         },
       ),
     );
