@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluro/fluro.dart';
@@ -25,6 +26,7 @@ void main() async {
   );
 
   if (kDebugMode) {
+    FirebaseFirestore.setLoggingEnabled(true);
     try {
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
     } catch (e) {

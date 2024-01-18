@@ -36,15 +36,21 @@ class VideoListView extends StatelessWidget {
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data()! as Map<String, dynamic>;
-                return ListTile(
-                  title: Text(data['id']),
-                  subtitle: Text(data['updated_at'].toString()),
-                );
+                return Container(
+                    height: 100,
+                    child: ListTile(
+                      title: Text(data['snippet']['title']),
+                      subtitle: Text(data['id']),
+                      leading: Image.network(
+                          data['snippet']['thumbnails']['default']['url']),
+                    ));
               }).toList(),
             );
           }
 
-          return const Text('Loading...');
+          return Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator());
         },
       ),
     );
