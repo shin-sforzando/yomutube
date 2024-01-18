@@ -564,7 +564,9 @@ components:
         liveStreamingDetails:
           $ref: '#/components/schemas/LiveStreamingDetails'
         localizations:
-          $ref: '#/components/schemas/Localization'
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Localization'
       required:
         - kind
         - etag
@@ -1502,13 +1504,15 @@ components:
     Localization:
       type: object
       description: The localizations object contains translations of the video's metadata.
-      properties:
-        title:
-          type: string
-          description: The localized video title.
-        description:
-          type: string
-          description: The localized video description.
+      additionalProperties:
+        type: object
+        properties:
+          title:
+            type: string
+            description: The localized video title.
+          description:
+            type: string
+            description: The localized video description.
 
     CaptionList:
       description: |-
