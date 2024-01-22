@@ -20,7 +20,24 @@ class VideoListView extends StatelessWidget {
     Timestamp nextDateTimestamp = Timestamp.fromDate(nextDate);
 
     return Scaffold(
-      appBar: AppBar(title: Text(targetDateString)),
+      appBar: AppBar(title: Text(targetDateString), actions: [
+        IconButton(
+          icon: const Icon(Icons.calendar_today),
+          onPressed: () {
+            showDatePicker(
+              context: context,
+              initialDate: targetDate,
+              firstDate: DateTime(2023),
+              lastDate: DateTime.now(),
+            ).then((value) {
+              if (value != null) {
+                Navigator.pushReplacementNamed(context,
+                    '/videos/' + DateFormat('yyyy-MM-dd').format(value));
+              }
+            });
+          },
+        )
+      ]),
       body: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance
             .collection('videos')
@@ -37,13 +54,12 @@ class VideoListView extends StatelessWidget {
                 Map<String, dynamic> data =
                     document.data()! as Map<String, dynamic>;
                 return Container(
-                    height: 100,
                     child: ListTile(
-                      title: Text(data['snippet']['title']),
-                      subtitle: Text(data['id']),
-                      leading: Image.network(
-                          data['snippet']['thumbnails']['default']['url']),
-                    ));
+                  title: Text(data['snippet']['title']),
+                  subtitle: Text(data['caption']['keywords'].join(', ')),
+                  leading: Image.network(
+                      data['snippet']['thumbnails']['default']['url']),
+                ));
               }).toList(),
             );
           }

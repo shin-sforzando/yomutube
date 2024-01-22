@@ -7,6 +7,7 @@ from langchain.docstore.document import Document
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.llms import VertexAI
+from utils import SUMMARIZE_PROMPT_TEMPLATE
 
 
 ModelName: TypeAlias = Literal["gemini-pro", "text-bison-32k"]
@@ -16,7 +17,7 @@ def get_summarized_text(
     text: str,
     chunk_size: int = 16384,
     model_name: ModelName = "gemini-pro",
-    temperature: float = 0.25,
+    temperature: float = 0.2,
     max_output_tokens: int = 2048,
 ) -> str:
     """
@@ -31,22 +32,24 @@ def get_summarized_text(
     Returns:
         str: The summarized text.
     """
-    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
-文章は句読点が欠落していたり、表記揺れがあったりします。
-動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
-------
+    first_template = (
+        SUMMARIZE_PROMPT_TEMPLATE
+        + """
+--------
 {text}
-------
+--------
 """
+    )
     first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
-    subsequent_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
-文章は句読点が欠落していたり、表記揺れがあったりします。
-動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
-------
+    subsequent_template = (
+        SUMMARIZE_PROMPT_TEMPLATE
+        + """
+--------
 {existing_answer}
 {text}
-------
+--------
 """
+    )
     subsequent_prompt = PromptTemplate(
         input_variables=["existing_answer", "text"], template=subsequent_template
     )
@@ -95,9 +98,9 @@ def get_keywords(
         list[str]: A list of extracted keywords in descending order of importance.
     """
     prompt_template = """以下の文章から、最大10個のキーワードを抽出し、 `|` で区切って重要度の高い順に出力してください。
-------
+--------
 {text}
-------
+--------
 """
     prompt = PromptTemplate(input_variables=["text"], template=prompt_template)
     vertex_ai = VertexAI(

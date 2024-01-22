@@ -5,7 +5,13 @@ from datetime import timezone
 
 JST = timezone(timedelta(hours=9), "JST")
 
-NO_CAPTION_MESSAGE = "【No captions were available.】"
+NO_CAPTION_MESSAGE = "【Video information could not be retrieved.】"
+
+SUMMARIZE_PROMPT_TEMPLATE = """あなたは情報収集のスペシャリストです。
+以下の文章はYouTubeの動画から抜き出した音声字幕です。
+文章は句読点が欠落しており、表記揺れもあります。
+動画を見てない人に紹介するために、動画の内容を800文字程度に要約し、結果だけ出力してください。
+結果では箇条書きを使わずに文章で出力してください。"""
 
 
 def print_json(json_obj) -> None:
