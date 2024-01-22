@@ -20,24 +20,44 @@ class VideoListView extends StatelessWidget {
     Timestamp nextDateTimestamp = Timestamp.fromDate(nextDate);
 
     return Scaffold(
-      appBar: AppBar(title: Text(targetDateString), actions: [
-        IconButton(
-          icon: const Icon(Icons.calendar_today),
-          onPressed: () {
-            showDatePicker(
-              context: context,
-              initialDate: targetDate,
-              firstDate: DateTime(2023),
-              lastDate: DateTime.now(),
-            ).then((value) {
-              if (value != null) {
-                Navigator.pushReplacementNamed(context,
-                    '/videos/' + DateFormat('yyyy-MM-dd').format(value));
-              }
-            });
-          },
-        )
-      ]),
+      appBar: AppBar(
+        title: Text("YomuTube",
+            style: TextStyle(
+                fontSize: 36, fontWeight: FontWeight.bold, color: Colors.red)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () {
+              showDatePicker(
+                context: context,
+                initialDate: targetDate,
+                firstDate: DateTime(2023),
+                lastDate: DateTime.now(),
+              ).then((value) {
+                if (value != null) {
+                  Navigator.pushReplacementNamed(context,
+                      '/videos/' + DateFormat('yyyy-MM-dd').format(value));
+                }
+              });
+            },
+          )
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48),
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              targetDateString,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
       body: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance
             .collection('videos')
@@ -53,13 +73,25 @@ class VideoListView extends StatelessWidget {
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data()! as Map<String, dynamic>;
-                return Container(
-                    child: ListTile(
-                  title: Text(data['snippet']['title']),
-                  subtitle: Text(data['caption']['keywords'].join(', ')),
-                  leading: Image.network(
-                      data['snippet']['thumbnails']['default']['url']),
-                ));
+                return Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Ink.image(
+                            image: Image.network(data['snippet']['thumbnails']
+                                    ['standard']['url'])
+                                .image,
+                            fit: BoxFit.cover,
+                            height: 120),
+                        Text(data['snippet']['title'],
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                      ],
+                    ));
               }).toList(),
             );
           }
