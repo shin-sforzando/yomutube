@@ -32,13 +32,13 @@ class _VideoListViewState extends State<VideoListView> {
 
   Future<QuerySnapshot<Video>> _getVideos() async {
     DateTime nextDate = targetDate.add(const Duration(days: 1));
-    Timestamp TargetDateTimestamp = Timestamp.fromDate(targetDate);
+    Timestamp targetTimestamp = Timestamp.fromDate(targetDate);
     Timestamp nextDateTimestamp = Timestamp.fromDate(nextDate);
 
     return FirebaseFirestore.instance
         .collection('videos')
         .orderBy('updated_at', descending: false)
-        .startAt([TargetDateTimestamp])
+        .startAt([targetTimestamp])
         .endAt([nextDateTimestamp])
         .withConverter<Video>(
             fromFirestore: (snapshot, _) => Video.fromMap(snapshot.data()!),

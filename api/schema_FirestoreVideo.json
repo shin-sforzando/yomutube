@@ -12,7 +12,7 @@
             }
           ],
           "default": null,
-          "description": "TThe number of audio channels that the stream contains.",
+          "description": "The number of audio channels that the stream contains.",
           "title": "Channelcount"
         },
         "codec": {

@@ -21,14 +21,15 @@ class Video {
 
   factory Video.fromMap(Map<String, dynamic> map) {
     return Video(
-      id: map['id'],
-      title: map['snippet']['title'],
-      minThumbnailUrl: map['snippet']['thumbnails']['default']['url'],
-      maxThumbnailUrl: map['snippet']['thumbnails']['standard']['url'],
-      summarizedCaption: map['caption']['summarized'],
-      keywords: map['caption']['keywords'].cast<String>(),
-      createdAt: map['created_at'].toDate(),
-      updatedAt: map['updated_at'].toDate(),
+      id: map['id'] as String,
+      title: map['snippet']['title'] as String,
+      minThumbnailUrl: map['snippet']['thumbnails']['default']['url'] as String,
+      maxThumbnailUrl:
+          map['snippet']['thumbnails']['standard']['url'] as String,
+      summarizedCaption: map['caption']['summarized'] as String,
+      keywords: List<String>.from(map['caption']['keywords']),
+      createdAt: map['created_at'].toDate() as DateTime,
+      updatedAt: map['updated_at'].toDate() as DateTime,
     );
   }
 }

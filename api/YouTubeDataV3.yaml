@@ -1248,7 +1248,7 @@ components:
               channelCount:
                 type: integer
                 format: int32
-                description: TThe number of audio channels that the stream contains.
+                description: The number of audio channels that the stream contains.
               codec:
                 type: string
                 description: The codec of the audio stream.
