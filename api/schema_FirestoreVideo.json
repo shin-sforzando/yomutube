@@ -1,0 +1,2620 @@
+{
+  "$defs": {
+    "AudioStream": {
+      "properties": {
+        "channelCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "TThe number of audio channels that the stream contains.",
+          "title": "Channelcount"
+        },
+        "codec": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The codec of the audio stream.",
+          "title": "Codec"
+        },
+        "bitrateBps": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The bitrate of the audio stream in bits per second.",
+          "title": "Bitratebps"
+        },
+        "vendor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A value that uniquely identifies a video vendor. Typically, the value is a four-letter vendor code.",
+          "title": "Vendor"
+        }
+      },
+      "title": "AudioStream",
+      "type": "object"
+    },
+    "Caption": {
+      "description": "Represents the caption of a video.",
+      "properties": {
+        "raw": {
+          "default": "",
+          "description": "The raw caption of the video.",
+          "title": "Raw",
+          "type": "string"
+        },
+        "summarized": {
+          "default": "",
+          "description": "The summarized caption of the video.",
+          "title": "Summarized",
+          "type": "string"
+        },
+        "keywords": {
+          "default": [],
+          "description": "The keywords extracted from caption.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Keywords",
+          "type": "array"
+        }
+      },
+      "title": "Caption",
+      "type": "object"
+    },
+    "ContentDetails": {
+      "description": "The contentDetails object contains information about the video content, including the length of the video and an indication of whether captions are available for the video.",
+      "properties": {
+        "duration": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The length of the video. The property value is an ISO 8601 duration. For example, for a video that is at least one minute long and less than one hour long, the duration is in the format `PT#M#S`, in which the letters PT indicate that the value specifies a period of time, and the letters M and S refer to length in minutes and seconds, respectively. The # characters preceding the M and S letters are both integers that specify the number of minutes (or seconds) of the video. For example, a value of `PT15M33S` indicates that the video is 15 minutes and 33 seconds long. If the video is at least one hour long, the duration is in the format PT#H#M#S, in which the # preceding the letter H specifies the length of the video in hours and all of the other details are the same as described above. If the video is at least one day long, the letters P and T are separated, and the value's format is P#DT#H#M#S. Please refer to the ISO 8601 specification for complete details.",
+          "title": "Duration"
+        },
+        "dimension": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Indicates whether the video is available in 3D or in 2D.",
+          "title": "Dimension"
+        },
+        "definition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Indicates whether the video is available in high definition (HD) or only in standard definition. Valid values for this property are: - `hd` - `sd`",
+          "examples": ["hd", "sd"],
+          "title": "Definition"
+        },
+        "caption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Indicates whether captions are available for the video. Valid values for this property are: - `false` - `true`",
+          "examples": ["false", "true"],
+          "title": "Caption"
+        },
+        "licensedContent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Indicates whether the video represents licensed content, which means that the content was uploaded to a channel linked to a YouTube content partner and then claimed by that partner.",
+          "title": "Licensedcontent"
+        },
+        "regionRestriction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegionRestriction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The `regionRestriction` object contains information about the countries where a video is (or is not) viewable. The object will contain either the `contentDetails.regionRestriction.allowed` property or the `contentDetails.regionRestriction.blocked` property."
+        },
+        "contentRating": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ContentRating"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "projection": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Specifies the projection format of the video. Valid values for this property are: - `360` - `rectangular`",
+          "title": "Projection"
+        },
+        "hasCustomThumbnail": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Indicates whether the video uploader has provided a custom thumbnail image for the video. This property is only visible to the video uploader.",
+          "title": "Hascustomthumbnail"
+        }
+      },
+      "title": "ContentDetails",
+      "type": "object"
+    },
+    "ContentRating": {
+      "description": "Specifies the ratings that the video received under various rating schemes.",
+      "properties": {
+        "acbRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The ACB rating of the content.",
+          "title": "Acbrating"
+        },
+        "agcomRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The AGCOM rating of the content.",
+          "title": "Agcomrating"
+        },
+        "anatelRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The Anatel rating of the content.",
+          "title": "Anatelrating"
+        },
+        "bbfcRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The BBFC rating of the content.",
+          "title": "Bbfcrating"
+        },
+        "bfvcRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The BFVC rating of the content.",
+          "title": "Bfvcrating"
+        },
+        "bmukkRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The BMUKK rating of the content.",
+          "title": "Bmukkrating"
+        },
+        "catvRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CATV rating of the content.",
+          "title": "Catvrating"
+        },
+        "catvfrRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CATVFR rating of the content.",
+          "title": "Catvfrrating"
+        },
+        "cbfcRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CBFC rating of the content.",
+          "title": "Cbfcrating"
+        },
+        "cccRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CCC rating of the content.",
+          "title": "Cccrating"
+        },
+        "cceRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CCE rating of the content.",
+          "title": "Ccerating"
+        },
+        "chfilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CHFilm rating of the content.",
+          "title": "Chfilmrating"
+        },
+        "chvrsRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CHVRS rating of the content.",
+          "title": "Chvrsrating"
+        },
+        "cicfRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CICF rating of the content.",
+          "title": "Cicfrating"
+        },
+        "cnaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CNA rating of the content.",
+          "title": "Cnarating"
+        },
+        "cncRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CNC rating of the content.",
+          "title": "Cncrating"
+        },
+        "csaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CSA rating of the content.",
+          "title": "Csarating"
+        },
+        "cscfRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CSCF rating of the content.",
+          "title": "Cscfrating"
+        },
+        "czfilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CZFilm rating of the content.",
+          "title": "Czfilmrating"
+        },
+        "djctqRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The DJCTQ rating of the content.",
+          "title": "Djctqrating"
+        },
+        "djctqRatingReasons": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The DJCTQ rating reasons of the content.",
+          "title": "Djctqratingreasons"
+        },
+        "ecbmctRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The ECBMCT rating of the content.",
+          "title": "Ecbmctrating"
+        },
+        "eefilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The EEFilm rating of the content.",
+          "title": "Eefilmrating"
+        },
+        "egfilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The EGFilm rating of the content.",
+          "title": "Egfilmrating"
+        },
+        "eirinRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The EIRIN rating of the content.",
+          "title": "Eirinrating"
+        },
+        "fcbmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The FCBM rating of the content.",
+          "title": "Fcbmrating"
+        },
+        "fcoRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The FCO rating of the content.",
+          "title": "Fcorating"
+        },
+        "fmocRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The FMOC rating of the content. This property has been deprecated as of November 2, 2015. Use the `contentDetails.contentRating.cncRating` property instead.",
+          "title": "Fmocrating"
+        },
+        "fpbRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The FPB rating of the content.",
+          "title": "Fpbrating"
+        },
+        "fpbRatingReasons": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The FPB rating reasons of the content.",
+          "title": "Fpbratingreasons"
+        },
+        "fskRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The FSK rating of the content.",
+          "title": "Fskrating"
+        },
+        "grfilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The GRFilm rating of the content.",
+          "title": "Grfilmrating"
+        },
+        "icaaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The ICAA rating of the content.",
+          "title": "Icaarating"
+        },
+        "ifcoRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The IFCo rating of the content.",
+          "title": "Ifcorating"
+        },
+        "ilfilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The ILFilm rating of the content.",
+          "title": "Ilfilmrating"
+        },
+        "incaaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The INCAA rating of the content.",
+          "title": "Incaarating"
+        },
+        "kfcbRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The KFCB rating of the content.",
+          "title": "Kfcbrating"
+        },
+        "kijkwijzerRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The Kijkwijzer rating of the content.",
+          "title": "Kijkwijzerrating"
+        },
+        "kmrbRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The KMRB rating of the content.",
+          "title": "Kmrbrating"
+        },
+        "lsfRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The LSF rating of the content.",
+          "title": "Lsfrating"
+        },
+        "mccaaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MCCAA rating of the content.",
+          "title": "Mccaarating"
+        },
+        "mccypRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MCCYP rating of the content.",
+          "title": "Mccyprating"
+        },
+        "mcstRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MCST rating of the content.",
+          "title": "Mcstrating"
+        },
+        "mdaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MDA rating of the content.",
+          "title": "Mdarating"
+        },
+        "medietilsynetRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The Medietilsynet rating of the content.",
+          "title": "Medietilsynetrating"
+        },
+        "mekuRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MEKU rating of the content.",
+          "title": "Mekurating"
+        },
+        "mibacRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MIBAC rating of the content.",
+          "title": "Mibacrating"
+        },
+        "mocRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MOC rating of the content.",
+          "title": "Mocrating"
+        },
+        "moctwRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MOCTW rating of the content.",
+          "title": "Moctwrating"
+        },
+        "mpaaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MPAA rating of the content.",
+          "title": "Mpaarating"
+        },
+        "mpaatRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MPAAT rating of the content.",
+          "title": "Mpaatrating"
+        },
+        "mtrcbRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The MTRCB rating of the content.",
+          "title": "Mtrcbrating"
+        },
+        "nbcRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The NBC rating of the content.",
+          "title": "Nbcrating"
+        },
+        "nbcplRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The NBCPL rating of the content.",
+          "title": "Nbcplrating"
+        },
+        "nfrcRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The NFRC rating of the content.",
+          "title": "Nfrcrating"
+        },
+        "nfvcbRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The NFVCB rating of the content.",
+          "title": "Nfvcbrating"
+        },
+        "nkclvRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The NKCLV rating of the content.",
+          "title": "Nkclvrating"
+        },
+        "oflcRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The OFLC rating of the content.",
+          "title": "Oflcrating"
+        },
+        "pefilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The PEFilm rating of the content.",
+          "title": "Pefilmrating"
+        },
+        "rcnofRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The RCNOF rating of the content.",
+          "title": "Rcnofrating"
+        },
+        "resorteviolenciaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The RESORTEVIOLÊNCIA rating of the content.",
+          "title": "Resorteviolenciarating"
+        },
+        "rtcRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The RTC rating of the content.",
+          "title": "Rtcrating"
+        },
+        "rteRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The RTE rating of the content.",
+          "title": "Rterating"
+        },
+        "russiaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The Russia rating of the content.",
+          "title": "Russiarating"
+        },
+        "skfilmRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The SKFilm rating of the content.",
+          "title": "Skfilmrating"
+        },
+        "smaisRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The SMAIS rating of the content.",
+          "title": "Smaisrating"
+        },
+        "smsaRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The SMSA rating of the content.",
+          "title": "Smsarating"
+        },
+        "tvpgRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The TVPG rating of the content.",
+          "title": "Tvpgrating"
+        },
+        "ytRating": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The YT rating of the content.",
+          "title": "Ytrating"
+        }
+      },
+      "title": "ContentRating",
+      "type": "object"
+    },
+    "FileDetails": {
+      "description": "The fileDetails object encapsulates information about the video file that was uploaded to YouTube, including the file's resolution, duration, audio and video codecs, stream bitrates, and more.\nThis data can only be retrieved by the video owner.\nThe fileDetails object will only be returned if the `processingDetails.fileAvailability` property has a value of available.",
+      "properties": {
+        "fileName": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The name of the file.",
+          "title": "Filename"
+        },
+        "fileSize": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The size of the file in bytes.",
+          "title": "Filesize"
+        },
+        "fileType": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The uploaded file's type as detected by YouTube's video processing engine. Currently, YouTube only processes video files, but this field is present whether a video file or another type of file was uploaded. Valid values for this property are: - `video` - The file is a known video file type, such as an .mp4 file. - `archive` - The file is an archive file, such as a .zip archive. - `audio` - The file is a known audio file type, such as an .mp3 file. - `document` - The file is a document or text file, such as a MS Word document. - `image` - The file is an image file, such as a .jpeg image. - `other` - The file is another non-video file type. - `project` - The file is a video project file, such as a Microsoft Windows Movie Maker project, that does not contain actual video data.",
+          "examples": [
+            "video",
+            "archive",
+            "audio",
+            "document",
+            "image",
+            "other",
+            "project"
+          ],
+          "title": "Filetype"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The uploaded video file's container format.",
+          "title": "Container"
+        },
+        "videoStreams": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/VideoStream"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of video streams contained in the uploaded video file. Each item in the list contains detailed metadata about a video stream.",
+          "title": "Videostreams"
+        },
+        "audioStreams": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/AudioStream"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of audio streams contained in the uploaded video file. Each item in the list contains detailed metadata about an audio stream.",
+          "title": "Audiostreams"
+        },
+        "durationMs": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The length of the uploaded video in milliseconds.",
+          "title": "Durationms"
+        },
+        "bitrateBps": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The uploaded video file's combined (video and audio) bitrate in bits per second.",
+          "title": "Bitratebps"
+        },
+        "creationTime": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The date and time when the uploaded video file was created. The value is specified in ISO 8601 format. Currently, the following ISO 8601 formats are supported: - Date only: `YYYY-MM-DD` - Naive time: `YYYY-MM-DDTHH:MM:SS` - Time with timezone: `YYYY-MM-DDTHH:MM:SS+HH:MM`",
+          "title": "Creationtime"
+        }
+      },
+      "title": "FileDetails",
+      "type": "object"
+    },
+    "LiveStreamingDetails": {
+      "description": "The liveStreamingDetails object contains metadata about a live video broadcast.\nThe object will only be present in a `video` resource if the video is an upcoming, live, or completed live broadcast.",
+      "properties": {
+        "actualStartTime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The time that the broadcast actually started. The value is specified in ISO 8601 format. This value will not be available until the broadcast begins.",
+          "title": "Actualstarttime"
+        },
+        "actualEndTime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The time that the broadcast actually ended. The value is specified in ISO 8601 format. This value will not be available until the broadcast is over.",
+          "title": "Actualendtime"
+        },
+        "scheduledStartTime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The time that the broadcast is scheduled to begin. The value is specified in ISO 8601 format.",
+          "title": "Scheduledstarttime"
+        },
+        "scheduledEndTime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The time that the broadcast is scheduled to end. The value is specified in ISO 8601 format. If the value is empty or the property is not present, then the broadcast is scheduled to continue indefinitely.",
+          "title": "Scheduledendtime"
+        },
+        "concurrentViewers": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The number of viewers currently watching the broadcast. The property and its value will be present if the broadcast has current viewers and the broadcast owner has not hidden the `viewCount` for the video. Note that YouTube stops tracking the number of concurrent viewers for a broadcast when the broadcast ends. So, this property would not identify the number of viewers watching an archived video of a live broadcast that already ended.",
+          "title": "Concurrentviewers"
+        },
+        "activeLiveChatId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The ID of the currently active live chat attached to this video. This field is filled only if the video is a currently live broadcast that has live chat. Once the broadcast transitions to complete this field will be removed and the live chat closed down. For persistent broadcasts that live chat id will no longer be tied to this video but rather to the new video being displayed at the persistent page.",
+          "title": "Activelivechatid"
+        }
+      },
+      "title": "LiveStreamingDetails",
+      "type": "object"
+    },
+    "Localization": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/Localization1"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The localizations object contains translations of the video's metadata.",
+      "title": "Localization"
+    },
+    "Localization1": {
+      "properties": {
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The localized video title.",
+          "title": "Title"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The localized video description.",
+          "title": "Description"
+        }
+      },
+      "title": "Localization1",
+      "type": "object"
+    },
+    "Localized": {
+      "description": "The `snippet.localized` object contains either a localized title and description for the video or the title in the default language for the video's metadata.\n- Localized text is returned in the resource snippet if the `videos.list` request used the hl parameter to specify a language for which localized text should be returned and localized text is available in that language.\n- Metadata for the default language is returned if an hl parameter value is not specified or a value is specified but localized metadata is not available for the specified language.\nThe property contains a read-only value. Use the `localizations` object to add, update, or delete localized titles.",
+      "properties": {
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The localized video title.",
+          "title": "Title"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The localized video description.",
+          "title": "Description"
+        }
+      },
+      "title": "Localized",
+      "type": "object"
+    },
+    "Player": {
+      "description": "The player object contains information that you would use to play the video in an embedded player.",
+      "properties": {
+        "embedHtml": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "An `<iframe>` tag that embeds a player that plays the video. If the API request to retrieve the resource specifies a value for the maxHeight and/or maxWidth parameters, the size of the embedded player is scaled to satisfy the maxHeight and/or maxWidth requirements. If the video's aspect ratio is unknown, the embedded player defaults to a 4:3 format.",
+          "title": "Embedhtml"
+        },
+        "embedHeight": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The height of the embedded player returned in the `player.embedHtml` property. This property is only returned if the request specified a value for the maxHeight and/or maxWidth parameters and the video's aspect ratio is known.",
+          "title": "Embedheight"
+        },
+        "embedWidth": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The width of the embedded player returned in the `player.embedHtml` property. This property is only returned if the request specified a value for the maxHeight and/or maxWidth parameters and the video's aspect ratio is known.",
+          "title": "Embedwidth"
+        }
+      },
+      "title": "Player",
+      "type": "object"
+    },
+    "ProcessingDetails": {
+      "description": "The processingDetails object encapsulates information about YouTube's progress in processing the uploaded video file.\nThe properties in the object identify the current processing status and an estimate of the time remaining until YouTube finishes processing the video.\nThis part also indicates whether different types of data or content, such as file details or thumbnail images, are available for the video.\nThe processingProgress object is designed to be polled so that the video uploaded can track the progress that YouTube has made in processing the uploaded video file.\nThis data can only be retrieved by the video owner.",
+      "properties": {
+        "processingStatus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The video's processing status. This value indicates whether YouTube was able to process the video or if the video is still being processed. Valid values for this property are: - `succeeded` - Video has been successfully processed. - `failed` - Video processing has failed. See ProcessingFailureReason. - `processing` - Video is currently being processed. See ProcessingProgress. - `terminated` - Processing information is no longer available.",
+          "examples": ["succeeded", "failed", "processing", "terminated"],
+          "title": "Processingstatus"
+        },
+        "processingProgress": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProcessingProgress"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The processingProgress object contains information about the progress YouTube has made in processing the video. The values are really only relevant if the video's processing status is processing."
+        },
+        "processingFailureReason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The reason that YouTube failed to process the video. This property will only have a value if the `processingStatus` property's value is `failed`. Valid values for this property are: - `other` - Some other processing component has failed. - `streamingFailed` - Video could not be sent to streamers. - `transcodeFailed` - Content transcoding has failed. - `uploadFailed` - File delivery has failed.",
+          "title": "Processingfailurereason"
+        },
+        "fileDetailsAvailability": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether file details are available for the uploaded video. You can retrieve a video's file details by requesting the `fileDetails` part in your `videos.list()` request.",
+          "title": "Filedetailsavailability"
+        },
+        "processingIssuesAvailability": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether the video processing engine has generated suggestions that might improve YouTube's ability to process the the video, warnings that explain video processing problems, or errors that cause video processing problems. You can retrieve these suggestions by requesting the `suggestions` part in your `videos.list()` request.",
+          "title": "Processingissuesavailability"
+        },
+        "tagSuggestionsAvailability": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether keyword (tag) suggestions are available for the video. Tags can be added to a video's metadata to make it easier for other users to find the video. You can retrieve these suggestions by requesting the `suggestions` part in your `videos.list()` request.",
+          "title": "Tagsuggestionsavailability"
+        },
+        "editorSuggestionsAvailability": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether video editing suggestions, which might improve video quality or the playback experience, are available for the video. You can retrieve these suggestions by requesting the `suggestions` part in your `videos.list()` request.",
+          "title": "Editorsuggestionsavailability"
+        },
+        "thumbnailsAvailability": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether thumbnail images have been generated for the video.",
+          "title": "Thumbnailsavailability"
+        }
+      },
+      "title": "ProcessingDetails",
+      "type": "object"
+    },
+    "ProcessingProgress": {
+      "description": "The processingProgress object contains information about the progress YouTube has made in processing the video.\nThe values are really only relevant if the video's processing status is processing.",
+      "properties": {
+        "partsTotal": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "An estimate of the total number of parts that need to be processed for the video. The number may be updated with more precise estimates while YouTube processes the video.",
+          "title": "Partstotal"
+        },
+        "partsProcessed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The number of parts of the video that YouTube has already processed. You can estimate the percentage of the video that YouTube has already processed by calculating: `100 * parts_processed / parts_total` Note that since the estimated number of parts could increase without a corresponding increase in the number of parts that have already been processed, it is possible that the calculated progress could periodically decrease while YouTube processes a video.",
+          "title": "Partsprocessed"
+        },
+        "timeLeftMs": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "An estimate of the amount of time, in milliseconds, that YouTube needs to finish processing the video.",
+          "title": "Timeleftms"
+        }
+      },
+      "title": "ProcessingProgress",
+      "type": "object"
+    },
+    "RecordingDetails": {
+      "description": "The recordingDetails object encapsulates information about the location, date and address where the video was recorded.",
+      "properties": {
+        "recordingDate": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The date and time when the video was recorded. The value is specified in ISO 8601 (YYYY-MM-DDThh:mm:ss.sssZ) format.",
+          "title": "Recordingdate"
+        }
+      },
+      "title": "RecordingDetails",
+      "type": "object"
+    },
+    "RegionRestriction": {
+      "description": "The `regionRestriction` object contains information about the countries where a video is (or is not) viewable.\nThe object will contain either the `contentDetails.regionRestriction.allowed` property or the `contentDetails.regionRestriction.blocked` property.",
+      "properties": {
+        "allowed": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of region codes that identify countries where the video is viewable. If this property is present and a country is not listed in its value, then the video is blocked from appearing in that country. If this property is present and contains an empty list, the video is blocked in all countries.",
+          "title": "Allowed"
+        },
+        "blocked": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of region codes that identify countries where the video is blocked. If this property is present and a country is not listed in its value, then the video is viewable in that country. If this property is present and contains an empty list, the video is viewable in all countries.",
+          "title": "Blocked"
+        }
+      },
+      "title": "RegionRestriction",
+      "type": "object"
+    },
+    "Snippet": {
+      "description": "The snippet object contains basic details about the video, such as its title, description, and category.",
+      "properties": {
+        "publishedAt": {
+          "description": "The date and time that the video was published. Note that this time might be different than the time that the video was uploaded. For example, if a video is uploaded as a private video and then made public at a later time, this property will specify the time that the video was made public. There are a couple of special cases: - If a video is uploaded as a private video and the video metadata is retrieved by the channel owner, then the property value specifies the date and time that the video was uploaded. - If a video is uploaded as an unlisted video, the property value also specifies the date and time that the video was uploaded. In this case, anyone who knows the video's unique video ID can retrieve the video metadata. The value is specified in ISO 8601 format.",
+          "format": "date-time",
+          "title": "Publishedat",
+          "type": "string"
+        },
+        "channelId": {
+          "description": "The ID that YouTube uses to uniquely identify the channel that the video was uploaded to.",
+          "title": "Channelid",
+          "type": "string"
+        },
+        "title": {
+          "description": "The video's title. The property value has a maximum length of 100 characters and may contain all valid UTF-8 characters except < and >. You must set a value for this property if you call the videos.update method and are updating the snippet part of a video resource.",
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "description": "The video's description. The property value has a maximum length of 5000 bytes and may contain all valid UTF-8 characters except < and >.",
+          "title": "Description",
+          "type": "string"
+        },
+        "thumbnails": {
+          "$ref": "#/$defs/Thumbnails"
+        },
+        "channelTitle": {
+          "description": "The title of the channel that the video belongs to.",
+          "title": "Channeltitle",
+          "type": "string"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of keyword tags associated with the video. Tags may contain spaces. The property value has a maximum length of 500 characters. Note the following rules regarding the way the character limit is calculated: - The property value is a list, and commas between items in the list count toward the limit. - If a tag contains a space, the API server handles the tag value as though it were wrapped in quotation marks, and the quotation marks count toward the character limit.",
+          "title": "Tags"
+        },
+        "categoryId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The YouTube video category associated with the video. You must set a value for this property if you call the `videos.update` method and are updating the snippet part of a video resource.",
+          "title": "Categoryid"
+        },
+        "liveBroadcastContent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Indicates if the video is an upcoming/active live broadcast. Or it's \"none\" if the video is not an upcoming/active live broadcast. Valid values for this property are: - `live` - `none` - `upcoming`",
+          "examples": ["live", "none", "upcoming"],
+          "title": "Livebroadcastcontent"
+        },
+        "defaultLanguage": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The language of the text in the video resource's `snippet.title` and `snippet.description` properties.",
+          "title": "Defaultlanguage"
+        },
+        "localized": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Localized"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "defaultAudioLanguage": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The `default_audio_language` property specifies the language spoken in the video's default audio track.",
+          "title": "Defaultaudiolanguage"
+        }
+      },
+      "required": [
+        "publishedAt",
+        "channelId",
+        "title",
+        "description",
+        "thumbnails",
+        "channelTitle"
+      ],
+      "title": "Snippet",
+      "type": "object"
+    },
+    "Statistics": {
+      "description": "The statistics object contains statistics about the video.",
+      "properties": {
+        "viewCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The view count of the video.",
+          "title": "Viewcount"
+        },
+        "likeCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The like count of the video.",
+          "title": "Likecount"
+        },
+        "dislikeCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The dislike count of the video. The `statistics.dislikeCount` property was made private as of December 13, 2021. This means that the property is included in an API response only if the API request was authenticated by the video owner. See the [revision history](https://developers.google.com/youtube/v3/revision_history#release_notes_12_15_2021) for more information.",
+          "title": "Dislikecount"
+        },
+        "favoriteCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The favorite count of the video. This property has been deprecated. The deprecation is effective as of August 28, 2015. The property's value is now always set to `0`.",
+          "examples": [0],
+          "title": "Favoritecount"
+        },
+        "commentCount": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The comment count of the video.",
+          "title": "Commentcount"
+        }
+      },
+      "title": "Statistics",
+      "type": "object"
+    },
+    "Status": {
+      "description": "The status object contains information about the video's uploading, processing, and privacy statuses.",
+      "properties": {
+        "uploadStatus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The status of the uploaded video.",
+          "examples": [
+            "deleted",
+            "failed",
+            "processed",
+            "rejected",
+            "uploaded"
+          ],
+          "title": "Uploadstatus"
+        },
+        "failureReason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value explains why a video failed to upload. This property is only present if the `uploadStatus` property indicates that the upload failed.",
+          "examples": [
+            "codec",
+            "conversion",
+            "emptyFile",
+            "invalidFile",
+            "tooSmall",
+            "uploadAborted"
+          ],
+          "title": "Failurereason"
+        },
+        "rejectionReason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value explains why YouTube rejected an uploaded video. This property is only present if the `uploadStatus` property indicates that the upload was rejected.",
+          "examples": [
+            "claim",
+            "copyright",
+            "duplicate",
+            "inappropriate",
+            "legal",
+            "length",
+            "termsOfUse",
+            "trademark",
+            "uploaderAccountClosed",
+            "uploaderAccountSuspended"
+          ],
+          "title": "Rejectionreason"
+        },
+        "privacyStatus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The video's privacy status.",
+          "examples": ["private", "public", "unlisted"],
+          "title": "Privacystatus"
+        },
+        "publishAt": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The date and time when the video is scheduled to publish. It can be set only if the privacy status of the video is private. The value is specified in ISO 8601 format. Note the following two additional points about this property's behavior: - If you set this property's value when calling the videos.update method, you must also set the status.privacyStatus property value to private even if the video is already private. - If your request schedules a video to be published at some time in the past, the video will be published right away. As such, the effect of setting the status.publishAt property to a past date and time is the same as of changing the video's privacyStatus from private to public.",
+          "title": "Publishat"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The license of the video.",
+          "examples": ["creativeCommon", "youtube"],
+          "title": "License"
+        },
+        "embeddable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether the video can be embedded on another website.",
+          "title": "Embeddable"
+        },
+        "publicStatsViewable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether the extended video statistics on the video's watch page are publicly viewable. By default, those statistics are viewable, and statistics like a video's `viewCount` and ratings will still be publicly visible even if this property's value is set to `false`.",
+          "title": "Publicstatsviewable"
+        },
+        "madeForKids": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "This value indicates whether the video is designated as child-directed, and it contains the current \"made for kids\" status of the video. For example, the status might be determined based on the value of the `selfDeclaredMadeForKids` property.",
+          "title": "Madeforkids"
+        },
+        "selfDeclaredMadeForKids": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In a `videos.insert` or `videos.update` request, this property allows the channel owner to designate the video as being child-directed. In a `videos.list` request, the property value is only returned if the channel owner authorized the API request.",
+          "title": "Selfdeclaredmadeforkids"
+        }
+      },
+      "title": "Status",
+      "type": "object"
+    },
+    "Suggestions": {
+      "description": "The suggestions object encapsulates suggestions that identify opportunities to improve the video quality or the metadata for the uploaded video.\nThis data can only be retrieved by the video owner.\nThe suggestions object will only be returned if the `processingDetails.tagSuggestionsAvailability` property or the `processingDetails.editorSuggestionsAvailability` property has a value of `available`.",
+      "properties": {
+        "processingErrors": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of errors that will prevent YouTube from successfully processing the uploaded video. These errors indicate that, regardless of the video's current processing status, eventually, that status will almost certainly be failed. Valid values for this property are: - `archiveFile` - An archive file (e.g., a ZIP archive). - `audioFile` - File contains audio only (e.g., an MP3 file). - `docFile` - Document or text file (e.g., MS Word document). - `imageFile` - Image file (e.g., a JPEG image). - `notAVideoFile` - Other non-video file. - `projectFile` - Movie project file (e.g., Microsoft Windows Movie Maker project).",
+          "title": "Processingerrors"
+        },
+        "processingWarnings": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of reasons why YouTube may have difficulty transcoding the uploaded video or that might result in an erroneous transcoding. These warnings are generated before YouTube actually processes the uploaded video file. In addition, they identify issues that do not necessarily indicate that video processing will fail but that still might cause problems such as sync issues, video artifacts, or a missing audio track. Valid values for this property are: - `hasEditlist` - Edit lists are not currently supported. - `inconsistentResolution` - Conflicting container and stream resolutions. - `problematicAudioCodec` - Audio codec that is known to cause problems was used. - `problematicVideoCodec` - Video codec that is known to cause problems was used. - `unknownAudioCodec` - Unrecognized audio codec, transcoding is likely to fail. - `unknownContainer` - Unrecognized file format, transcoding is likely to fail. - `unknownVideoCodec` - Unrecognized video codec, transcoding is likely to fail.",
+          "title": "Processingwarnings"
+        },
+        "processingHints": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of suggestions that may improve YouTube's ability to process the video. Valid values for this property are: - `nonStreamableMov` - The MP4 file is not streamable, this will slow down the processing. - `sendBestQualityVideo` - Probably a better quality version of the video exists.",
+          "title": "Processinghints"
+        },
+        "tagSuggestions": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/TagSuggestion"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of keyword tags that could be added to the video's metadata to increase the likelihood that users will locate your video when searching or browsing on YouTube.",
+          "title": "Tagsuggestions"
+        },
+        "editorSuggestions": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of video editing operations that might improve the video quality or playback experience of the uploaded video. Valid values for this property are: - `audioQuietAudioSwap` - The audio track appears silent and could be swapped with a better quality one. - `videoAutoLevels` - Picture brightness levels seem off and could be corrected. - `videoCrop` - Margins (mattes) detected around the picture could be cropped. - `videoStabilize` - The video appears shaky and could be stabilized.",
+          "title": "Editorsuggestions"
+        }
+      },
+      "title": "Suggestions",
+      "type": "object"
+    },
+    "TagSuggestion": {
+      "properties": {
+        "tag": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The keyword tag suggested for the video.",
+          "title": "Tag"
+        },
+        "categoryRestricts": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A set of video categories for which the tag is relevant. You can use this information to display appropriate tag suggestions based on the video category that the video uploader associates with the video. By default, tag suggestions are relevant for all categories if there are no restricts defined for the keyword.",
+          "title": "Categoryrestricts"
+        }
+      },
+      "title": "TagSuggestion",
+      "type": "object"
+    },
+    "Thumbnail": {
+      "description": "A map of thumbnail images associated with the video.\nFor each object in the map, the key is the name of the thumbnail image, and the value is an object that contains other information about the thumbnail.",
+      "properties": {
+        "url": {
+          "description": "The URL of the thumbnail image.",
+          "title": "Url",
+          "type": "string"
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The width of the thumbnail image in pixels.",
+          "title": "Width"
+        },
+        "height": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The height of the thumbnail image in pixels.",
+          "title": "Height"
+        }
+      },
+      "required": ["url"],
+      "title": "Thumbnail",
+      "type": "object"
+    },
+    "Thumbnails": {
+      "properties": {
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Thumbnail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "medium": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Thumbnail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "high": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Thumbnail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "standard": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Thumbnail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "maxres": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Thumbnail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Thumbnails",
+      "type": "object"
+    },
+    "TopicDetails": {
+      "description": "The topicDetails object encapsulates information about topics associated with the video.\nImportant: See the definitions of the `topicDetails.relevantTopicIds[]` and `topicDetails.topicIds[]` properties as well as the [revision history](https://developers.google.com/youtube/v3/revision_history#november-10-2016) for more details about upcoming changes related to topic IDs.",
+      "properties": {
+        "topicIds": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Important: This property has been deprecated as of November 10, 2016. The API no longer returns values for this property, and any topics associated with a video are now returned by the `topicDetails.relevantTopicIds[]` property value.",
+          "title": "Topicids"
+        },
+        "relevantTopicIds": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of topic IDs that are relevant to the video. Important: This property has been deprecated as of November 10, 2016. It will be supported until November 10, 2017.",
+          "title": "Relevanttopicids"
+        },
+        "topicCategories": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A list of Wikipedia URLs that provide a high-level description of the video's content.",
+          "title": "Topiccategories"
+        }
+      },
+      "title": "TopicDetails",
+      "type": "object"
+    },
+    "VideoStream": {
+      "properties": {
+        "widthPixels": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The encoded video content's width in pixels. You can calculate the video's encoding aspect ratio as `width_pixels` / `height_pixels`.",
+          "title": "Widthpixels"
+        },
+        "heightPixels": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The encoded video content's height in pixels.",
+          "title": "Heightpixels"
+        },
+        "frameRateFps": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The video stream's frame rate, in frames per second.",
+          "title": "Frameratefps"
+        },
+        "aspectRatio": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The video content's display aspect ratio, which specifies the aspect ratio in which the video should be displayed.",
+          "title": "Aspectratio"
+        },
+        "codec": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The video codec that the stream uses.",
+          "title": "Codec"
+        },
+        "bitrateBps": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The video stream's bitrate, in bits per second.",
+          "title": "Bitratebps"
+        },
+        "rotation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The amount that YouTube needs to rotate the original source content to properly display the video. Valid values for this property are: - `none` - The video does not need to be rotated. - `clockwise` - The video needs to be rotated 90 degrees clockwise. - `counterClockwise` - The video needs to be rotated 90 degrees counter-clockwise. - `other` - The video needs to be rotated in some other, non-trivial way. - `upsideDown` - The video needs to be rotated upside down.",
+          "examples": [
+            "none",
+            "clockwise",
+            "counterClockwise",
+            "other",
+            "upsideDown"
+          ],
+          "title": "Rotation"
+        },
+        "vendor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A value that uniquely identifies a video vendor. Typically, the value is a four-letter vendor code.",
+          "title": "Vendor"
+        }
+      },
+      "title": "VideoStream",
+      "type": "object"
+    }
+  },
+  "description": "Represents a video stored in Firestore.",
+  "properties": {
+    "kind": {
+      "description": "Identifies the API resource's type. The value will be `youtube#video`.",
+      "examples": ["youtube#video"],
+      "title": "Kind",
+      "type": "string"
+    },
+    "etag": {
+      "description": "The Etag of this resource.",
+      "title": "Etag",
+      "type": "string"
+    },
+    "id": {
+      "description": "The ID that YouTube uses to uniquely identify the video.",
+      "title": "Id",
+      "type": "string"
+    },
+    "snippet": {
+      "$ref": "#/$defs/Snippet"
+    },
+    "contentDetails": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ContentDetails"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Status"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "statistics": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Statistics"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "player": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Player"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "topicDetails": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TopicDetails"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "recordingDetails": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RecordingDetails"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "fileDetails": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FileDetails"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "processingDetails": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ProcessingDetails"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "suggestions": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Suggestions"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "liveStreamingDetails": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LiveStreamingDetails"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "localizations": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/Localization"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Localizations"
+    },
+    "created_at": {
+      "default": null,
+      "description": "The timestamp of the video was stored.",
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "default": "2024-01-18T17:34:33.971170+09:00",
+      "description": "The timestamp of the video was last updated.",
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "caption": {
+      "$ref": "#/$defs/Caption"
+    }
+  },
+  "required": ["kind", "etag", "id", "snippet", "caption"],
+  "title": "FirestoreVideo",
+  "type": "object"
+}

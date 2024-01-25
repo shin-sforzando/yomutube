@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 
 // Project imports:
-import 'package:yomutube/src/feature/video_list/presentation/video_list_view.dart';
+import 'package:yomutube/src/presentation/video_list_view.dart';
 
 Handler createBasicHandler(Widget targetWidget) {
   return Handler(
