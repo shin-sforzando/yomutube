@@ -48,10 +48,10 @@ A service gives transcribed YouTube for You.
 
 #### Pulumi
 
-- [Pulumi](https://www.pulumi.com) (Version `3.96.1` or higher)
+- [Pulumi](https://www.pulumi.com) (Version `3.103.1` or higher)
   - Python 3.11
-  - Google Cloud SDK (Version `455.0.0` or higher)
-  - Firebase CLI (Version `13.0.3` or higher)
+  - Google Cloud SDK (Version `461.0.0` or higher)
+  - Firebase CLI (Version `13.1.0` or higher)
 
 #### Cloud Functions
 

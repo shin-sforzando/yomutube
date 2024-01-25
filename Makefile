@@ -51,7 +51,7 @@ emulator: ## 模倣
 
 debug: ## 試行
 	flutter pub get
-	flutter run --debug --verbose --device-id chrome
+	flutter run --debug --web-renderer html --verbose --device-id chrome
 
 test: $(SUBDIRS) ## 試験
 	flutter test --coverage
@@ -62,7 +62,8 @@ build-runner: ## 構築
 	dart run build_runner build --delete-conflicting-outputs
 
 build: ## 清書
-	flutter build web --verbose --release
+	flutter clean
+	flutter build web --web-renderer html --verbose
 
 deploy: build $(SUBDIRS) ## 配備
 	firebase deploy --only hosting
