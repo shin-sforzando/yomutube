@@ -33,17 +33,41 @@ class VideoView extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final video = snapshot.data!.docs.first.data();
-            return Card(
-              child: Column(
-                children: [
-                  Image.network(video.maxThumbnailUrl),
-                  ListTile(
-                    leading: Text(video.id),
-                    title: Text(video.title),
-                    subtitle: Text(video.summarizedCaption),
+            return ListView(
+              children: [
+                Container(
+                  height: 300,
+                  child: Image.network(video.maxThumbnailUrl),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    video.title,
+                    style: const TextStyle(fontSize: 24),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    video.summarizedCaption,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    video.keywords.join(', '),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    video.updatedAt.toString(),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ],
             );
           } else {
             return const Center(child: CircularProgressIndicator());

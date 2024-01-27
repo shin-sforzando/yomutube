@@ -7,6 +7,7 @@ class Video {
   final List<String> keywords;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool hasCaption;
 
   Video({
     required this.id,
@@ -17,6 +18,7 @@ class Video {
     required this.keywords,
     required this.createdAt,
     required this.updatedAt,
+    required this.hasCaption,
   });
 
   factory Video.fromMap(Map<String, dynamic> map) {
@@ -30,6 +32,9 @@ class Video {
       keywords: List<String>.from(map['caption']['keywords']),
       createdAt: map['created_at'].toDate() as DateTime,
       updatedAt: map['updated_at'].toDate() as DateTime,
+      hasCaption: map['caption']['summarized'] != null &&
+          map['caption']['summarized'] !=
+              '【Video information could not be retrieved.】',
     );
   }
 }

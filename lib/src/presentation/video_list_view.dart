@@ -31,15 +31,17 @@ class _VideoListViewState extends State<VideoListView> {
   }
 
   Future<QuerySnapshot<Video>> _getVideos() async {
-    DateTime nextDate = targetDate.add(const Duration(days: 1));
     Timestamp targetTimestamp = Timestamp.fromDate(targetDate);
+    DateTime nextDate = targetDate.add(const Duration(days: 1));
     Timestamp nextDateTimestamp = Timestamp.fromDate(nextDate);
 
     return FirebaseFirestore.instance
         .collection('videos')
         .orderBy('updated_at', descending: false)
-        .startAt([targetTimestamp])
-        .endAt([nextDateTimestamp])
+        // .startAt([targetTimestamp])
+        // .endAt([nextDateTimestamp])
+        .where('updated_at', isGreaterThanOrEqualTo: targetTimestamp)
+        .where('updated_at', isLessThan: nextDateTimestamp)
         .withConverter<Video>(
             fromFirestore: (snapshot, _) => Video.fromMap(snapshot.data()!),
             toFirestore: (video, _) => {})
@@ -101,6 +103,7 @@ class _VideoListViewState extends State<VideoListView> {
                   leading: Image.network(video.maxThumbnailUrl),
                   title: Text(video.title),
                   subtitle: Text(video.updatedAt.toString()),
+                  tileColor: video.hasCaption ? null : Colors.grey,
                   onTap: () {
                     Navigator.pushNamed(context, '/video/' + video.id);
                   },
