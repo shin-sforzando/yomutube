@@ -34,36 +34,33 @@ class VideoView extends StatelessWidget {
           if (snapshot.hasData) {
             final video = snapshot.data!.docs.first.data();
             return ListView(
+              padding: const EdgeInsets.all(16),
               children: [
                 Container(
                   height: 300,
                   child: Image.network(video.maxThumbnailUrl),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(16),
                   child: Text(
                     video.title,
                     style: const TextStyle(fontSize: 24),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
+                  child: SelectableText(
                     video.summarizedCaption,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(16),
                   child: Text(
-                    video.keywords.join(', '),
+                    "Keywords: " + video.keywords.join(', '),
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(16),
                   child: Text(
-                    video.updatedAt.toString(),
+                    "Updated: " + video.updatedAt.toString(),
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
