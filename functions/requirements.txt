@@ -4,7 +4,8 @@ firebase-admin~=6.2
 google-api-python-client>=2.119.0,<3.0.0
 google-cloud-aiplatform~=1.42
 langchain-community>=0.0.24
-langchain-core==0.1.26
+langchain-core~=0.1
 langchain-google-vertexai==0.0.5
+langchain~=0.1
 pydantic>=2.5
 youtube-transcript-api~=0.6

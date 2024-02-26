@@ -28,18 +28,18 @@ app = initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)
 
 
-@https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])  # type: ignore
-def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
-    """HTTP trigger for execution at arbitrary timing.
+# @https_fn.on_request(cors=True, secrets=["YOUTUBE_DATA_API_KEY"])  # type: ignore
+# def on_request_optional_execution(req: https_fn.Request) -> https_fn.Response:
+#     """HTTP trigger for execution at arbitrary timing.
 
-    Args:
-        req (https_fn.Request): The raw request handled by the callable.
+#     Args:
+#         req (https_fn.Request): The raw request handled by the callable.
 
-    Returns:
-        https_fn.Response: The response object that is used by default in Flask.
-    """
-    print("Optional execution was invoked.")
-    return https_fn.Response(f"{req=}")
+#     Returns:
+#         https_fn.Response: The response object that is used by default in Flask.
+#     """
+#     print("Optional execution was invoked.")
+#     return https_fn.Response(f"{req=}")
 
 
 @scheduler_fn.on_schedule(
