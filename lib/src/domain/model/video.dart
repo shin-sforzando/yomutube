@@ -1,6 +1,7 @@
 class Video {
   final String id;
   final String title;
+  final String description;
   final String minThumbnailUrl;
   final String maxThumbnailUrl;
   final String summarizedCaption;
@@ -12,6 +13,7 @@ class Video {
   Video({
     required this.id,
     required this.title,
+    required this.description,
     required this.minThumbnailUrl,
     required this.maxThumbnailUrl,
     required this.summarizedCaption,
@@ -25,6 +27,7 @@ class Video {
     return Video(
       id: map['id'] as String,
       title: map['snippet']['title'] as String,
+      description: map['snippet']['description'] as String,
       minThumbnailUrl: map['snippet']['thumbnails']['default']['url'] as String,
       maxThumbnailUrl:
           map['snippet']['thumbnails']['standard']['url'] as String,

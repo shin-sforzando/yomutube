@@ -38,8 +38,6 @@ class _VideoListViewState extends State<VideoListView> {
     return FirebaseFirestore.instance
         .collection('videos')
         .orderBy('updated_at', descending: false)
-        // .startAt([targetTimestamp])
-        // .endAt([nextDateTimestamp])
         .where('updated_at', isGreaterThanOrEqualTo: targetTimestamp)
         .where('updated_at', isLessThan: nextDateTimestamp)
         .withConverter<Video>(

@@ -7,3 +7,4 @@ exclude:
 ignore:
   - flutter_gen
   - flutter_lints
+  - webview_flutter

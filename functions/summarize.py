@@ -6,17 +6,21 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.prompts import PromptTemplate
+from langchain_google_vertexai import HarmBlockThreshold
+from langchain_google_vertexai import HarmCategory
 from langchain_google_vertexai import VertexAI
 from utils import SUMMARIZE_PROMPT_TEMPLATE
 
 
-ModelName: TypeAlias = Literal["gemini-pro", "text-bison"]
+ModelName: TypeAlias = Literal[
+    "gemini-pro", "gemini-1.0-pro", "text-bison", "text-bison-32k"
+]
 
 
 def get_summarized_text(
     text: str,
     chunk_size: int = 16384,
-    model_name: ModelName = "gemini-pro",
+    model_name: ModelName = "text-bison-32k",
     temperature: float = 0.2,
     max_output_tokens: int = 2048,
 ) -> str:
@@ -81,7 +85,7 @@ def get_summarized_text(
 def get_keywords(
     text: str,
     existing_keywords: list[str] = [],
-    model_name: ModelName = "gemini-pro",
+    model_name: ModelName = "gemini-1.0-pro",
     temperature: float = 0.0,
     max_output_tokens: int = 256,
 ) -> list[str]:
