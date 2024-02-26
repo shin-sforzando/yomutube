@@ -4,13 +4,13 @@ from typing import TypeAlias
 from langchain.chains import LLMChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
-from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.llms import VertexAI
+from langchain_core.prompts import PromptTemplate
+from langchain_google_vertexai import VertexAI
 from utils import SUMMARIZE_PROMPT_TEMPLATE
 
 
-ModelName: TypeAlias = Literal["gemini-pro", "text-bison-32k"]
+ModelName: TypeAlias = Literal["gemini-pro", "text-bison"]
 
 
 def get_summarized_text(
@@ -194,9 +194,9 @@ if __name__ == "__main__":
 進めていく必要があるなと感じてます これからも どうぞよろしくお願いします 一緒にコロナをやっつけるために
 戦っていきましょう"""  # 【後編】河野太郎大臣 x YouTube CEO スーザン・ウォジスキ対談動画 @ YouTube Japan 公式チャンネル
 
-    print("text-bison-32k Version")
-    print(summarized_by_bison := get_summarized_text(text, model_name="text-bison-32k"))
-    print(get_keywords(summarized_by_bison, model_name="text-bison-32k"))
+    print("text-bison Version")
+    print(summarized_by_bison := get_summarized_text(text, model_name="text-bison"))
+    print(get_keywords(summarized_by_bison, model_name="text-bison"))
 
     print("gemini-pro Version")
     print(summarized_by_gemini := get_summarized_text(text, model_name="gemini-pro"))
