@@ -48,10 +48,10 @@ A service gives transcribed YouTube for You.
 
 #### Pulumi
 
-- [Pulumi](https://www.pulumi.com) (Version `3.96.1` or higher)
+- [Pulumi](https://www.pulumi.com) (Version `3.107.0` or higher)
   - Python 3.11
-  - Google Cloud SDK (Version `455.0.0` or higher)
-  - Firebase CLI (Version `13.0.1` or higher)
+  - Google Cloud SDK (Version `465.0.0` or higher)
+  - Firebase CLI (Version `13.3.1` or higher)
 
 #### Cloud Functions
 
@@ -59,7 +59,7 @@ A service gives transcribed YouTube for You.
 
 ### for Front-End
 
-- Flutter SDK (Version `3.16.1` or higher)
+- Flutter SDK (Version `3.19.1` or higher)
   - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
 - [lcov](https://github.com/linux-test-project/lcov) as **Coverage HTML Generator**
 
@@ -76,6 +76,7 @@ pulumi/check       検証
 pulumi/test        試験
 pulumi/preview     確認
 pulumi/up          反映
+pulumi/deploy      配置
 pulumi/clean       掃除
 pulumi/pwd         現地
 pulumi/help        助言
@@ -85,6 +86,7 @@ functions/open        閲覧
 functions/hide        秘匿
 functions/reveal      暴露
 functions/gen-models  生成
+functions/debug       試行
 functions/check       検証
 functions/test        試験
 functions/deploy      反映
@@ -98,9 +100,10 @@ hide                 秘匿
 reveal               暴露
 check                検証
 emulator             模倣
-debug                確認
+debug                試行
 test                 試験
-build                構築
+build-runner         構築
+build                清書
 deploy               配備
 tag                  付箋
 clean                掃除

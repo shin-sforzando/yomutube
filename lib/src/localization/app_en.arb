@@ -3,9 +3,5 @@
   "appTitle": "YomuTube",
   "@appTitle": {
     "description": "Application Title"
-  },
-  "settingsTitle": "Settings",
-  "@settingsTitle": {
-    "description": "Settings View Title"
   }
 }

@@ -1,6 +1,6 @@
 import re
 
-from langchain.document_loaders import YoutubeLoader
+from langchain_community.document_loaders import YoutubeLoader
 from models import Video
 from utils import NO_CAPTION_MESSAGE
 

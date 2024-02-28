@@ -4,19 +4,24 @@ from typing import TypeAlias
 from langchain.chains import LLMChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
-from langchain.llms import VertexAI
-from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.prompts import PromptTemplate
+from langchain_google_vertexai import HarmBlockThreshold
+from langchain_google_vertexai import HarmCategory
+from langchain_google_vertexai import VertexAI
+from utils import SUMMARIZE_PROMPT_TEMPLATE
 
 
-ModelName: TypeAlias = Literal["gemini-pro", "text-bison-32k"]
+ModelName: TypeAlias = Literal[
+    "gemini-pro", "gemini-1.0-pro", "text-bison", "text-bison-32k"
+]
 
 
 def get_summarized_text(
     text: str,
     chunk_size: int = 16384,
-    model_name: ModelName = "gemini-pro",
-    temperature: float = 0.25,
+    model_name: ModelName = "text-bison-32k",
+    temperature: float = 0.2,
     max_output_tokens: int = 2048,
 ) -> str:
     """
@@ -31,22 +36,24 @@ def get_summarized_text(
     Returns:
         str: The summarized text.
     """
-    first_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
-文章は句読点が欠落していたり、表記揺れがあったりします。
-動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
-------
+    first_template = (
+        SUMMARIZE_PROMPT_TEMPLATE
+        + """
+--------
 {text}
-------
+--------
 """
+    )
     first_prompt = PromptTemplate(input_variables=["text"], template=first_template)
-    subsequent_template = """以下の文章はYouTubeの動画から抜き出した音声字幕です。
-文章は句読点が欠落していたり、表記揺れがあったりします。
-動画を見てない人にもわかりやすく800文字を目安に要約し、結果だけ出力してください。
-------
+    subsequent_template = (
+        SUMMARIZE_PROMPT_TEMPLATE
+        + """
+--------
 {existing_answer}
 {text}
-------
+--------
 """
+    )
     subsequent_prompt = PromptTemplate(
         input_variables=["existing_answer", "text"], template=subsequent_template
     )
@@ -78,7 +85,7 @@ def get_summarized_text(
 def get_keywords(
     text: str,
     existing_keywords: list[str] = [],
-    model_name: ModelName = "gemini-pro",
+    model_name: ModelName = "gemini-1.0-pro",
     temperature: float = 0.0,
     max_output_tokens: int = 256,
 ) -> list[str]:
@@ -95,9 +102,9 @@ def get_keywords(
         list[str]: A list of extracted keywords in descending order of importance.
     """
     prompt_template = """以下の文章から、最大10個のキーワードを抽出し、 `|` で区切って重要度の高い順に出力してください。
-------
+--------
 {text}
-------
+--------
 """
     prompt = PromptTemplate(input_variables=["text"], template=prompt_template)
     vertex_ai = VertexAI(
@@ -191,9 +198,9 @@ if __name__ == "__main__":
 進めていく必要があるなと感じてます これからも どうぞよろしくお願いします 一緒にコロナをやっつけるために
 戦っていきましょう"""  # 【後編】河野太郎大臣 x YouTube CEO スーザン・ウォジスキ対談動画 @ YouTube Japan 公式チャンネル
 
-    print("text-bison-32k Version")
-    print(summarized_by_bison := get_summarized_text(text, model_name="text-bison-32k"))
-    print(get_keywords(summarized_by_bison, model_name="text-bison-32k"))
+    print("text-bison Version")
+    print(summarized_by_bison := get_summarized_text(text, model_name="text-bison"))
+    print(get_keywords(summarized_by_bison, model_name="text-bison"))
 
     print("gemini-pro Version")
     print(summarized_by_gemini := get_summarized_text(text, model_name="gemini-pro"))

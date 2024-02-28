@@ -10,13 +10,15 @@
       "name": "YomuTube (Debug)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--device-id", "chrome", "--web-renderer", "html"]
     },
     {
       "name": "YomuTube (Release)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "args": ["--device-id", "chrome", "--web-renderer", "html"]
     }
   ]
 }

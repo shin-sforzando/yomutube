@@ -3,30 +3,30 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fluro/fluro.dart';
 
 // Project imports:
 import 'package:yomutube/firebase_options.dart';
 import 'package:yomutube/src/app.dart';
-import 'package:yomutube/src/feature/settings/application/settings_service.dart';
-import 'package:yomutube/src/feature/settings/presentation/settings_controller.dart';
+import 'package:yomutube/src/router/routes.dart';
 
 void main() async {
-  // Set up the SettingsController, which will glue user settings to multiple
-  // Flutter Widgets.
-  final settingsController = SettingsController(SettingsService());
-
-  // Load the user's preferred theme while the splash screen is displayed.
-  // This prevents a sudden theme change when the app is first displayed.
-  await settingsController.loadSettings();
+  // Router configuration
+  final router = FluroRouter();
+  Routes.configureRoutes(router);
+  MyApp.router = router;
 
   // Initialize Firebase
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   if (kDebugMode) {
+    FirebaseFirestore.setLoggingEnabled(true);
     try {
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
     } catch (e) {
@@ -34,8 +34,5 @@ void main() async {
     }
   }
 
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  runApp(MyApp(settingsController: settingsController));
+  runApp(const MyApp());
 }

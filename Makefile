@@ -12,7 +12,7 @@ VERSION := $(shell git tag --sort=-v:refname | head -n 1)
 
 OPTS :=
 .DEFAULT_GOAL := default
-.PHONY: default setup open hide reveal check emulator debug test build deploy tag clean pwd help FORCE
+.PHONY: default setup open hide reveal check emulator debug test build-runner build deploy tag clean pwd help FORCE
 
 default: ## 常用
 	make debug
@@ -49,17 +49,21 @@ check: ## 検証
 emulator: ## 模倣
 	firebase emulators:start
 
-debug: ## 確認
+debug: ## 試行
 	flutter pub get
-	flutter run --debug --verbose --device-id chrome
+	flutter run --debug --web-renderer html --verbose --device-id chrome
 
 test: $(SUBDIRS) ## 試験
 	flutter test --coverage
 	genhtml coverage/lcov.info --output-directory coverage/html
 	@if [ $(OS_NAME) = "Darwin" ]; then say "The cleanup process of Flutter Web is complete." ; fi
 
-build: ## 構築
-	flutter build web --verbose --release
+build-runner: ## 構築
+	dart run build_runner build --delete-conflicting-outputs
+
+build: ## 清書
+	flutter clean
+	flutter build web --web-renderer html --verbose
 
 deploy: build $(SUBDIRS) ## 配備
 	firebase deploy --only hosting
