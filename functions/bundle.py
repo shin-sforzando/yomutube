@@ -7,8 +7,8 @@ from firebase_admin import storage
 from google.cloud.firestore_bundle import FirestoreBundle
 from utils import JST
 
-
-app = initialize_app(options={"storageBucket": "yomutube-f5b5d.appspot.com"})
+BUCKET_NAME = "yomutube-f5b5d.appspot.com"
+app = initialize_app(options={"storageBucket": BUCKET_NAME})
 bucket = storage.bucket()
 
 
@@ -37,11 +37,11 @@ def make_bundle(target_date: str) -> str:
     blob = bucket.blob(f"firestore-bundle/{target_date}.bundle")
     blob.upload_from_string(serialized)
     blob.make_public()
-    return f"https://storage.googleapis.com/yomutube-f5b5d.appspot.com/firestore-bundle/{target_date}.bundle"
+    return f"https://storage.googleapis.com/{BUCKET_NAME}/firestore-bundle/{target_date}.bundle"
 
 
 def main() -> None:
-    make_bundle("2024-02-28")
+    make_bundle("2024-02-28")  # XXX: For Debug!
     print(list(bucket.list_blobs()))
 
 
