@@ -54,3 +54,10 @@ default_firestore_database = gcp.firestore.Database(
     type="FIRESTORE_NATIVE",
     opts=pulumi.ResourceOptions(protect=True),
 )
+
+default_firebase_storage = gcp.firebase.StorageBucket(
+    "default",
+    bucket_id="yomutube-f5b5d.appspot.com",
+    project="yomutube-f5b5d",
+    opts=pulumi.ResourceOptions(protect=True),
+)
