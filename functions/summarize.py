@@ -13,7 +13,7 @@ from utils import SUMMARIZE_PROMPT_TEMPLATE
 
 
 ModelName: TypeAlias = Literal[
-    "gemini-pro", "gemini-1.0-pro", "text-bison", "text-bison-32k"
+    "gemini-1.5-pro", "gemini-1.0-pro", "text-bison", "text-bison-32k"
 ]
 
 
@@ -198,10 +198,12 @@ if __name__ == "__main__":
 進めていく必要があるなと感じてます これからも どうぞよろしくお願いします 一緒にコロナをやっつけるために
 戦っていきましょう"""  # 【後編】河野太郎大臣 x YouTube CEO スーザン・ウォジスキ対談動画 @ YouTube Japan 公式チャンネル
 
-    print("text-bison Version")
+    print("---- text-bison Version ----")
     print(summarized_by_bison := get_summarized_text(text, model_name="text-bison"))
     print(get_keywords(summarized_by_bison, model_name="text-bison"))
 
-    print("gemini-pro Version")
-    print(summarized_by_gemini := get_summarized_text(text, model_name="gemini-pro"))
-    print(get_keywords(summarized_by_gemini, model_name="gemini-pro"))
+    print("---- gemini-1.5-pro Version ----")
+    print(
+        summarized_by_gemini := get_summarized_text(text, model_name="gemini-1.5-pro")
+    )
+    print(get_keywords(summarized_by_gemini, model_name="gemini-1.5-pro"))
