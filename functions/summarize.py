@@ -12,15 +12,13 @@ from langchain_google_vertexai import VertexAI
 from utils import SUMMARIZE_PROMPT_TEMPLATE
 
 
-ModelName: TypeAlias = Literal[
-    "gemini-1.5-pro", "gemini-1.0-pro", "text-bison", "text-bison-32k"
-]
+ModelName: TypeAlias = Literal["gemini-2.0-flash"]
 
 
 def get_summarized_text(
     text: str,
     chunk_size: int = 16384,
-    model_name: ModelName = "text-bison-32k",
+    model_name: ModelName = "gemini-2.0-flash",
     temperature: float = 0.2,
     max_output_tokens: int = 2048,
 ) -> str:
@@ -85,7 +83,7 @@ def get_summarized_text(
 def get_keywords(
     text: str,
     existing_keywords: list[str] = [],
-    model_name: ModelName = "gemini-1.0-pro",
+    model_name: ModelName = "gemini-2.0-flash",
     temperature: float = 0.0,
     max_output_tokens: int = 256,
 ) -> list[str]:
@@ -198,12 +196,8 @@ if __name__ == "__main__":
 進めていく必要があるなと感じてます これからも どうぞよろしくお願いします 一緒にコロナをやっつけるために
 戦っていきましょう"""  # 【後編】河野太郎大臣 x YouTube CEO スーザン・ウォジスキ対談動画 @ YouTube Japan 公式チャンネル
 
-    print("---- text-bison Version ----")
-    print(summarized_by_bison := get_summarized_text(text, model_name="text-bison"))
-    print(get_keywords(summarized_by_bison, model_name="text-bison"))
-
-    print("---- gemini-1.5-pro Version ----")
+    print("---- gemini-2.0-flash Version ----")
     print(
-        summarized_by_gemini := get_summarized_text(text, model_name="gemini-1.5-pro")
+        summarized_by_bison := get_summarized_text(text, model_name="gemini-2.0-flash")
     )
-    print(get_keywords(summarized_by_gemini, model_name="gemini-1.5-pro"))
+    print(get_keywords(summarized_by_bison, model_name="gemini-2.0-flash"))
