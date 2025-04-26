@@ -40,6 +40,7 @@ class _VideoListViewState extends State<VideoListView> {
         .orderBy('updated_at', descending: false)
         .where('updated_at', isGreaterThanOrEqualTo: targetTimestamp)
         .where('updated_at', isLessThan: nextDateTimestamp)
+        .limit(50)
         .withConverter<Video>(
             fromFirestore: (snapshot, _) => Video.fromMap(snapshot.data()!),
             toFirestore: (video, _) => {})

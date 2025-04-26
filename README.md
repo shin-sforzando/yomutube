@@ -48,10 +48,10 @@ A service gives transcribed YouTube for You.
 
 #### Pulumi
 
-- [Pulumi](https://www.pulumi.com) (Version `3.107.0` or higher)
+- [Pulumi](https://www.pulumi.com) (Version `3.126.0` or higher)
   - Python 3.11
-  - Google Cloud SDK (Version `465.0.0` or higher)
-  - Firebase CLI (Version `13.3.1` or higher)
+  - Google Cloud SDK (Version `484.0.0` or higher)
+  - Firebase CLI (Version `13.13.3` or higher)
 
 #### Cloud Functions
 
@@ -59,7 +59,7 @@ A service gives transcribed YouTube for You.
 
 ### for Front-End
 
-- Flutter SDK (Version `3.19.1` or higher)
+- Flutter SDK (Version `3.22.3` or higher)
   - [FlutterFire](https://firebase.flutter.dev) (Version `0.2.7` or higher)
 - [lcov](https://github.com/linux-test-project/lcov) as **Coverage HTML Generator**
 
@@ -172,7 +172,7 @@ Other arguments are specified in `pyproject.toml`.
 
 Change Directory to `./`.
 
-`make debug` to preview the site on Chrome.
+"Run & Debug" on VSCode or `make debug` to preview the site on Chrome.
 
 ### Test
 

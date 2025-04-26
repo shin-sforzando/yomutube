@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <base href="$FLUTTER_BASE_HREF" />
     <meta charset="UTF-8" />
@@ -8,7 +8,6 @@
       name="description"
       content="A service gives transcribed YouTube for You."
     />
-
     <!-- iOS meta tags & icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -20,23 +19,21 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="msapplication-TileColor" content="#999999" />
-
     <title>YomuTube</title>
-
     <script>
-      // The value below is injected by flutter build, do not touch.
-      const serviceWorkerVersion = null;
+      var serviceWorkerVersion = '{{flutter_service_worker_version}}';
     </script>
-    <!-- This script adds the flutter initialization JS code -->
-    <script src="flutter.js" defer></script>
   </head>
   <body>
     <script>
+      {{flutter_js}}
+      {{flutter_build_config}}
+
       let useHTML = true;
 
       window.addEventListener("load", function (ev) {
         // Download main.dart.js
-        _flutter.loader.loadEntrypoint({
+        _flutter.loader.load({
           serviceWorker: {
             serviceWorkerVersion: serviceWorkerVersion,
           },
